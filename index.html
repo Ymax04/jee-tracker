@@ -3,156 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEE Ultimate Tracker | #PaperPhodnaHai</title>
+    <title>JEE 2026 | #PaperPhodnaHai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; overflow: hidden; margin: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #f8fafc; overflow: hidden; margin: 0; }
 
-        /* LOADER BOX */
+        /* UPGRADED LOADER */
         #loader {
             position: fixed; inset: 0; background: #000; z-index: 10000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
+        .loader-text {
+            font-size: 3rem; font-weight: 900; font-style: italic; color: #1e40af;
+            letter-spacing: -2px; animation: pulse 1.5s infinite;
+        }
 
-        /* STICKY FIXES */
+        /* JEE 2026 WATERMARK BACKGROUND */
+        .jee-bg {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 20vw; font-weight: 900; color: rgba(255, 255, 255, 0.03);
+            white-space: nowrap; pointer-events: none; z-index: 0;
+        }
+
+        /* SMOOTH STICKY TABLE */
         .table-container {
-            overflow: auto; height: 60vh; border-radius: 0 0 1rem 1rem;
-            border: 1px solid rgba(255,255,255,0.1);
+            overflow: auto; height: 62vh; border-radius: 12px;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative; z-index: 10;
         }
 
         table { border-collapse: separate; border-spacing: 0; width: 100%; }
 
-        /* Header must be solid to prevent transparency overlap */
         thead th {
             position: sticky; top: 0; z-index: 100;
-            background-color: #1e293b !important; /* Solid dark blue */
-            border-bottom: 2px solid #3b82f6; padding: 12px;
+            background: #111 !important; border-bottom: 2px solid #2563eb;
+            padding: 14px 8px; font-size: 10px; color: #3b82f6; text-transform: uppercase;
         }
 
-        /* Category rows stick below the main header */
         .category-row td {
-            position: sticky; top: 45px; z-index: 90;
-            background-color: #0f172a !important; 
-            color: #60a5fa; font-weight: 900; font-size: 11px;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            position: sticky; top: 44px; z-index: 95;
+            background: #0a0a0a !important; color: #60a5fa;
+            font-weight: 900; font-size: 12px; padding: 10px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
         }
 
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .checkbox-custom { width: 1.5rem; height: 1.5rem; cursor: pointer; accent-color: #2563eb; }
-        .tab-active { border-bottom: 4px solid #3b82f6; color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        .glass-card { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .checkbox-custom { width: 1.6rem; height: 1.6rem; cursor: pointer; accent-color: #2563eb; }
+        .tab-active { border-bottom: 4px solid #2563eb; color: #fff; background: rgba(37, 99, 235, 0.1); }
         
-        #sigma-overlay { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
-            z-index: 9999; justify-content: center; align-items: center; flex-direction: column; 
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
-<body class="pb-10">
+<body>
+
+    <div class="jee-bg">JEE 2026</div>
 
     <div id="loader">
-        <div class="text-6xl animate-bounce mb-4">🗿</div>
-        <h2 class="text-2xl font-black italic tracking-tighter text-blue-500">INITIALIZING SIGMA TRACKER...</h2>
-        <p class="text-[10px] text-gray-500 mt-2 uppercase">#PaperPhodnaHai</p>
+        <div class="loader-text italic">JEE 2026</div>
+        <div class="h-1 w-48 bg-gray-900 mt-4 overflow-hidden rounded-full">
+            <div class="h-full bg-blue-600 transition-all duration-1000" id="load-bar" style="width: 0%"></div>
+        </div>
+        <p class="text-[10px] text-blue-900 mt-4 tracking-[0.5em] font-black uppercase">Mission IIT Bombay</p>
     </div>
 
-    <div id="sigma-overlay" onclick="this.style.display='none'">
-        <div class="animate-bounce text-8xl mb-4">🗿</div>
-        <h1 class="text-6xl font-black italic text-white text-center">CHAPTER DECIMATED</h1>
-        <p class="text-blue-400 font-bold mt-2 tracking-widest uppercase italic">IIT BOMBAY BOUND</p>
-    </div>
-
-    <header class="bg-black py-6 px-4 text-center border-b border-blue-900/50">
-        <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter text-white uppercase italic">#PAPERPHODNAHAI</h1>
-        <div class="max-w-2xl mx-auto mt-4 px-4">
-            <div class="flex justify-between mb-1 text-[9px] font-black text-blue-400">
-                <span>TOTAL READINESS</span>
+    <header class="relative z-10 bg-black/80 py-8 px-4 text-center border-b border-blue-900/50">
+        <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter text-white uppercase italic">#PAPERPHODNAHAI</h1>
+        <div class="max-w-xl mx-auto mt-6 px-4">
+            <div class="flex justify-between mb-1 text-[10px] font-black text-blue-500">
+                <span>PREP LEVEL</span>
                 <span id="global-perc">0%</span>
             </div>
-            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
+            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden border border-blue-900/20">
                 <div id="global-bar" class="bg-blue-600 h-full transition-all duration-1000" style="width: 0%"></div>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-4 -mt-4 grid grid-cols-3 gap-2 relative z-20">
-        <div class="glass-card p-3 rounded-xl text-center border-t-2 border-blue-600">
-            <div id="math-perc" class="text-lg font-black">0%</div>
+    <div class="container mx-auto px-4 -mt-6 grid grid-cols-3 gap-2 relative z-20">
+        <div class="glass-card p-3 rounded-xl text-center border-b-2 border-blue-600">
+            <div id="math-perc" class="text-xl font-black">0%</div>
             <div class="text-[8px] font-bold text-gray-500">MATH</div>
         </div>
-        <div class="glass-card p-3 rounded-xl text-center border-t-2 border-cyan-500">
-            <div id="physics-perc" class="text-lg font-black">0%</div>
+        <div class="glass-card p-3 rounded-xl text-center border-b-2 border-cyan-500">
+            <div id="physics-perc" class="text-xl font-black">0%</div>
             <div class="text-[8px] font-bold text-gray-500">PHYSICS</div>
         </div>
-        <div class="glass-card p-3 rounded-xl text-center border-t-2 border-indigo-500">
-            <div id="chemistry-perc" class="text-lg font-black">0%</div>
-            <div class="text-[8px] font-bold text-gray-500">CHEM</div>
+        <div class="glass-card p-3 rounded-xl text-center border-b-2 border-indigo-500">
+            <div id="chemistry-perc" class="text-xl font-black">0%</div>
+            <div class="text-[8px] font-bold text-gray-500">CHEMISTRY</div>
         </div>
     </div>
 
-    <nav class="container mx-auto px-4 mt-6 flex gap-1">
-        <button onclick="switchTab('math')" id="tab-math" class="flex-1 py-3 glass-card rounded-t-xl font-black text-[10px] tab-active">MATH</button>
-        <button onclick="switchTab('physics')" id="tab-physics" class="flex-1 py-3 glass-card rounded-t-xl font-black text-[10px] text-gray-500">PHYSICS</button>
-        <button onclick="switchTab('chemistry')" id="tab-chemistry" class="flex-1 py-3 glass-card rounded-t-xl font-black text-[10px] text-gray-500">CHEMISTRY</button>
+    <nav class="container mx-auto px-4 mt-8 flex gap-1 relative z-10">
+        <button onclick="switchTab('math')" id="tab-math" class="flex-1 py-4 glass-card rounded-t-xl font-black text-[11px] tab-active">MATHEMATICS</button>
+        <button onclick="switchTab('physics')" id="tab-physics" class="flex-1 py-4 glass-card rounded-t-xl font-black text-[11px] text-gray-500">PHYSICS</button>
+        <button onclick="switchTab('chemistry')" id="tab-chemistry" class="flex-1 py-4 glass-card rounded-t-xl font-black text-[11px] text-gray-500">CHEMISTRY</button>
     </nav>
 
-    <main class="container mx-auto px-4">
-        <div class="glass-card shadow-2xl">
-            <div class="table-container">
-                <table class="min-w-[800px]">
-                    <thead class="text-blue-400 text-[9px] font-black uppercase">
-                        <tr>
-                            <th>#</th>
-                            <th class="text-left">Topic Name</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center bg-blue-900/20">PYQ(B)</th>
-                            <th class="text-center bg-blue-900/20">PYQ(M)</th>
-                            <th class="text-center">Test</th>
-                            <th class="text-center">R1</th>
-                            <th class="text-center">R2</th>
-                            <th class="text-center">Form</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tracker-body"></tbody>
-                </table>
-            </div>
+    <main class="container mx-auto px-4 relative z-10">
+        <div class="table-container shadow-2xl">
+            <table class="min-w-[850px]">
+                <thead>
+                    <tr>
+                        <th class="w-12 text-center">#</th>
+                        <th class="text-left px-4">Chapter Name</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center bg-blue-950/30">PYQ(B)</th>
+                        <th class="text-center bg-blue-950/30">PYQ(M)</th>
+                        <th class="text-center">Test</th>
+                        <th class="text-center">Rev 1</th>
+                        <th class="text-center">Rev 2</th>
+                        <th class="text-center">Form</th>
+                    </tr>
+                </thead>
+                <tbody id="tracker-body"></tbody>
+            </table>
         </div>
     </main>
 
     <script>
-        window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1500);
-        });
-
+        // Data sources from MathonGo Trackers 
         const fullData = {
             math: { 
-                "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], 
-                "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], 
-                "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], 
-                "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"]
+                "Category 1 [cite: 1]": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], 
+                "Category 2 [cite: 1]": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], 
+                "Category 3 [cite: 1]": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], 
+                "Category 4 [cite: 1]": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"]
             },
             physics: { 
-                "Category 1": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], 
-                "Category 2": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], 
-                "Category 3": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], 
-                "Category 4": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"]
+                "Category 1 [cite: 9]": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], 
+                "Category 2 [cite: 9]": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], 
+                "Category 3 [cite: 9]": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], 
+                "Category 4 [cite: 9]": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"]
             },
             chemistry: { 
-                "Category 1": ["Biomolecules", "Polymers", "P Block Elements", "Environmental Chemistry", "S Block & Hydrogen", "Mole Concept", "Surface Chemistry", "Atomic Structure", "Electrochemistry", "Metallurgy", "Solutions"], 
-                "Category 2": ["Coordination Compounds", "Chemical Thermodynamics", "General Organic Chemistry", "Hydrocarbons", "Haloalkanes", "Aldehydes And Ketones", "Amines", "Chemical Kinetics", "Chemical Bonding", "d and f block elements", "Haloarenes And Phenols"], 
-                "Category 3": ["Periodicity", "Solid State", "Gaseous State", "Purification Of Organic Compounds", "Chemistry in Everyday Life", "Chemical Equilibrium"], 
-                "Category 4": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "lonic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"]
+                "Category 1 [cite: 5]": ["Biomolecules", "Polymers", "P Block Elements", "Environmental Chemistry", "S Block & Hydrogen", "Mole Concept", "Surface Chemistry", "Atomic Structure", "Electrochemistry", "Metallurgy", "Solutions"], 
+                "Category 2 [cite: 5]": ["Coordination Compounds", "Chemical Thermodynamics", "General Organic Chemistry", "Hydrocarbons", "Haloalkanes", "Aldehydes And Ketones", "Amines", "Chemical Kinetics", "Chemical Bonding", "d and f block elements", "Haloarenes And Phenols"], 
+                "Category 3 [cite: 5]": ["Periodicity", "Solid State", "Gaseous State", "Purification Of Organic Compounds", "Chemistry in Everyday Life", "Chemical Equilibrium"], 
+                "Category 4 [cite: 5]": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "lonic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"]
             }
         };
 
-        let currentSub = 'math';
         const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fr'];
+        let currentSub = 'math';
+
+        window.addEventListener('load', () => {
+            document.getElementById('load-bar').style.width = '100%';
+            setTimeout(() => { document.getElementById('loader').style.opacity = '0'; 
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+            }, 1200);
+        });
 
         function switchTab(sub) {
             currentSub = sub;
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active', 'text-blue-600'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active', 'text-white'));
             document.getElementById(`tab-${sub}`).classList.add('tab-active');
             renderTable();
         }
@@ -162,13 +170,15 @@
             body.innerHTML = '';
             let count = 1;
             for (const [cat, topics] of Object.entries(fullData[currentSub])) {
-                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9" class="p-3 uppercase">${cat}</td></tr>`);
+                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9">${cat}</td></tr>`);
                 topics.forEach(topic => {
                     const rowId = `${currentSub}-${count}`;
-                    let rowHtml = `<tr class="border-b border-gray-800"><td class="p-4 text-gray-600 font-bold text-[10px]">${count}</td><td class="p-4 font-bold text-gray-200 text-xs">${topic}</td>`;
+                    let rowHtml = `<tr class="hover:bg-blue-900/10 border-b border-gray-900">
+                        <td class="text-center text-gray-600 font-bold text-xs">${count}</td>
+                        <td class="px-4 py-4 font-bold text-gray-200 text-[13px]">${topic}</td>`;
                     cols.forEach(col => {
                         const checkId = `${rowId}-${col}`;
-                        rowHtml += `<td class="p-4 text-center"><input type="checkbox" ${localStorage.getItem(checkId) === 'true' ? 'checked' : ''} class="checkbox-custom" onchange="save('${rowId}', '${col}', this)"></td>`;
+                        rowHtml += `<td class="text-center"><input type="checkbox" ${localStorage.getItem(checkId) === 'true' ? 'checked' : ''} class="checkbox-custom" onchange="save('${rowId}', '${col}', this)"></td>`;
                     });
                     body.insertAdjacentHTML('beforeend', rowHtml + `</tr>`);
                     count++;
@@ -179,13 +189,7 @@
 
         function save(rowId, col, el) {
             localStorage.setItem(`${rowId}-${col}`, el.checked);
-            if (el.checked) {
-                confetti({ particleCount: 20, spread: 40, origin: { y: 0.8 } });
-                if (cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true')) {
-                    document.getElementById('sigma-overlay').style.display = 'flex';
-                    confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
-                }
-            }
+            if (el.checked) confetti({ particleCount: 15, spread: 30, origin: { y: 0.8 }, colors: ['#2563eb'] });
             updateStats();
         }
 
@@ -197,7 +201,8 @@
                 for (let i = 0; i < localStorage.length; i++) {
                     if (localStorage.key(i).startsWith(s + '-') && localStorage.getItem(localStorage.key(i)) === 'true') sDone++;
                 }
-                document.getElementById(`${s}-perc`).innerText = (Math.round((sDone/sTotal)*100)||0) + '%';
+                const p = Math.round((sDone/sTotal)*100)||0;
+                document.getElementById(`${s}-perc`).innerText = p + '%';
                 gDone += sDone; gTotal += sTotal;
             });
             const total = Math.round((gDone/gTotal)*100)||0;
