@@ -13,20 +13,15 @@
             background-color: #000000; 
             color: #ffffff; 
         }
-        .planner-card {
-            background-color: #111111;
-            border: 1px solid #222222;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
         .progress-line {
             height: 2px;
             background-color: #222222;
+            position: relative;
         }
         .progress-fill {
             height: 100%;
             background-color: #ffffff;
-            transition: width 1s ease-in-out;
+            transition: width 0.8s ease-in-out;
         }
         .subject-tab {
             color: #666666;
@@ -34,35 +29,38 @@
             font-weight: 600;
             padding-bottom: 8px;
             border-bottom: 2px solid transparent;
+            transition: all 0.2s;
         }
         .tab-active {
             color: #ffffff;
             border-bottom: 2px solid #ffffff;
         }
         .category-header {
-            color: #666666;
-            font-size: 0.75rem;
+            color: #444444;
+            font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding-top: 2rem;
-            padding-bottom: 1rem;
+            letter-spacing: 0.15em;
+            padding: 2.5rem 0 1rem 0;
         }
         .custom-check {
-            width: 1.25rem;
-            height: 1.25rem;
+            width: 1.1rem;
+            height: 1.1rem;
             background-color: #000000;
             border: 1px solid #333333;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
             accent-color: #ffffff;
+            transition: transform 0.1s;
         }
+        .custom-check:active { transform: scale(0.9); }
+        
         #sigma-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 100;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -70,79 +68,79 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-12">
+<body class="p-6 md:p-16">
 
     <div id="sigma-modal" onclick="this.style.display='none'">
-        <div class="text-8xl mb-6">🗿</div>
-        <h2 class="text-5xl font-black italic tracking-tighter uppercase mb-2">Chapter Decimated</h2>
-        <p class="text-zinc-500 font-bold tracking-widest uppercase text-sm">One Step Closer to the Dream</p>
+        <div class="text-9xl mb-6">🗿</div>
+        <h2 class="text-6xl font-black italic tracking-tighter uppercase mb-2">CHAPTER DECIMATED</h2>
+        <p class="text-zinc-500 font-bold tracking-[0.3em] uppercase text-xs">IIT BOMBAY IS THE ONLY GOAL</p>
     </div>
 
-    <header class="max-w-6xl mx-auto mb-12">
-        <div class="flex justify-between items-end mb-8">
-            <h1 class="text-xl font-bold tracking-tighter">JEE PLANNER</h1>
-            <div class="flex gap-4 text-xs font-bold text-zinc-500 uppercase">
-                <span>Focus</span>
+    <header class="max-w-5xl mx-auto mb-16">
+        <div class="flex justify-between items-center mb-12">
+            <h1 class="text-sm font-black tracking-widest uppercase">JEE PLANNER</h1>
+            <div class="flex gap-6 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                <span class="text-white">Focus</span>
                 <span>History</span>
+                <span>⚙️</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="space-y-2">
-                <div class="flex justify-between text-[10px] font-bold uppercase text-zinc-500">
-                    <span>Math</span>
-                    <span id="math-perc">0% (0/31)</span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="space-y-3">
+                <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <span>Mathematics</span>
+                    <span id="math-perc-text">0% (0/31)</span>
                 </div>
-                <div class="progress-line w-full"><div id="math-bar" class="progress-fill" style="width: 0%"></div></div>
+                <div class="progress-line"><div id="math-bar" class="progress-fill" style="width: 0%"></div></div>
             </div>
-            <div class="space-y-2">
-                <div class="flex justify-between text-[10px] font-bold uppercase text-zinc-500">
+            <div class="space-y-3">
+                <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                     <span>Physics</span>
-                    <span id="physics-perc">0% (0/34)</span>
+                    <span id="physics-perc-text">0% (0/34)</span>
                 </div>
-                <div class="progress-line w-full"><div id="physics-bar" class="progress-fill" style="width: 0%"></div></div>
+                <div class="progress-line"><div id="physics-bar" class="progress-fill" style="width: 0%"></div></div>
             </div>
-            <div class="space-y-2">
-                <div class="flex justify-between text-[10px] font-bold uppercase text-zinc-500">
+            <div class="space-y-3">
+                <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                     <span>Chemistry</span>
-                    <span id="chemistry-perc">0% (0/34)</span>
+                    <span id="chemistry-perc-text">0% (0/34)</span>
                 </div>
-                <div class="progress-line w-full"><div id="chemistry-bar" class="progress-fill" style="width: 0%"></div></div>
+                <div class="progress-line"><div id="chemistry-bar" class="progress-fill" style="width: 0%"></div></div>
             </div>
         </div>
     </header>
 
-    <nav class="max-w-6xl mx-auto flex gap-8 mb-12 border-b border-zinc-900">
-        <button onclick="changeSubject('math')" id="tab-math" class="subject-tab tab-active">MATHEMATICS</button>
-        <button onclick="changeSubject('physics')" id="tab-physics" class="subject-tab">PHYSICS</button>
-        <button onclick="changeSubject('chemistry')" id="tab-chemistry" class="subject-tab">CHEMISTRY</button>
+    <nav class="max-w-5xl mx-auto flex gap-10 mb-8 border-b border-zinc-900">
+        <button onclick="switchSubject('math')" id="nav-math" class="subject-tab tab-active">MATH</button>
+        <button onclick="switchSubject('physics')" id="nav-physics" class="subject-tab">PHYSICS</button>
+        <button onclick="switchSubject('chemistry')" id="nav-chemistry" class="subject-tab">CHEMISTRY</button>
     </nav>
 
-    <main class="max-w-6xl mx-auto">
+    <main class="max-w-5xl mx-auto">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
-                <thead class="text-[10px] font-bold text-zinc-600 uppercase">
+                <thead class="text-[9px] font-black text-zinc-600 uppercase tracking-widest border-b border-zinc-900">
                     <tr>
-                        <th class="pb-4 pr-4">#</th>
-                        <th class="pb-4 w-1/3">Topic</th>
+                        <th class="pb-4 w-8">#</th>
+                        <th class="pb-4">Chapter Name</th>
                         <th class="pb-4 text-center">Stat</th>
                         <th class="pb-4 text-center">PYQ (B)</th>
                         <th class="pb-4 text-center">PYQ (M)</th>
                         <th class="pb-4 text-center">Test</th>
-                        <th class="pb-4 text-center">Rev 1</th>
-                        <th class="pb-4 text-center">Rev 2</th>
+                        <th class="pb-4 text-center">R1</th>
+                        <th class="pb-4 text-center">R2</th>
                         <th class="pb-4 text-center">Form</th>
                     </tr>
                 </thead>
-                <tbody id="planner-body">
+                <tbody id="table-content">
                     </tbody>
             </table>
         </div>
     </main>
 
     <script>
-        [cite_start]// Full Data from Trackers [cite: 1, 5, 9]
-        const appData = {
+        const jeeData = {
             math: {
                 "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"],
                 "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"],
@@ -163,87 +161,89 @@
             }
         };
 
-        let currentSub = 'math';
-        const columns = ['status', 'pyq_beg', 'pyq_mod', 'test', 'rev1', 'rev2', 'form'];
+        let activeSub = 'math';
+        const cols = ['stat', 'pyqb', 'pyqm', 'test', 'r1', 'r2', 'form'];
 
-        function changeSubject(sub) {
-            currentSub = sub;
+        function switchSubject(sub) {
+            activeSub = sub;
             document.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('tab-active'));
-            document.getElementById(`tab-${sub}`).classList.add('tab-active');
-            renderPlanner();
+            document.getElementById(`nav-${sub}`).classList.add('tab-active');
+            render();
         }
 
-        function renderPlanner() {
-            const body = document.getElementById('planner-body');
-            body.innerHTML = '';
+        function render() {
+            const container = document.getElementById('table-content');
+            container.innerHTML = '';
             let count = 1;
 
-            for (const [cat, topics] of Object.entries(appData[currentSub])) {
-                body.insertAdjacentHTML('beforeend', `<tr><td colspan="9" class="category-header">${cat}</td></tr>`);
+            for (const [cat, chapters] of Object.entries(jeeData[activeSub])) {
+                container.insertAdjacentHTML('beforeend', `<tr><td colspan="9" class="category-header">${cat}</td></tr>`);
                 
-                topics.forEach(topic => {
-                    const rowId = `${currentSub}-${count}`;
-                    let rowHtml = `<tr class="border-b border-zinc-900 group">
-                        <td class="py-6 pr-4 text-[10px] text-zinc-700 font-bold">${count}</td>
-                        <td class="py-6 font-bold text-sm text-zinc-200">${topic}</td>`;
+                chapters.forEach(name => {
+                    const rowId = `${activeSub}-${count}`;
+                    let html = `<tr class="border-b border-zinc-900/50 group hover:bg-zinc-900/30 transition-all">
+                        <td class="py-5 text-[10px] text-zinc-700 font-bold">${count}</td>
+                        <td class="py-5 text-[13px] font-semibold text-zinc-200">${name}</td>`;
                     
-                    columns.forEach(col => {
-                        const key = `${rowId}-${col}`;
-                        const isChecked = localStorage.getItem(key) === 'true';
-                        rowHtml += `<td class="py-6 text-center">
+                    cols.forEach(col => {
+                        const storageKey = `${rowId}-${col}`;
+                        const isChecked = localStorage.getItem(storageKey) === 'true';
+                        html += `<td class="py-5 text-center">
                             <input type="checkbox" ${isChecked ? 'checked' : ''} 
                                 class="custom-check" 
-                                onchange="updateProgress('${rowId}', '${col}', this)">
+                                onchange="handleToggle('${rowId}', '${col}', this)">
                         </td>`;
                     });
                     
-                    rowHtml += `</tr>`;
-                    body.insertAdjacentHTML('beforeend', rowHtml);
+                    html += `</tr>`;
+                    container.insertAdjacentHTML('beforeend', html);
                     count++;
                 });
             }
-            updateUI();
+            refreshStats();
         }
 
-        function updateProgress(rowId, col, el) {
+        function handleToggle(rowId, col, el) {
             localStorage.setItem(`${rowId}-${col}`, el.checked);
             
             if (el.checked) {
-                const rowAllChecked = columns.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
-                if (rowAllChecked) {
+                const allDone = cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
+                if (allDone) {
                     document.getElementById('sigma-modal').style.display = 'flex';
                     confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 }
             }
-            updateUI();
+            refreshStats();
         }
 
-        function updateUI() {
+        function refreshStats() {
             ['math', 'physics', 'chemistry'].forEach(sub => {
-                let totalItems = 0;
-                let doneItems = 0;
                 let totalTopics = 0;
-
-                Object.values(appData[sub]).forEach(list => {
-                    totalTopics += list.length;
-                    totalItems += list.length * columns.length;
-                });
+                Object.values(jeeData[sub]).forEach(list => totalTopics += list.length);
+                
+                let totalBoxes = totalTopics * cols.length;
+                let checkedBoxes = 0;
+                let fullyCompletedChapters = 0;
 
                 for (let i = 1; i <= totalTopics; i++) {
-                    columns.forEach(col => {
-                        if (localStorage.getItem(`${sub}-${i}-${col}`) === 'true') doneItems++;
+                    let rowFull = true;
+                    cols.forEach(c => {
+                        if (localStorage.getItem(`${sub}-${i}-${c}`) === 'true') {
+                            checkedBoxes++;
+                        } else {
+                            rowFull = false;
+                        }
                     });
+                    if (rowFull) fullyCompletedChapters++;
                 }
 
-                const perc = Math.round((doneItems / totalItems) * 100) || 0;
-                const completedTopics = 0; // Logic for fully completed chapters could go here
-                
-                document.getElementById(`${sub}-perc`).innerText = `${perc}% (${Math.floor(doneItems/columns.length)}/${totalTopics})`;
+                const perc = Math.round((checkedBoxes / totalBoxes) * 100) || 0;
                 document.getElementById(`${sub}-bar`).style.width = `${perc}%`;
+                document.getElementById(`${sub}-perc-text`).innerText = `${perc}% (${fullyCompletedChapters}/${totalTopics})`;
             });
         }
 
-        renderPlanner();
+        render();
     </script>
 </body>
 </html>
