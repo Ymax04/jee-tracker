@@ -8,12 +8,14 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
         
+        /* PAGE-WIDE SCROLLING ENABLED */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #000000; 
             color: #ffffff; 
             margin: 0; 
-            overflow: hidden;
+            overflow-y: auto; 
+            overflow-x: hidden;
         }
 
         /* SIMPLE LOADER */
@@ -25,43 +27,61 @@
             color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
         }
 
-        /* MINIMALIST DASHBOARD */
+        /* DASHBOARD STYLING */
         .progress-sub { color: #999; font-size: 11px; margin-bottom: 4px; }
-        .progress-bar-bg { background: #1a1a1a; height: 2px; border-radius: 1px; width: 100%; }
-        .progress-bar-fill { background: #ffffff; height: 2px; transition: width 0.5s ease; }
+        .progress-bar-bg { background: #111; height: 2px; border-radius: 1px; width: 100%; }
+        .progress-bar-fill { background: #ffffff; height: 2px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* CLEAN TABLE LOGIC */
-        .table-container {
-            overflow: auto; height: 70vh; margin-top: 20px;
-            scrollbar-width: thin; scrollbar-color: #333 #000;
+        /* FLUID TABLE LOGIC */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto; /* Horizontal scroll for small screens */
+            -webkit-overflow-scrolling: touch;
         }
 
         table { border-collapse: separate; border-spacing: 0; width: 100%; }
 
+        /* HEADER STICKY TO VIEWPORT */
         thead th {
-            position: sticky; top: 0; z-index: 100;
-            background-color: #000 !important; /* Fixed sticky overlap */
-            color: #666; font-weight: 500; font-size: 10px; text-transform: uppercase;
-            padding: 15px 10px; border-bottom: 1px solid #1a1a1a; text-align: center;
+            position: sticky; 
+            top: 0; 
+            z-index: 100;
+            background-color: #000 !important; 
+            color: #555; 
+            font-weight: 500; 
+            font-size: 9px; 
+            text-transform: uppercase;
+            padding: 18px 10px; 
+            border-bottom: 1px solid #111; 
+            text-align: center;
         }
 
-        .topic-col { text-align: left !important; width: 30%; }
+        .topic-col { text-align: left !important; min-width: 200px; }
 
         tbody td {
-            padding: 12px 10px; border-bottom: 1px solid #1a1a1a;
-            font-size: 13px; color: #ccc; text-align: center;
+            padding: 14px 10px; 
+            border-bottom: 1px solid #0a0a0a;
+            font-size: 13px; 
+            color: #ccc; 
+            text-align: center;
         }
 
         .category-row td {
-            background-color: #000; color: #666; font-size: 10px;
-            text-transform: uppercase; letter-spacing: 1px; padding: 20px 10px 10px;
-            text-align: left; border: none;
+            background-color: #000; 
+            color: #444; 
+            font-size: 10px;
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            padding: 30px 10px 10px;
+            text-align: left; 
+            border: none;
         }
 
-        /* CUSTOM CHECKBOX */
+        /* CHECKBOX STYLE */
         .cb {
-            appearance: none; width: 16px; height: 16px; border: 1px solid #333;
+            appearance: none; width: 16px; height: 16px; border: 1px solid #222;
             border-radius: 2px; cursor: pointer; transition: 0.2s; position: relative;
+            background: transparent;
         }
         .cb:checked { background: #ffffff; border-color: #ffffff; }
         .cb:checked::after {
@@ -70,29 +90,32 @@
             border-width: 0 2px 2px 0; transform: rotate(45deg);
         }
 
-        .tab-btn { color: #666; font-size: 12px; font-weight: 500; padding: 10px 20px; transition: 0.3s; }
+        .tab-btn { color: #444; font-size: 12px; font-weight: 500; padding: 12px 20px; transition: 0.3s; position: relative; }
         .tab-btn.active { color: #fff; }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: 0; left: 25%; width: 50%; height: 1px; background: #fff;
+        }
     </style>
 </head>
-<body>
+<body class="pb-20">
 
     <div id="loader">
         <div class="loader-text">LOADING</div>
     </div>
 
-    <header class="p-8 max-w-5xl mx-auto">
-        <div class="flex justify-between items-center mb-10">
-            <h1 class="text-sm font-semibold tracking-widest uppercase">JEE 2026</h1>
-            <div class="flex gap-4">
-                <span class="text-[10px] text-gray-500 uppercase tracking-widest">Focus</span>
-                <span class="text-[10px] text-gray-500 uppercase tracking-widest">History</span>
+    <header class="p-8 max-w-5  mx-auto mt-4">
+        <div class="flex justify-between items-center mb-12">
+            <h1 class="text-[11px] font-medium tracking-[0.3em] text-gray-400 uppercase">JEE 2026 Planner</h1>
+            <div class="flex gap-6">
+                <span class="text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition">Focus</span>
+                <span class="text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition">History</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
                 <div class="flex justify-between progress-sub">
-                    <span>Math</span>
+                    <span>Mathematics</span>
                     <span id="math-perc">0%</span>
                 </div>
                 <div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill" style="width: 0%"></div></div>
@@ -114,26 +137,26 @@
         </div>
     </header>
 
-    <nav class="flex justify-center gap-8 border-b border-[#1a1a1a] max-w-5xl mx-auto">
+    <nav class="flex justify-center gap-4 md:gap-12 border-b border-[#111] max-w-5xl mx-auto sticky top-0 bg-black z-[110]">
         <button onclick="switchTab('math')" id="tab-math" class="tab-btn active">Mathematics</button>
         <button onclick="switchTab('physics')" id="tab-physics" class="tab-btn">Physics</button>
         <button onclick="switchTab('chemistry')" id="tab-chemistry" class="tab-btn">Chemistry</button>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-4">
-        <div class="table-container">
+    <main class="max-w-5xl mx-auto px-4 mt-4">
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
-                        <th class="w-12">#</th>
-                        <th class="topic-col">Topic</th>
+                        <th class="w-10">#</th>
+                        <th class="topic-col">Topic Name</th>
                         <th>Status</th>
                         <th>PYQ(B)</th>
                         <th>PYQ(M)</th>
                         <th>Test</th>
                         <th>Rev 1</th>
                         <th>Rev 2</th>
-                        <th>Formula</th>
+                        <th>Form</th>
                     </tr>
                 </thead>
                 <tbody id="tracker-body"></tbody>
@@ -143,9 +166,13 @@
 
     <script>
         window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1000);
+            setTimeout(() => { 
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+            }, 800);
         });
 
+        // Exact Data from MathonGo PDF Trackers
         const fullData = {
             math: { 
                 "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], 
@@ -163,7 +190,7 @@
                 "Category 1": ["Biomolecules", "Polymers", "P Block Elements", "Environmental Chemistry", "S Block & Hydrogen", "Mole Concept", "Surface Chemistry", "Atomic Structure", "Electrochemistry", "Metallurgy", "Solutions"], 
                 "Category 2": ["Coordination Compounds", "Chemical Thermodynamics", "General Organic Chemistry", "Hydrocarbons", "Haloalkanes", "Aldehydes And Ketones", "Amines", "Chemical Kinetics", "Chemical Bonding", "d and f block elements", "Haloarenes And Phenols"], 
                 "Category 3": ["Periodicity", "Solid State", "Gaseous State", "Purification Of Organic Compounds", "Chemistry in Everyday Life", "Chemical Equilibrium"], 
-                "Category 4": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "lonic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"]
+                "Category 4": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "Ionic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"]
             }
         };
 
@@ -175,6 +202,7 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`tab-${sub}`).classList.add('active');
             renderTable();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderTable() {
@@ -186,8 +214,8 @@
                 topics.forEach(topic => {
                     const rowId = `${currentSub}-${count}`;
                     let rowHtml = `<tr>
-                        <td style="color:#444">${count}</td>
-                        <td class="topic-col" style="color:#eee">${topic}</td>`;
+                        <td style="color:#333">${count}</td>
+                        <td class="topic-col" style="color:#ddd">${topic}</td>`;
                     cols.forEach(col => {
                         const checkId = `${rowId}-${col}`;
                         rowHtml += `<td><input type="checkbox" ${localStorage.getItem(checkId) === 'true' ? 'checked' : ''} class="cb" onchange="save('${checkId}', this.checked)"></td>`;
@@ -209,15 +237,7 @@
                 let done = 0, total = 0;
                 Object.values(fullData[s]).forEach(l => total += l.length * cols.length);
                 for (let i = 0; i < localStorage.length; i++) {
-                    if (localStorage.key(i).startsWith(s + '-') && localStorage.getItem(localStorage.key(i)) === 'true') done++;
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith(s + '-') && localStorage.getItem(key) === 'true') done++;
                 }
-                const p = Math.round((done / total) * 100) || 0;
-                document.getElementById(`${s}-perc`).innerText = p + '%';
-                document.getElementById(`${s === 'chemistry' ? 'chem' : s}-bar`).style.width = p + '%';
-            });
-        }
-
-        renderTable();
-    </script>
-</body>
-</html>
+                const p = Math.round((done / total
