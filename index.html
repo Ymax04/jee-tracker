@@ -2,164 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEE Prep Planner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Ultimate Tracker | #PaperPhodnaHai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #f8fafc; overflow-x: hidden; }
         
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #000000; 
-            color: #ffffff;
-            overflow-x: hidden;
-        }
-
-        /* Fixed the 'unclickable' issue by ensuring content is above background elements */
-        main { position: relative; z-index: 10; }
-
-        .progress-line {
-            height: 2px;
-            background-color: #1a1a1a;
-            width: 100%;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #ffffff;
-            transition: width 0.8s ease;
-        }
-
-        .subject-tab {
-            color: #52525b;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            padding: 12px 0;
-            border-bottom: 2px solid transparent;
-            white-space: nowrap;
-        }
-        .tab-active {
-            color: #ffffff;
-            border-bottom: 2px solid #ffffff;
-        }
-
-        /* Mobile specific adjustments */
-        .table-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
+        .glass-card { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .tab-active { border-bottom: 4px solid #3b82f6; color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        
+        /* Fixed Clickable Checkbox */
         .custom-check {
             width: 1.4rem;
             height: 1.4rem;
-            background-color: #000000;
-            border: 1px solid #3f3f46;
-            border-radius: 4px;
+            accent-color: #2563eb;
             cursor: pointer;
-            appearance: none;
-            display: inline-block;
             position: relative;
-        }
-        .custom-check:checked {
-            background-color: #ffffff;
-            border-color: #ffffff;
-        }
-        .custom-check:checked::after {
-            content: '✓';
-            color: #000000;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.8rem;
-            font-weight: bold;
+            z-index: 20;
         }
 
-        #sigma-modal {
+        #sigma-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.98);
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
             justify-content: center;
+            align-items: center;
+            flex-direction: column;
             text-align: center;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .min-w-mobile { min-w: 800px; }
         }
     </style>
 </head>
-<body class="p-4 md:p-12">
+<body class="pb-20">
 
-    <div id="sigma-modal" onclick="this.style.display='none'">
-        <div class="text-7xl mb-4">🗿</div>
-        <h2 class="text-4xl font-black italic tracking-tighter uppercase">CHAPTER FINISHED</h2>
-        <p class="text-zinc-500 font-bold tracking-widest uppercase text-[10px] mt-2">Sigma mindset only</p>
+    <div id="sigma-overlay" onclick="this.style.display='none'">
+        <div class="animate-bounce text-8xl mb-4">🗿</div>
+        <h1 class="text-7xl font-black italic text-white tracking-tighter">CHAPTER COMPLETED</h1>
+        <p class="text-2xl font-bold text-blue-500 mt-4 uppercase tracking-[0.3em]">SIGMA BOOM</p>
+        <p class="mt-8 text-gray-500 animate-pulse text-sm">CLICK TO CONTINUE THE GRIND</p>
     </div>
 
-    <header class="max-w-5xl mx-auto mb-10">
-        <div class="flex justify-between items-center mb-10">
-            <h1 class="text-xs font-black tracking-[0.2em]">JEE PLANNER</h1>
-            <div class="flex gap-4 text-[9px] font-bold text-zinc-500 uppercase">
-                <span class="text-white">FOCUS</span>
-                <span>HISTORY</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="space-y-2">
-                <div class="flex justify-between text-[9px] font-bold uppercase text-zinc-500">
-                    <span>Mathematics</span>
-                    <span id="math-stat">0/31</span>
+    <header class="bg-black border-b border-blue-900/30 py-10 px-4 text-center">
+        <div class="container mx-auto">
+            <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter text-white mb-2 uppercase">#PaperPhodnaHai</h1>
+            <p class="text-blue-500 font-bold tracking-[0.4em] text-xs md:text-sm">IIT BOMBAY IS THE ONLY OPTION</p>
+            
+            <div class="max-w-2xl mx-auto mt-8 px-4">
+                <div class="flex justify-between mb-2 text-[10px] font-black text-blue-400 tracking-widest">
+                    <span>OVERALL PROGRESS</span>
+                    <span id="global-perc">0%</span>
                 </div>
-                <div class="progress-line"><div id="math-bar" class="progress-fill" style="width: 0%"></div></div>
-            </div>
-            <div class="space-y-2">
-                <div class="flex justify-between text-[9px] font-bold uppercase text-zinc-500">
-                    <span>Physics</span>
-                    <span id="physics-stat">0/34</span>
+                <div class="w-full bg-zinc-900 rounded-full h-3 border border-zinc-800">
+                    <div id="global-bar" class="bg-blue-600 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(37,99,235,0.5)]" style="width: 0%"></div>
                 </div>
-                <div class="progress-line"><div id="physics-bar" class="progress-fill" style="width: 0%"></div></div>
-            </div>
-            <div class="space-y-2">
-                <div class="flex justify-between text-[9px] font-bold uppercase text-zinc-500">
-                    <span>Chemistry</span>
-                    <span id="chemistry-stat">0/34</span>
-                </div>
-                <div class="progress-line"><div id="chemistry-bar" class="progress-fill" style="width: 0%"></div></div>
             </div>
         </div>
     </header>
 
-    <nav class="max-w-5xl mx-auto flex gap-6 mb-4 border-b border-zinc-900">
-        <button onclick="changeSub('math')" id="nav-math" class="subject-tab tab-active">MATHEMATICS</button>
-        <button onclick="changeSub('physics')" id="nav-physics" class="subject-tab">PHYSICS</button>
-        <button onclick="changeSub('chemistry')" id="nav-chemistry" class="subject-tab">CHEMISTRY</button>
+    <nav class="container mx-auto px-4 mt-8">
+        <div class="flex bg-zinc-900/50 rounded-xl overflow-hidden border border-zinc-800">
+            <button onclick="switchSub('math')" id="tab-math" class="flex-1 py-4 font-black text-[10px] md:text-xs tracking-widest tab-active">MATH</button>
+            <button onclick="switchSub('physics')" id="nav-physics" class="flex-1 py-4 font-black text-[10px] md:text-xs tracking-widest text-zinc-500">PHYSICS</button>
+            <button onclick="switchSub('chemistry')" id="nav-chemistry" class="flex-1 py-4 font-black text-[10px] md:text-xs tracking-widest text-zinc-500">CHEMISTRY</button>
+        </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto">
-        <div class="table-container">
-            <table class="w-full text-left min-w-[600px]">
-                <thead>
-                    <tr class="text-[9px] font-black text-zinc-600 uppercase border-b border-zinc-900">
-                        <th class="py-4 w-10">#</th>
-                        <th class="py-4">Topic Name</th>
-                        <th class="py-4 text-center">Status</th>
-                        <th class="py-4 text-center">PYQ (B)</th>
-                        <th class="py-4 text-center">PYQ (M)</th>
-                        <th class="py-4 text-center">Test</th>
-                        <th class="py-4 text-center">R1</th>
-                        <th class="py-4 text-center">R2</th>
-                        <th class="py-4 text-center">Form</th>
-                    </tr>
-                </thead>
-                <tbody id="planner-content"></tbody>
-            </table>
+    <main class="container mx-auto px-4 mt-6 relative z-10">
+        <div class="glass-card rounded-2xl overflow-hidden shadow-2xl border border-zinc-800">
+            <div class="table-container">
+                <table class="w-full text-left min-w-[900px]">
+                    <thead>
+                        <tr class="bg-black text-blue-400 text-[9px] font-black uppercase tracking-widest">
+                            <th class="p-5">#</th>
+                            <th class="p-5 w-1/4">Topic Name</th>
+                            <th class="p-5 text-center">Status</th>
+                            <th class="p-5 text-center bg-blue-900/10 border-x border-zinc-800">PYQ (Beg)</th>
+                            <th class="p-5 text-center bg-blue-900/10 border-r border-zinc-800">PYQ (Mod)</th>
+                            <th class="p-5 text-center">Test</th>
+                            <th class="p-5 text-center">Rev 1</th>
+                            <th class="p-5 text-center">Rev 2</th>
+                            <th class="p-5 text-center">Formula</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tracker-body"></tbody>
+                </table>
+            </div>
         </div>
     </main>
 
     <script>
-        const data = {
+        const jeeData = {
             math: {
                 "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"],
                 "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"],
@@ -181,72 +122,74 @@
         };
 
         let currentSub = 'math';
-        const columns = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fm'];
+        const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fm'];
 
-        function changeSub(sub) {
+        function switchSub(sub) {
             currentSub = sub;
-            document.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('tab-active'));
-            document.getElementById(`nav-${sub}`).classList.add('tab-active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active', 'text-blue-600'));
+            const btn = (sub === 'math') ? 'tab-math' : (sub === 'physics' ? 'nav-physics' : 'nav-chemistry');
+            document.getElementById(btn).classList.add('tab-active');
             render();
         }
 
         function render() {
-            const container = document.getElementById('planner-content');
-            container.innerHTML = '';
-            let idx = 1;
+            const body = document.getElementById('tracker-body');
+            body.innerHTML = '';
+            let count = 1;
 
-            for (const [cat, chapters] of Object.entries(data[currentSub])) {
-                container.insertAdjacentHTML('beforeend', `<tr><td colspan="9" class="text-[9px] font-black text-zinc-800 uppercase py-6 tracking-widest">${cat}</td></tr>`);
+            for (const [cat, topics] of Object.entries(jeeData[currentSub])) {
+                body.insertAdjacentHTML('beforeend', `<tr class="bg-zinc-900/30 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]"><td colspan="9" class="p-4 border-y border-zinc-800/50">${cat}</td></tr>`);
                 
-                chapters.forEach(name => {
-                    const id = `${currentSub}-${idx}`;
-                    let row = `<tr class="border-b border-zinc-900/50 group">
-                        <td class="py-4 text-[10px] text-zinc-700 font-bold">${idx}</td>
-                        <td class="py-4 text-xs font-semibold text-zinc-300">${name}</td>`;
+                topics.forEach(name => {
+                    const rowId = `${currentSub}-${count}`;
+                    let rowHtml = `<tr class="border-b border-zinc-800/50 group hover:bg-white/[0.02] transition-colors">
+                        <td class="p-5 text-zinc-700 font-bold text-xs">${count}</td>
+                        <td class="p-5 font-bold text-zinc-200 text-sm">${name}</td>`;
                     
-                    columns.forEach(col => {
-                        const key = `${id}-${col}`;
-                        const checked = localStorage.getItem(key) === 'true' ? 'checked' : '';
-                        row += `<td class="py-4 text-center">
-                            <input type="checkbox" ${checked} class="custom-check" onchange="toggle('${id}', '${col}', this)">
+                    cols.forEach(col => {
+                        const key = `${rowId}-${col}`;
+                        const isChecked = localStorage.getItem(key) === 'true';
+                        rowHtml += `<td class="p-5 text-center">
+                            <input type="checkbox" ${isChecked ? 'checked' : ''} 
+                                class="custom-check" 
+                                onchange="save('${rowId}', '${col}', this)">
                         </td>`;
                     });
                     
-                    row += `</tr>`;
-                    container.insertAdjacentHTML('beforeend', row);
-                    idx++;
+                    rowHtml += `</tr>`;
+                    body.insertAdjacentHTML('beforeend', rowHtml);
+                    count++;
                 });
             }
             updateStats();
         }
 
-        function toggle(id, col, el) {
-            localStorage.setItem(`${id}-${col}`, el.checked);
-            
+        function save(rowId, col, el) {
+            localStorage.setItem(`${rowId}-${col}`, el.checked);
             if (el.checked) {
-                const rowAll = columns.every(c => localStorage.getItem(`${id}-${c}`) === 'true');
-                if (rowAll) {
-                    document.getElementById('sigma-modal').style.display = 'flex';
-                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                confetti({ particleCount: 20, spread: 40, origin: { y: 0.9 }, colors: ['#2563eb', '#ffffff'] });
+                const allDone = cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
+                if (allDone) {
+                    document.getElementById('sigma-overlay').style.display = 'flex';
+                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
                 }
             }
             updateStats();
         }
 
         function updateStats() {
-            ['math', 'physics', 'chemistry'].forEach(sub => {
-                let totalTopics = 0;
-                Object.values(data[sub]).forEach(l => totalTopics += l.length);
-                
-                let doneChapters = 0;
-                for(let i=1; i<=totalTopics; i++) {
-                    if(columns.every(c => localStorage.getItem(`${sub}-${i}-${c}`) === 'true')) doneChapters++;
+            let gDone = 0, gTotal = 0;
+            ['math', 'physics', 'chemistry'].forEach(s => {
+                let sDone = 0, sTotal = 0;
+                Object.values(jeeData[s]).forEach(list => sTotal += list.length * cols.length);
+                for (let i = 0; i < localStorage.length; i++) {
+                    if (localStorage.key(i).startsWith(s + '-') && localStorage.getItem(localStorage.key(i)) === 'true') sDone++;
                 }
-
-                const perc = (doneChapters / totalTopics) * 100;
-                document.getElementById(`${sub}-bar`).style.width = `${perc}%`;
-                document.getElementById(`${sub}-stat`).innerText = `${doneChapters}/${totalTopics}`;
+                gDone += sDone; gTotal += sTotal;
             });
+            const totalPerc = Math.round((gDone / gTotal) * 100) || 0;
+            document.getElementById('global-bar').style.width = totalPerc + '%';
+            document.getElementById('global-perc').innerText = totalPerc + '%';
         }
 
         render();
