@@ -9,111 +9,86 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #0f172a; 
-            color: #f8fafc; 
-            overflow-x: hidden;
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; overflow: hidden; margin: 0; }
+
+        /* LOADER BOX */
+        #loader {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        .glass-card { 
-            background: rgba(30, 41, 59, 0.7); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,0.1); 
-        }
-
-        /* FIX: STICKY HEADER ALIGNMENT */
+        /* STICKY FIXES */
         .table-container {
-            overflow-x: auto;
-            overflow-y: auto;
-            max-height: 65vh; /* Adjustable height for mobile scrolling */
-            -webkit-overflow-scrolling: touch;
-            border-radius: 0 0 1rem 1rem;
+            overflow: auto; height: 60vh; border-radius: 0 0 1rem 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-        }
+        table { border-collapse: separate; border-spacing: 0; width: 100%; }
 
+        /* Header must be solid to prevent transparency overlap */
         thead th {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: #1e293b; /* Matches your card color to prevent "gaps" */
-            border-bottom: 2px solid #3b82f6;
+            position: sticky; top: 0; z-index: 100;
+            background-color: #1e293b !important; /* Solid dark blue */
+            border-bottom: 2px solid #3b82f6; padding: 12px;
         }
 
-        /* Category rows also stick just below the header */
+        /* Category rows stick below the main header */
         .category-row td {
-            position: sticky;
-            top: 48px; /* Height of the header row */
-            z-index: 90;
-            background-color: rgba(15, 23, 42, 0.95);
-            font-weight: 900;
-            color: #60a5fa;
-            font-size: 11px;
-            letter-spacing: 0.1em;
+            position: sticky; top: 45px; z-index: 90;
+            background-color: #0f172a !important; 
+            color: #60a5fa; font-weight: 900; font-size: 11px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
         }
 
-        .checkbox-custom { 
-            width: 1.6rem; 
-            height: 1.6rem; 
-            cursor: pointer; 
-            accent-color: #2563eb; 
-        }
-
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .checkbox-custom { width: 1.5rem; height: 1.5rem; cursor: pointer; accent-color: #2563eb; }
+        .tab-active { border-bottom: 4px solid #3b82f6; color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        
         #sigma-overlay { 
-            display: none; 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0,0,0,0.95); 
-            z-index: 9999; 
-            justify-content: center; 
-            align-items: center; 
-            flex-direction: column; 
-        }
-
-        .tab-active { 
-            border-bottom: 4px solid #3b82f6; 
-            color: #3b82f6; 
-            background: rgba(59, 130, 246, 0.1); 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
+            z-index: 9999; justify-content: center; align-items: center; flex-direction: column; 
         }
     </style>
 </head>
 <body class="pb-10">
 
-    <div id="sigma-overlay" onclick="this.style.display='none'">
-        <div class="animate-bounce text-8xl mb-4">🗿</div>
-        <h1 class="text-6xl font-black italic text-white text-center">SIGMA COMPLETE</h1>
-        <p class="text-blue-400 font-bold mt-2 tracking-widest uppercase">IIT BOMBAY IS CALLING</p>
+    <div id="loader">
+        <div class="text-6xl animate-bounce mb-4">🗿</div>
+        <h2 class="text-2xl font-black italic tracking-tighter text-blue-500">INITIALIZING SIGMA TRACKER...</h2>
+        <p class="text-[10px] text-gray-500 mt-2 uppercase">#PaperPhodnaHai</p>
     </div>
 
-    <header class="bg-black py-8 px-4 text-center border-b border-blue-900/50">
-        <h1 class="text-4xl md:text-7xl font-black italic tracking-tighter text-white uppercase">#PAPERPHODNAHAI</h1>
-        <div class="max-w-3xl mx-auto mt-6 px-4">
-            <div class="flex justify-between mb-2 text-[10px] font-black text-blue-400">
-                <span>TOTAL PROGRESS</span>
+    <div id="sigma-overlay" onclick="this.style.display='none'">
+        <div class="animate-bounce text-8xl mb-4">🗿</div>
+        <h1 class="text-6xl font-black italic text-white text-center">CHAPTER DECIMATED</h1>
+        <p class="text-blue-400 font-bold mt-2 tracking-widest uppercase italic">IIT BOMBAY BOUND</p>
+    </div>
+
+    <header class="bg-black py-6 px-4 text-center border-b border-blue-900/50">
+        <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter text-white uppercase italic">#PAPERPHODNAHAI</h1>
+        <div class="max-w-2xl mx-auto mt-4 px-4">
+            <div class="flex justify-between mb-1 text-[9px] font-black text-blue-400">
+                <span>TOTAL READINESS</span>
                 <span id="global-perc">0%</span>
             </div>
-            <div class="w-full bg-gray-900 h-2.5 rounded-full overflow-hidden border border-blue-900/30">
+            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
                 <div id="global-bar" class="bg-blue-600 h-full transition-all duration-1000" style="width: 0%"></div>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-4 -mt-6 grid grid-cols-3 gap-2 relative z-20">
+    <div class="container mx-auto px-4 -mt-4 grid grid-cols-3 gap-2 relative z-20">
         <div class="glass-card p-3 rounded-xl text-center border-t-2 border-blue-600">
-            <div class="text-[8px] font-black text-gray-500 uppercase">Math</div>
             <div id="math-perc" class="text-lg font-black">0%</div>
+            <div class="text-[8px] font-bold text-gray-500">MATH</div>
         </div>
         <div class="glass-card p-3 rounded-xl text-center border-t-2 border-cyan-500">
-            <div class="text-[8px] font-black text-gray-500 uppercase">Physics</div>
             <div id="physics-perc" class="text-lg font-black">0%</div>
+            <div class="text-[8px] font-bold text-gray-500">PHYSICS</div>
         </div>
         <div class="glass-card p-3 rounded-xl text-center border-t-2 border-indigo-500">
-            <div class="text-[8px] font-black text-gray-500 uppercase">Chem</div>
             <div id="chemistry-perc" class="text-lg font-black">0%</div>
+            <div class="text-[8px] font-bold text-gray-500">CHEM</div>
         </div>
     </div>
 
@@ -124,20 +99,20 @@
     </nav>
 
     <main class="container mx-auto px-4">
-        <div class="glass-card rounded-b-xl shadow-2xl overflow-hidden">
+        <div class="glass-card shadow-2xl">
             <div class="table-container">
-                <table class="w-full text-left min-w-[800px]">
+                <table class="min-w-[800px]">
                     <thead class="text-blue-400 text-[9px] font-black uppercase">
                         <tr>
-                            <th class="p-4">#</th>
-                            <th class="p-4">Topic Name</th>
-                            <th class="p-4 text-center">Status</th>
-                            <th class="p-4 text-center bg-blue-900/20">PYQ(B)</th>
-                            <th class="p-4 text-center bg-blue-900/20">PYQ(M)</th>
-                            <th class="p-4 text-center">Test</th>
-                            <th class="p-4 text-center">Rev 1</th>
-                            <th class="p-4 text-center">Rev 2</th>
-                            <th class="p-4 text-center">Form</th>
+                            <th>#</th>
+                            <th class="text-left">Topic Name</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center bg-blue-900/20">PYQ(B)</th>
+                            <th class="text-center bg-blue-900/20">PYQ(M)</th>
+                            <th class="text-center">Test</th>
+                            <th class="text-center">R1</th>
+                            <th class="text-center">R2</th>
+                            <th class="text-center">Form</th>
                         </tr>
                     </thead>
                     <tbody id="tracker-body"></tbody>
@@ -147,7 +122,10 @@
     </main>
 
     <script>
-        // Data derived from MathonGo PDF Trackers 
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1500);
+        });
+
         const fullData = {
             math: { 
                 "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], 
@@ -183,22 +161,14 @@
             const body = document.getElementById('tracker-body');
             body.innerHTML = '';
             let count = 1;
-
             for (const [cat, topics] of Object.entries(fullData[currentSub])) {
-                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9" class="p-3 border-b border-gray-800">${cat}</td></tr>`);
-                
+                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9" class="p-3 uppercase">${cat}</td></tr>`);
                 topics.forEach(topic => {
                     const rowId = `${currentSub}-${count}`;
-                    let rowHtml = `<tr class="border-b border-gray-800 hover:bg-white/[0.02]">
-                        <td class="p-4 text-gray-600 font-bold text-[10px]">${count}</td>
-                        <td class="p-4 font-bold text-gray-200 text-xs">${topic}</td>`;
-                    
+                    let rowHtml = `<tr class="border-b border-gray-800"><td class="p-4 text-gray-600 font-bold text-[10px]">${count}</td><td class="p-4 font-bold text-gray-200 text-xs">${topic}</td>`;
                     cols.forEach(col => {
                         const checkId = `${rowId}-${col}`;
-                        const isChecked = localStorage.getItem(checkId) === 'true';
-                        rowHtml += `<td class="p-4 text-center">
-                            <input type="checkbox" ${isChecked ? 'checked' : ''} class="checkbox-custom" onchange="save('${rowId}', '${col}', this)">
-                        </td>`;
+                        rowHtml += `<td class="p-4 text-center"><input type="checkbox" ${localStorage.getItem(checkId) === 'true' ? 'checked' : ''} class="checkbox-custom" onchange="save('${rowId}', '${col}', this)"></td>`;
                     });
                     body.insertAdjacentHTML('beforeend', rowHtml + `</tr>`);
                     count++;
@@ -211,8 +181,7 @@
             localStorage.setItem(`${rowId}-${col}`, el.checked);
             if (el.checked) {
                 confetti({ particleCount: 20, spread: 40, origin: { y: 0.8 } });
-                const rowAll = cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
-                if (rowAll) {
+                if (cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true')) {
                     document.getElementById('sigma-overlay').style.display = 'flex';
                     confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
                 }
@@ -221,20 +190,17 @@
         }
 
         function updateStats() {
-            const subs = ['math', 'physics', 'chemistry'];
             let gDone = 0, gTotal = 0;
-            subs.forEach(s => {
+            ['math', 'physics', 'chemistry'].forEach(s => {
                 let sDone = 0, sTotal = 0;
-                Object.values(fullData[s]).forEach(list => sTotal += list.length * cols.length);
+                Object.values(fullData[s]).forEach(l => sTotal += l.length * cols.length);
                 for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith(s + '-') && localStorage.getItem(key) === 'true') sDone++;
+                    if (localStorage.key(i).startsWith(s + '-') && localStorage.getItem(localStorage.key(i)) === 'true') sDone++;
                 }
-                const perc = Math.round((sDone / sTotal) * 100) || 0;
-                document.getElementById(`${s}-perc`).innerText = perc + '%';
+                document.getElementById(`${s}-perc`).innerText = (Math.round((sDone/sTotal)*100)||0) + '%';
                 gDone += sDone; gTotal += sTotal;
             });
-            const total = Math.round((gDone / gTotal) * 100) || 0;
+            const total = Math.round((gDone/gTotal)*100)||0;
             document.getElementById('global-bar').style.width = total + '%';
             document.getElementById('global-perc').innerText = total + '%';
         }
