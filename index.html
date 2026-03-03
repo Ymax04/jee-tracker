@@ -8,89 +8,80 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #f8fafc; overflow-x: hidden; }
-        
-        .glass-card { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .category-row { background-color: #1e293b; color: #60a5fa; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .checkbox-custom { width: 1.5rem; height: 1.5rem; cursor: pointer; accent-color: #2563eb; }
         .tab-active { border-bottom: 4px solid #3b82f6; color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
-        
-        /* Fixed Clickable Checkbox */
-        .custom-check {
-            width: 1.4rem;
-            height: 1.4rem;
-            accent-color: #2563eb;
-            cursor: pointer;
-            position: relative;
-            z-index: 20;
-        }
-
-        #sigma-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        /* Mobile Optimization */
-        @media (max-width: 768px) {
-            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .min-w-mobile { min-w: 800px; }
-        }
+        .sigma-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; text-align: center; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        tr:hover { background: rgba(255,255,255,0.03); }
     </style>
 </head>
 <body class="pb-20">
 
-    <div id="sigma-overlay" onclick="this.style.display='none'">
+    <div id="sigma-overlay" class="sigma-overlay p-6" onclick="this.style.display='none'">
         <div class="animate-bounce text-8xl mb-4">🗿</div>
-        <h1 class="text-7xl font-black italic text-white tracking-tighter">CHAPTER COMPLETED</h1>
-        <p class="text-2xl font-bold text-blue-500 mt-4 uppercase tracking-[0.3em]">SIGMA BOOM</p>
-        <p class="mt-8 text-gray-500 animate-pulse text-sm">CLICK TO CONTINUE THE GRIND</p>
+        <h1 class="text-7xl font-black italic text-white tracking-tighter">SIGMA CHAPTER COMPLETE</h1>
+        <p class="text-2xl font-bold text-blue-400 mt-4 uppercase tracking-widest">IIT BOMBAY IS CALLING</p>
+        <p class="mt-8 text-gray-500 animate-pulse text-sm text-white">CLICK ANYWHERE TO CONTINUE THE GRIND</p>
     </div>
 
-    <header class="bg-black border-b border-blue-900/30 py-10 px-4 text-center">
-        <div class="container mx-auto">
-            <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter text-white mb-2 uppercase">#PaperPhodnaHai</h1>
-            <p class="text-blue-500 font-bold tracking-[0.4em] text-xs md:text-sm">IIT BOMBAY IS THE ONLY OPTION</p>
+    <header class="bg-black border-b border-blue-900/50 py-12 px-4 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none text-9xl font-black italic flex items-center justify-center">JEE 2026</div>
+        <div class="container mx-auto relative z-10">
+            <h1 class="text-6xl md:text-8xl font-black italic tracking-tighter text-white mb-2">#PAPERPHODNAHAI</h1>
+            <p class="text-xl text-blue-500 font-bold tracking-[0.3em] uppercase">YOU CAN DO IT </p>
             
-            <div class="max-w-2xl mx-auto mt-8 px-4">
-                <div class="flex justify-between mb-2 text-[10px] font-black text-blue-400 tracking-widest">
-                    <span>OVERALL PROGRESS</span>
+            <div class="max-w-3xl mx-auto mt-10 px-4">
+                <div class="flex justify-between mb-2 text-xs font-black text-blue-400 tracking-widest">
+                    <span>OVERALL JEE READINESS</span>
                     <span id="global-perc">0%</span>
                 </div>
-                <div class="w-full bg-zinc-900 rounded-full h-3 border border-zinc-800">
-                    <div id="global-bar" class="bg-blue-600 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(37,99,235,0.5)]" style="width: 0%"></div>
+                <div class="w-full bg-gray-900 rounded-full h-4 border border-blue-900/50 p-0.5">
+                    <div id="global-bar" class="bg-gradient-to-r from-blue-700 via-blue-400 to-cyan-400 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
         </div>
     </header>
 
-    <nav class="container mx-auto px-4 mt-8">
-        <div class="flex bg-zinc-900/50 rounded-xl overflow-hidden border border-zinc-800">
-            <button onclick="switchSub('math')" id="tab-math" class="flex-1 py-4 font-black text-[10px] md:text-xs tracking-widest tab-active">MATH</button>
-            <button onclick="switchSub('physics')" id="nav-physics" class="flex-1 py-4 font-black text-[10px] md:text-xs tracking-widest text-zinc-500">PHYSICS</button>
-            <button onclick="switchSub('chemistry')" id="nav-chemistry" class="flex-1 py-4 font-black text-[10px] md:text-xs tracking-widest text-zinc-500">CHEMISTRY</button>
+    <section class="container mx-auto px-4 -mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-20">
+        <div class="glass-card p-6 rounded-2xl shadow-2xl border-t-4 border-blue-600">
+            <h3 class="font-black text-gray-400 text-xs tracking-widest">MATHEMATICS</h3>
+            <div class="text-4xl font-black text-white mt-1" id="math-perc">0%</div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl shadow-2xl border-t-4 border-cyan-500">
+            <h3 class="font-black text-gray-400 text-xs tracking-widest">PHYSICS</h3>
+            <div class="text-4xl font-black text-white mt-1" id="physics-perc">0%</div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl shadow-2xl border-t-4 border-indigo-500">
+            <h3 class="font-black text-gray-400 text-xs tracking-widest">CHEMISTRY</h3>
+            <div class="text-4xl font-black text-white mt-1" id="chemistry-perc">0%</div>
+        </div>
+    </section>
+
+    <nav class="container mx-auto px-4 mt-12">
+        <div class="flex bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800">
+            <button onclick="switchTab('math')" id="tab-math" class="flex-1 py-5 font-black text-sm tracking-widest transition-all tab-active">MATHEMATICS</button>
+            <button onclick="switchTab('physics')" id="tab-physics" class="flex-1 py-5 font-black text-sm tracking-widest transition-all text-gray-500">PHYSICS</button>
+            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="flex-1 py-5 font-black text-sm tracking-widest transition-all text-gray-500">CHEMISTRY</button>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 mt-6 relative z-10">
-        <div class="glass-card rounded-2xl overflow-hidden shadow-2xl border border-zinc-800">
-            <div class="table-container">
-                <table class="w-full text-left min-w-[900px]">
+    <main class="container mx-auto px-4 mt-8">
+        <div class="bg-gray-900/80 rounded-2xl border border-gray-800 overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
                     <thead>
-                        <tr class="bg-black text-blue-400 text-[9px] font-black uppercase tracking-widest">
-                            <th class="p-5">#</th>
-                            <th class="p-5 w-1/4">Topic Name</th>
-                            <th class="p-5 text-center">Status</th>
-                            <th class="p-5 text-center bg-blue-900/10 border-x border-zinc-800">PYQ (Beg)</th>
-                            <th class="p-5 text-center bg-blue-900/10 border-r border-zinc-800">PYQ (Mod)</th>
-                            <th class="p-5 text-center">Test</th>
-                            <th class="p-5 text-center">Rev 1</th>
-                            <th class="p-5 text-center">Rev 2</th>
-                            <th class="p-5 text-center">Formula</th>
+                        <tr class="bg-black text-blue-400">
+                            <th class="p-5 border-b border-gray-800 text-[10px] font-black uppercase">#</th>
+                            <th class="p-5 border-b border-gray-800 text-[10px] font-black uppercase w-1/4">Topic Name</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase">Status</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase bg-blue-900/20">PYQ (Beg)</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase bg-blue-900/20">PYQ (Mod)</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase">Test</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase">Rev 1</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase">Rev 2</th>
+                            <th class="p-5 border-b border-gray-800 text-center text-[10px] font-black uppercase">Formula</th>
                         </tr>
                     </thead>
                     <tbody id="tracker-body"></tbody>
@@ -100,11 +91,11 @@
     </main>
 
     <script>
-        const jeeData = {
+        const fullData = {
             math: {
                 "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"],
                 "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"],
-                "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"],
+                "Category 3": ["Continuity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"],
                 "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"]
             },
             physics: {
@@ -117,42 +108,40 @@
                 "Category 1": ["Biomolecules", "Polymers", "P Block Elements", "Environmental Chemistry", "S Block & Hydrogen", "Mole Concept", "Surface Chemistry", "Atomic Structure", "Electrochemistry", "Metallurgy", "Solutions"],
                 "Category 2": ["Coordination Compounds", "Chemical Thermodynamics", "General Organic Chemistry", "Hydrocarbons", "Haloalkanes", "Aldehydes And Ketones", "Amines", "Chemical Kinetics", "Chemical Bonding", "d and f block elements", "Haloarenes And Phenols"],
                 "Category 3": ["Periodicity", "Solid State", "Gaseous State", "Purification Of Organic Compounds", "Chemistry in Everyday Life", "Chemical Equilibrium"],
-                "Category 4": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "lonic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"]
+                "Category 4": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "Ionic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"]
             }
         };
 
         let currentSub = 'math';
-        const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fm'];
+        const cols = ['status', 'pyq_beg', 'pyq_mod', 'test', 'rev1', 'rev2', 'formula'];
 
-        function switchSub(sub) {
+        function switchTab(sub) {
             currentSub = sub;
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active', 'text-blue-600'));
-            const btn = (sub === 'math') ? 'tab-math' : (sub === 'physics' ? 'nav-physics' : 'nav-chemistry');
-            document.getElementById(btn).classList.add('tab-active');
-            render();
+            document.getElementById(`tab-${sub}`).classList.add('tab-active');
+            renderTable();
         }
 
-        function render() {
+        function renderTable() {
             const body = document.getElementById('tracker-body');
             body.innerHTML = '';
             let count = 1;
 
-            for (const [cat, topics] of Object.entries(jeeData[currentSub])) {
-                body.insertAdjacentHTML('beforeend', `<tr class="bg-zinc-900/30 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]"><td colspan="9" class="p-4 border-y border-zinc-800/50">${cat}</td></tr>`);
+            for (const [cat, topics] of Object.entries(fullData[currentSub])) {
+                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9" class="p-4 border-b border-gray-800 text-[11px] font-black">${cat} </td></tr>`);
                 
-                topics.forEach(name => {
+                topics.forEach(topic => {
                     const rowId = `${currentSub}-${count}`;
-                    let rowHtml = `<tr class="border-b border-zinc-800/50 group hover:bg-white/[0.02] transition-colors">
-                        <td class="p-5 text-zinc-700 font-bold text-xs">${count}</td>
-                        <td class="p-5 font-bold text-zinc-200 text-sm">${name}</td>`;
+                    let rowHtml = `<tr class="border-b border-gray-800 transition-colors" id="row-${rowId}">
+                        <td class="p-5 text-gray-600 font-bold text-xs">${count}</td>
+                        <td class="p-5 font-bold text-gray-200 text-sm">${topic} </td>`;
                     
                     cols.forEach(col => {
-                        const key = `${rowId}-${col}`;
-                        const isChecked = localStorage.getItem(key) === 'true';
+                        const checkId = `${rowId}-${col}`;
+                        const checked = localStorage.getItem(checkId) === 'true' ? 'checked' : '';
                         rowHtml += `<td class="p-5 text-center">
-                            <input type="checkbox" ${isChecked ? 'checked' : ''} 
-                                class="custom-check" 
-                                onchange="save('${rowId}', '${col}', this)">
+                            <input type="checkbox" ${checked} class="checkbox-custom" 
+                                onchange="handleAction('${rowId}', '${col}', this)">
                         </td>`;
                     });
                     
@@ -164,35 +153,47 @@
             updateStats();
         }
 
-        function save(rowId, col, el) {
+        function handleAction(rowId, col, el) {
             localStorage.setItem(`${rowId}-${col}`, el.checked);
+            
             if (el.checked) {
-                confetti({ particleCount: 20, spread: 40, origin: { y: 0.9 }, colors: ['#2563eb', '#ffffff'] });
-                const allDone = cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
-                if (allDone) {
+                // Individual check burst
+                confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 }, colors: ['#2563eb', '#ffffff'] });
+                
+                // Check for Sigma Row Completion
+                const rowAllDone = cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
+                if (rowAllDone) {
                     document.getElementById('sigma-overlay').style.display = 'flex';
-                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+                    confetti({ particleCount: 250, spread: 160, origin: { y: 0.5 } });
                 }
             }
             updateStats();
         }
 
         function updateStats() {
+            const subs = ['math', 'physics', 'chemistry'];
             let gDone = 0, gTotal = 0;
-            ['math', 'physics', 'chemistry'].forEach(s => {
-                let sDone = 0, sTotal = 0;
-                Object.values(jeeData[s]).forEach(list => sTotal += list.length * cols.length);
+
+            subs.forEach(s => {
+                let sDone = 0, sCount = 0;
+                Object.values(fullData[s]).forEach(list => sCount += list.length * cols.length);
+                
                 for (let i = 0; i < localStorage.length; i++) {
-                    if (localStorage.key(i).startsWith(s + '-') && localStorage.getItem(localStorage.key(i)) === 'true') sDone++;
+                    const key = localStorage.key(i);
+                    if (key.startsWith(s + '-') && localStorage.getItem(key) === 'true') sDone++;
                 }
-                gDone += sDone; gTotal += sTotal;
+
+                const perc = Math.round((sDone / sCount) * 100) || 0;
+                document.getElementById(`${s}-perc`).innerText = perc + '%';
+                gDone += sDone; gTotal += sCount;
             });
+
             const totalPerc = Math.round((gDone / gTotal) * 100) || 0;
             document.getElementById('global-bar').style.width = totalPerc + '%';
             document.getElementById('global-perc').innerText = totalPerc + '%';
         }
 
-        render();
+        renderTable();
     </script>
 </body>
 </html>
