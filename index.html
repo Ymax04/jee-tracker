@@ -22,20 +22,38 @@
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* STICKY HEADER LOGIC */
+        /* FIX: STICKY HEADER ALIGNMENT */
+        .table-container {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 65vh; /* Adjustable height for mobile scrolling */
+            -webkit-overflow-scrolling: touch;
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
         thead th {
             position: sticky;
             top: 0;
-            z-index: 50;
-            background-color: #000; /* Solid black so topics don't bleed through */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 100;
+            background-color: #1e293b; /* Matches your card color to prevent "gaps" */
+            border-bottom: 2px solid #3b82f6;
         }
 
+        /* Category rows also stick just below the header */
         .category-row td {
             position: sticky;
-            top: 59px; /* Sits right below the main header */
-            z-index: 40;
+            top: 48px; /* Height of the header row */
+            z-index: 90;
             background-color: rgba(15, 23, 42, 0.95);
+            font-weight: 900;
+            color: #60a5fa;
+            font-size: 11px;
+            letter-spacing: 0.1em;
         }
 
         .checkbox-custom { 
@@ -43,12 +61,6 @@
             height: 1.6rem; 
             cursor: pointer; 
             accent-color: #2563eb; 
-        }
-
-        .table-container {
-            overflow-x: auto;
-            max-height: 70vh; /* Limits height so you can actually use the sticky effect */
-            -webkit-overflow-scrolling: touch;
         }
 
         #sigma-overlay { 
@@ -69,7 +81,7 @@
         }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-10">
 
     <div id="sigma-overlay" onclick="this.style.display='none'">
         <div class="animate-bounce text-8xl mb-4">🗿</div>
@@ -77,55 +89,55 @@
         <p class="text-blue-400 font-bold mt-2 tracking-widest uppercase">IIT BOMBAY IS CALLING</p>
     </div>
 
-    <header class="bg-black py-10 px-4 text-center border-b border-blue-900/50">
-        <h1 class="text-5xl md:text-8xl font-black italic tracking-tighter text-white uppercase italic">#PAPERPHODNAHAI</h1>
-        <div class="max-w-3xl mx-auto mt-8 px-4">
-            <div class="flex justify-between mb-2 text-[10px] font-black text-blue-400 tracking-widest">
+    <header class="bg-black py-8 px-4 text-center border-b border-blue-900/50">
+        <h1 class="text-4xl md:text-7xl font-black italic tracking-tighter text-white uppercase">#PAPERPHODNAHAI</h1>
+        <div class="max-w-3xl mx-auto mt-6 px-4">
+            <div class="flex justify-between mb-2 text-[10px] font-black text-blue-400">
                 <span>TOTAL PROGRESS</span>
                 <span id="global-perc">0%</span>
             </div>
-            <div class="w-full bg-gray-900 h-3 rounded-full border border-blue-900/30 overflow-hidden">
+            <div class="w-full bg-gray-900 h-2.5 rounded-full overflow-hidden border border-blue-900/30">
                 <div id="global-bar" class="bg-blue-600 h-full transition-all duration-1000" style="width: 0%"></div>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-4 -mt-8 grid grid-cols-3 gap-3 relative z-20">
-        <div class="glass-card p-4 rounded-xl text-center border-t-4 border-blue-600">
-            <div class="text-[9px] font-black text-gray-500">MATH</div>
-            <div id="math-perc" class="text-xl font-black">0%</div>
+    <div class="container mx-auto px-4 -mt-6 grid grid-cols-3 gap-2 relative z-20">
+        <div class="glass-card p-3 rounded-xl text-center border-t-2 border-blue-600">
+            <div class="text-[8px] font-black text-gray-500 uppercase">Math</div>
+            <div id="math-perc" class="text-lg font-black">0%</div>
         </div>
-        <div class="glass-card p-4 rounded-xl text-center border-t-4 border-cyan-500">
-            <div class="text-[9px] font-black text-gray-500">PHYSICS</div>
-            <div id="physics-perc" class="text-xl font-black">0%</div>
+        <div class="glass-card p-3 rounded-xl text-center border-t-2 border-cyan-500">
+            <div class="text-[8px] font-black text-gray-500 uppercase">Physics</div>
+            <div id="physics-perc" class="text-lg font-black">0%</div>
         </div>
-        <div class="glass-card p-4 rounded-xl text-center border-t-4 border-indigo-500">
-            <div class="text-[9px] font-black text-gray-500">CHEMISTRY</div>
-            <div id="chemistry-perc" class="text-xl font-black">0%</div>
+        <div class="glass-card p-3 rounded-xl text-center border-t-2 border-indigo-500">
+            <div class="text-[8px] font-black text-gray-500 uppercase">Chem</div>
+            <div id="chemistry-perc" class="text-lg font-black">0%</div>
         </div>
     </div>
 
-    <nav class="container mx-auto px-4 mt-8 flex gap-1">
-        <button onclick="switchTab('math')" id="tab-math" class="flex-1 py-4 glass-card rounded-t-xl font-black text-[10px] tab-active">MATH</button>
-        <button onclick="switchTab('physics')" id="tab-physics" class="flex-1 py-4 glass-card rounded-t-xl font-black text-[10px] text-gray-500">PHYSICS</button>
-        <button onclick="switchTab('chemistry')" id="tab-chemistry" class="flex-1 py-4 glass-card rounded-t-xl font-black text-[10px] text-gray-500">CHEMISTRY</button>
+    <nav class="container mx-auto px-4 mt-6 flex gap-1">
+        <button onclick="switchTab('math')" id="tab-math" class="flex-1 py-3 glass-card rounded-t-xl font-black text-[10px] tab-active">MATH</button>
+        <button onclick="switchTab('physics')" id="tab-physics" class="flex-1 py-3 glass-card rounded-t-xl font-black text-[10px] text-gray-500">PHYSICS</button>
+        <button onclick="switchTab('chemistry')" id="tab-chemistry" class="flex-1 py-3 glass-card rounded-t-xl font-black text-[10px] text-gray-500">CHEMISTRY</button>
     </nav>
 
     <main class="container mx-auto px-4">
-        <div class="glass-card rounded-b-2xl overflow-hidden shadow-2xl">
+        <div class="glass-card rounded-b-xl shadow-2xl overflow-hidden">
             <div class="table-container">
-                <table class="w-full text-left min-w-[850px]">
-                    <thead class="text-blue-400 text-[10px] font-black uppercase tracking-tighter">
+                <table class="w-full text-left min-w-[800px]">
+                    <thead class="text-blue-400 text-[9px] font-black uppercase">
                         <tr>
-                            <th class="p-5">#</th>
-                            <th class="p-5 w-1/4">Topic Name </th>
-                            <th class="p-5 text-center">Status</th>
-                            <th class="p-5 text-center bg-blue-900/20">PYQ(B)</th>
-                            <th class="p-5 text-center bg-blue-900/20">PYQ(M)</th>
-                            <th class="p-5 text-center">Test</th>
-                            <th class="p-5 text-center">Rev 1</th>
-                            <th class="p-5 text-center">Rev 2</th>
-                            <th class="p-5 text-center">Form</th>
+                            <th class="p-4">#</th>
+                            <th class="p-4">Topic Name</th>
+                            <th class="p-4 text-center">Status</th>
+                            <th class="p-4 text-center bg-blue-900/20">PYQ(B)</th>
+                            <th class="p-4 text-center bg-blue-900/20">PYQ(M)</th>
+                            <th class="p-4 text-center">Test</th>
+                            <th class="p-4 text-center">Rev 1</th>
+                            <th class="p-4 text-center">Rev 2</th>
+                            <th class="p-4 text-center">Form</th>
                         </tr>
                     </thead>
                     <tbody id="tracker-body"></tbody>
@@ -135,6 +147,7 @@
     </main>
 
     <script>
+        // Data derived from MathonGo PDF Trackers 
         const fullData = {
             math: { 
                 "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], 
@@ -172,18 +185,18 @@
             let count = 1;
 
             for (const [cat, topics] of Object.entries(fullData[currentSub])) {
-                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9" class="p-4 text-[11px] font-black text-blue-500 uppercase tracking-widest border-b border-gray-800">${cat} </td></tr>`);
+                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9" class="p-3 border-b border-gray-800">${cat}</td></tr>`);
                 
                 topics.forEach(topic => {
                     const rowId = `${currentSub}-${count}`;
                     let rowHtml = `<tr class="border-b border-gray-800 hover:bg-white/[0.02]">
-                        <td class="p-5 text-gray-600 font-bold text-xs">${count}</td>
-                        <td class="p-5 font-bold text-gray-200 text-sm">${topic} </td>`;
+                        <td class="p-4 text-gray-600 font-bold text-[10px]">${count}</td>
+                        <td class="p-4 font-bold text-gray-200 text-xs">${topic}</td>`;
                     
                     cols.forEach(col => {
                         const checkId = `${rowId}-${col}`;
                         const isChecked = localStorage.getItem(checkId) === 'true';
-                        rowHtml += `<td class="p-5 text-center">
+                        rowHtml += `<td class="p-4 text-center">
                             <input type="checkbox" ${isChecked ? 'checked' : ''} class="checkbox-custom" onchange="save('${rowId}', '${col}', this)">
                         </td>`;
                     });
@@ -197,11 +210,11 @@
         function save(rowId, col, el) {
             localStorage.setItem(`${rowId}-${col}`, el.checked);
             if (el.checked) {
-                confetti({ particleCount: 25, spread: 50, origin: { y: 0.8 } });
+                confetti({ particleCount: 20, spread: 40, origin: { y: 0.8 } });
                 const rowAll = cols.every(c => localStorage.getItem(`${rowId}-${c}`) === 'true');
                 if (rowAll) {
                     document.getElementById('sigma-overlay').style.display = 'flex';
-                    confetti({ particleCount: 200, spread: 150, origin: { y: 0.5 } });
+                    confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
                 }
             }
             updateStats();
@@ -214,7 +227,8 @@
                 let sDone = 0, sTotal = 0;
                 Object.values(fullData[s]).forEach(list => sTotal += list.length * cols.length);
                 for (let i = 0; i < localStorage.length; i++) {
-                    if (localStorage.key(i).startsWith(s + '-') && localStorage.getItem(localStorage.key(i)) === 'true') sDone++;
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith(s + '-') && localStorage.getItem(key) === 'true') sDone++;
                 }
                 const perc = Math.round((sDone / sTotal) * 100) || 0;
                 document.getElementById(`${s}-perc`).innerText = perc + '%';
