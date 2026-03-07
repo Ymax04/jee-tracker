@@ -19,10 +19,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ENHANCED LOADER */
+        /* PREMIUM LOADER */
         #loader {
             position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            display: flex; justify-content: center; align-items: center;
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .loader-text { 
@@ -30,14 +30,14 @@
             letter-spacing: 5px; font-weight: 300; opacity: 0.6;
             animation: pulse 2s infinite;
         }
+        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
 
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 0.8; } 100% { opacity: 0.3; } }
-
-        /* DASHBOARD */
-        .progress-sub { color: #666; font-size: 11px; margin-bottom: 5px; }
+        /* HEADER & PROGRESS */
+        .progress-sub { color: #555; font-size: 11px; margin-bottom: 5px; }
         .progress-bar-bg { background: #111; height: 1px; width: 100%; }
         .progress-bar-fill { background: #ffffff; height: 1px; transition: width 0.8s ease; }
 
+        /* TABLE & STICKY NAV */
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         table { border-collapse: separate; border-spacing: 0; width: 100%; }
 
@@ -54,7 +54,7 @@
         }
 
         .topic-col { text-align: left !important; min-width: 220px; }
-        tbody td { padding: 15px 10px; border-bottom: 1px solid #0a0a0a; font-size: 13px; color: #999; text-align: center; }
+        tbody td { padding: 15px 10px; border-bottom: 1px solid #0a0a0a; font-size: 13px; color: #888; text-align: center; }
 
         .category-row td {
             background-color: #000; color: #222; font-size: 10px;
@@ -62,6 +62,7 @@
             text-align: left; border: none;
         }
 
+        /* CHECKBOX */
         .cb {
             appearance: none; width: 16px; height: 16px; border: 1px solid #222;
             border-radius: 2px; cursor: pointer; transition: 0.2s; position: relative;
@@ -73,18 +74,15 @@
             border-width: 0 2px 2px 0; transform: rotate(45deg);
         }
 
-        .tab-btn { color: #444; font-size: 11px; font-weight: 500; padding: 15px 20px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .tab-btn.active { color: #fff; border-bottom: 1px solid #fff; }
-
-        /* MOCK HISTORY STYLES */
+        /* HISTORY COMPONENTS */
         .mock-input {
-            background: transparent; border-bottom: 1px solid #222; color: #fff;
-            padding: 10px; font-size: 12px; width: 100%; text-align: center;
-            outline: none; transition: border-color 0.3s;
+            background: transparent; border-bottom: 1px solid #111; color: #fff;
+            padding: 12px; font-size: 13px; width: 100%; text-align: center;
+            outline: none; transition: 0.3s;
         }
-        .mock-input:focus { border-color: #ffffff; }
-        .history-card { border: 1px solid #111; padding: 20px; margin-top: 20px; background: #000; }
-        .del-btn { color: #444; font-size: 10px; cursor: pointer; transition: 0.3s; }
+        .mock-input:focus { border-color: #444; }
+        .history-card { border: 1px solid #0a0a0a; padding: 20px; margin-top: 20px; background: #000; }
+        .del-btn { color: #333; font-size: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .del-btn:hover { color: #ff4d4d; }
     </style>
 </head>
@@ -103,7 +101,7 @@
 
         <div id="top-progress-bars" class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-                <div class="flex justify-between progress-sub"><span>Math</span><span id="math-perc">0%</span></div>
+                <div class="flex justify-between progress-sub"><span>Mathematics</span><span id="math-perc">0%</span></div>
                 <div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill" style="width: 0%"></div></div>
             </div>
             <div>
@@ -119,16 +117,16 @@
 
     <div id="section-tracker">
         <nav class="sticky-nav flex justify-center gap-4 md:gap-12 max-w-5xl mx-auto px-4">
-            <button onclick="switchTab('math')" id="tab-math" class="tab-btn active">Mathematics</button>
-            <button onclick="switchTab('physics')" id="tab-physics" class="tab-btn">Physics</button>
-            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="tab-btn">Chemistry</button>
+            <button onclick="switchTab('math')" id="tab-math" class="tab-btn active text-[11px] text-white uppercase py-4 border-b border-white">Mathematics</button>
+            <button onclick="switchTab('physics')" id="tab-physics" class="tab-btn text-[11px] text-gray-600 uppercase py-4">Physics</button>
+            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="tab-btn text-[11px] text-gray-600 uppercase py-4">Chemistry</button>
         </nav>
-        <main class="max-w-5xl mx-auto px-4">
+        <main class="max-w-5xl mx-auto px-4 mt-4">
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th class="w-10">#</th><th class="topic-col">Topic Name</th><th>Status</th><th>PYQ(B)</th><th>PYQ(M)</th><th>Test</th><th>R1</th><th>R2</th><th>Form</th>
+                            <th class="w-10">#</th><th class="topic-col">Topic</th><th>Status</th><th>PYQ(B)</th><th>PYQ(M)</th><th>Test</th><th>R1</th><th>R2</th><th>Form</th>
                         </tr>
                     </thead>
                     <tbody id="tracker-body"></tbody>
@@ -138,18 +136,18 @@
     </div>
 
     <div id="section-history" class="hidden max-w-5xl mx-auto px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 items-end">
-            <div><label class="text-[9px] text-gray-600 uppercase mb-2 block">Math</label><input type="number" id="m-score" class="mock-input"></div>
-            <div><label class="text-[9px] text-gray-600 uppercase mb-2 block">Physics</label><input type="number" id="p-score" class="mock-input"></div>
-            <div><label class="text-[9px] text-gray-600 uppercase mb-2 block">Chemistry</label><input type="number" id="c-score" class="mock-input"></div>
-            <button onclick="addMockResult()" class="text-[10px] py-3 border border-gray-800 hover:border-white transition uppercase tracking-widest">Record</button>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 items-end">
+            <div><input type="number" id="m-score" placeholder="MATH" class="mock-input"></div>
+            <div><input type="number" id="p-score" placeholder="PHYSICS" class="mock-input"></div>
+            <div><input type="number" id="c-score" placeholder="CHEMISTRY" class="mock-input"></div>
+            <button onclick="addMockResult()" id="record-btn" class="text-[10px] py-3 border border-gray-900 hover:border-white transition uppercase tracking-widest bg-white text-black font-bold">Record Score</button>
         </div>
 
         <div class="history-card">
-            <canvas id="scoreChart" height="120"></canvas>
+            <canvas id="scoreChart" height="140"></canvas>
         </div>
 
-        <div class="mt-12 table-wrapper">
+        <div class="mt-16 table-wrapper">
             <table>
                 <thead>
                     <tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th><th>Action</th></tr>
@@ -160,7 +158,6 @@
     </div>
 
     <script>
-        // Data derived from MathonGo PDF Trackers
         const fullData = {
             math: { "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"] },
             physics: { "Category 1": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], "Category 2": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], "Category 3": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], "Category 4": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"] },
@@ -172,24 +169,26 @@
         let mockResults = JSON.parse(localStorage.getItem('mockHistory') || '[]');
 
         function hideLoader() { 
-            const loader = document.getElementById('loader');
-            loader.style.opacity = '0'; 
-            setTimeout(() => { loader.style.display = 'none'; }, 800); 
+            const l = document.getElementById('loader');
+            l.style.opacity = '0'; 
+            setTimeout(() => { l.style.display = 'none'; }, 800); 
         }
-        window.addEventListener('load', () => setTimeout(hideLoader, 500)); 
+        window.addEventListener('load', () => setTimeout(hideLoader, 600));
 
         function showSection(sec) {
             document.getElementById('section-tracker').classList.toggle('hidden', sec !== 'tracker');
             document.getElementById('section-history').classList.toggle('hidden', sec !== 'history');
-            document.getElementById('nav-focus').className = (sec === 'tracker') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer';
-            document.getElementById('nav-history').className = (sec === 'history') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer';
+            document.getElementById('nav-focus').className = (sec === 'tracker') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition';
+            document.getElementById('nav-history').className = (sec === 'history') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition';
             if(sec === 'history') renderHistory();
         }
 
         function switchTab(sub) {
             currentSub = sub;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${sub}`).classList.add('active');
+            ['math', 'physics', 'chemistry'].forEach(s => {
+                const b = document.getElementById(`tab-${s}`);
+                b.className = (s === sub) ? 'tab-btn text-[11px] text-white uppercase py-4 border-b border-white' : 'tab-btn text-[11px] text-gray-600 uppercase py-4';
+            });
             renderTable();
         }
 
@@ -220,8 +219,8 @@
                 let done = 0, total = 0;
                 Object.values(fullData[s]).forEach(l => total += l.length * cols.length);
                 for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith(s + '-') && localStorage.getItem(key) === 'true') done++;
+                    const k = localStorage.key(i);
+                    if (k && k.startsWith(s + '-') && localStorage.getItem(k) === 'true') done++;
                 }
                 const p = Math.round((done / total) * 100) || 0;
                 document.getElementById(`${s}-perc`).innerText = p + '%';
@@ -230,20 +229,25 @@
             });
         }
 
+        // --- FIXED HISTORY LOGIC ---
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
             const p = parseInt(document.getElementById('p-score').value) || 0;
             const c = parseInt(document.getElementById('c-score').value) || 0;
             const total = m + p + c;
             const date = new Date().toLocaleDateString('en-GB');
-            mockResults.push({ m, p, c, total, date });
+
+            mockResults.push({ m: m, p: p, c: c, total: total, date: date });
             localStorage.setItem('mockHistory', JSON.stringify(mockResults));
+            
             renderHistory();
-            document.getElementById('m-score').value = ''; document.getElementById('p-score').value = ''; document.getElementById('c-score').value = '';
+            
+            // Clear inputs
+            ['m-score', 'p-score', 'c-score'].forEach(id => document.getElementById(id).value = '');
         }
 
-        function deleteMock(index) {
-            mockResults.splice(index, 1);
+        function deleteMock(idx) {
+            mockResults.splice(idx, 1);
             localStorage.setItem('mockHistory', JSON.stringify(mockResults));
             renderHistory();
         }
@@ -252,12 +256,22 @@
         function renderHistory() {
             const body = document.getElementById('mock-history-body');
             body.innerHTML = '';
-            const labels = [], data = [];
+            const labels = [], chartData = [];
 
+            // IMPORTANT: Loop and use exact keys from the object
             mockResults.forEach((res, i) => {
-                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td style="color:#fff">${res.total}</td><td>${res.date}</td><td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td></tr>`);
+                const row = `<tr>
+                    <td>${i + 1}</td>
+                    <td>${res.m}</td>
+                    <td>${res.p}</td>
+                    <td>${res.c}</td>
+                    <td style="color:#fff; font-weight:600;">${res.total}</td>
+                    <td>${res.date}</td>
+                    <td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td>
+                </tr>`;
+                body.insertAdjacentHTML('afterbegin', row);
                 labels.push(`#${i+1}`);
-                data.push(res.total);
+                chartData.push(res.total);
             });
 
             if (myChart) myChart.destroy();
@@ -267,23 +281,19 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Progress',
-                        data: data,
+                        data: chartData,
                         borderColor: '#ffffff',
                         borderWidth: 1.5,
-                        pointBackgroundColor: '#000',
-                        pointBorderColor: '#fff',
+                        pointBackgroundColor: '#fff',
                         pointRadius: 3,
-                        tension: 0.2,
-                        fill: false
+                        tension: 0.2
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     scales: {
-                        x: { display: true, grid: { display: false }, ticks: { color: '#333', font: { size: 9 } } },
-                        y: { display: true, grid: { color: '#0a0a0a' }, ticks: { color: '#333', font: { size: 9 } } }
+                        x: { grid: { display: false }, ticks: { color: '#333', font: { size: 9 } } },
+                        y: { grid: { color: '#0a0a0a' }, ticks: { color: '#333', font: { size: 9 } } }
                     },
                     plugins: { legend: { display: false } }
                 }
