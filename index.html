@@ -41,14 +41,8 @@
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         table { border-collapse: separate; border-spacing: 0; width: 100%; }
 
-        .sticky-nav {
-            position: sticky; top: 0; background: #000; z-index: 110;
-            border-bottom: 1px solid #111;
-        }
-
         thead th {
-            position: sticky; top: 48px; z-index: 100;
-            background-color: #000 !important; color: #444; font-weight: 500; 
+            background-color: #000; color: #444; font-weight: 500; 
             font-size: 9px; text-transform: uppercase; padding: 15px 10px; 
             border-bottom: 1px solid #111; text-align: center;
         }
@@ -84,18 +78,10 @@
         .history-card { border: 1px solid #0a0a0a; padding: 20px; margin-top: 20px; background: #000; }
         
         #record-btn {
-            background: transparent;
-            color: #666;
-            border: 1px solid #111;
-            transition: all 0.3s ease;
-            font-weight: 400;
-            cursor: pointer;
+            background: transparent; color: #666; border: 1px solid #111;
+            transition: all 0.3s ease; font-weight: 400; cursor: pointer;
         }
-        #record-btn:hover {
-            border-color: #444;
-            color: #fff;
-            background: #050505;
-        }
+        #record-btn:hover { border-color: #444; color: #fff; background: #050505; }
 
         .del-btn { color: #333; font-size: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .del-btn:hover { color: #ff4d4d; }
@@ -117,9 +103,9 @@
             </div>
         </div>
 
-        <div id="top-progress-bars" class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-                <div class="flex justify-between progress-sub"><span>Mathematics</span><span id="math-perc">0%</span></div>
+                <div class="flex justify-between progress-sub"><span>Math</span><span id="math-perc">0%</span></div>
                 <div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill" style="width: 0%"></div></div>
             </div>
             <div>
@@ -134,7 +120,7 @@
     </header>
 
     <div id="section-tracker">
-        <nav class="sticky-nav flex justify-center gap-4 md:gap-12 max-w-5xl mx-auto px-4">
+        <nav class="flex justify-center gap-12 max-w-5xl mx-auto px-4 border-b border-[#111]">
             <button onclick="switchTab('math')" id="tab-math" class="tab-btn active py-4">Mathematics</button>
             <button onclick="switchTab('physics')" id="tab-physics" class="tab-btn py-4">Physics</button>
             <button onclick="switchTab('chemistry')" id="tab-chemistry" class="tab-btn py-4">Chemistry</button>
@@ -143,9 +129,7 @@
             <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr>
-                            <th class="w-10">#</th><th class="topic-col">Topic</th><th>Status</th><th>PYQ(B)</th><th>PYQ(M)</th><th>Test</th><th>R1</th><th>R2</th><th>Form</th>
-                        </tr>
+                        <tr><th class="w-10">#</th><th class="topic-col">Topic</th><th>Status</th><th>PYQ(B)</th><th>PYQ(M)</th><th>Test</th><th>R1</th><th>R2</th><th>Form</th></tr>
                     </thead>
                     <tbody id="tracker-body"></tbody>
                 </table>
@@ -162,7 +146,7 @@
         </div>
 
         <div class="history-card">
-            <canvas id="scoreChart" height="140"></canvas>
+            <canvas id="scoreChart" height="180"></canvas>
         </div>
 
         <div class="mt-16 table-wrapper">
@@ -196,17 +180,14 @@
         function showSection(sec) {
             document.getElementById('section-tracker').classList.toggle('hidden', sec !== 'tracker');
             document.getElementById('section-history').classList.toggle('hidden', sec !== 'history');
-            document.getElementById('nav-focus').className = (sec === 'tracker') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition';
-            document.getElementById('nav-history').className = (sec === 'history') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition';
+            document.getElementById('nav-focus').className = (sec === 'tracker') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer';
+            document.getElementById('nav-history').className = (sec === 'history') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer';
             if(sec === 'history') renderHistory();
         }
 
         function switchTab(sub) {
             currentSub = sub;
-            ['math', 'physics', 'chemistry'].forEach(s => {
-                const b = document.getElementById(`tab-${s}`);
-                b.classList.toggle('active', s === sub);
-            });
+            ['math', 'physics', 'chemistry'].forEach(s => document.getElementById(`tab-${s}`).classList.toggle('active', s === sub));
             renderTable();
         }
 
@@ -247,6 +228,7 @@
             });
         }
 
+        // FIXED HISTORY LOGIC
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
             const p = parseInt(document.getElementById('p-score').value) || 0;
@@ -254,11 +236,11 @@
             const total = m + p + c;
             const date = new Date().toLocaleDateString('en-GB');
 
-            mockResults.push({ m: m, p: p, c: c, total: total, date: date });
+            mockResults.push({ m, p, c, total, date });
             localStorage.setItem('mockHistory', JSON.stringify(mockResults));
             
-            renderHistory();
             ['m-score', 'p-score', 'c-score'].forEach(id => document.getElementById(id).value = '');
+            renderHistory();
         }
 
         function deleteMock(idx) {
@@ -273,7 +255,10 @@
             body.innerHTML = '';
             const labels = [], chartData = [];
 
-            mockResults.forEach((res, i) => {
+            // Read the latest array from storage to be safe
+            const currentData = JSON.parse(localStorage.getItem('mockHistory') || '[]');
+
+            currentData.forEach((res, i) => {
                 const row = `<tr>
                     <td>${i + 1}</td>
                     <td>${res.m}</td>
@@ -283,6 +268,7 @@
                     <td>${res.date}</td>
                     <td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td>
                 </tr>`;
+                // Inserts at the top so Mock #5 is the first thing you see
                 body.insertAdjacentHTML('afterbegin', row);
                 labels.push(`#${i+1}`);
                 chartData.push(res.total);
