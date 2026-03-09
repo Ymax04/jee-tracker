@@ -41,6 +41,8 @@
         .nav-card { border: 1px solid #111; background: #050505; padding: 20px; }
         .btn-main { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 10px 20px; transition: 0.3s; cursor: pointer; }
         .btn-main:hover { border-color: #fff; color: #fff; }
+        .del-btn { color: #333; font-size: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .del-btn:hover { color: #ff4d4d; }
 
         /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px; z-index: 1000; }
@@ -55,8 +57,9 @@
     <div id="loader"><div class="loader-text">LOADING</div></div>
 
     <div id="page-tracker" class="page-content">
-        <header class="p-8 max-w-5xl mx-auto mt-6">
-            <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-8">JEE 2026 / SYLLABUS</h1>
+        <header class="p-8 max-w-5xl mx-auto mt-6 text-center">
+            <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-2">JEE 2026 / SYLLABUS</h1>
+            <p class="text-[8px] text-blue-400 uppercase tracking-[0.3em] animate-pulse mb-8">More pro features coming soon...</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div><div class="flex justify-between progress-sub"><span>Math</span><span id="math-perc">0%</span></div><div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill"></div></div></div>
                 <div><div class="flex justify-between progress-sub"><span>Physics</span><span id="physics-perc">0%</span></div><div class="progress-bar-bg"><div id="physics-bar" class="progress-bar-fill"></div></div></div>
@@ -83,26 +86,25 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <div class="nav-card">
-                <p class="text-[9px] text-gray-500 uppercase mb-2">Focus Timer</p>
+                <p class="text-[9px] text-gray-500 uppercase mb-2">Current Session</p>
                 <h2 id="timer-display" class="text-4xl font-light mb-6">00:00:00</h2>
                 <div class="flex gap-4">
                     <button onclick="toggleTimer()" id="timer-control" class="btn-main">Start Session</button>
-                    <button onclick="resetTimer()" class="btn-main">Reset</button>
+                    <button onclick="endSession()" class="btn-main">End Session</button>
                 </div>
             </div>
             <div class="nav-card text-center">
-                <p class="text-[9px] text-gray-500 uppercase mb-2">Today's Study Rank</p>
-                <h2 class="text-4xl font-light text-gray-800">#--</h2>
-                <p id="today-total" class="text-[11px] text-gray-400 mt-4">Total: 0h 0m</p>
+                <p class="text-[9px] text-gray-500 uppercase mb-2">Today's Focus Status</p>
+                <h2 id="today-total" class="text-4xl font-light mb-2">0h 0m</h2>
+                <p class="text-[8px] text-gray-600 uppercase tracking-widest">Global Rank: #--</p>
             </div>
         </div>
 
         <div class="nav-card">
-            <h3 class="text-[10px] uppercase tracking-widest text-gray-500 mb-6">Global Leaderboard (Live Soon)</h3>
-            <div class="opacity-20">
-                <div class="flex justify-between py-3 border-b border-[#111] text-xs"><span>1. Aryan Singh</span><span>14h 20m</span></div>
-                <div class="flex justify-between py-3 border-b border-[#111] text-xs"><span>2. Rahul K.</span><span>12h 05m</span></div>
-                <div class="flex justify-between py-3 text-xs"><span>3. Ishita P.</span><span>10h 50m</span></div>
+            <h3 class="text-[10px] uppercase tracking-widest text-gray-500 mb-6">Daily Scorecard</h3>
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] text-gray-400 uppercase">Focus Points:</span>
+                <span id="focus-points" class="text-xl font-light">0</span>
             </div>
         </div>
     </div>
@@ -118,7 +120,7 @@
         <div class="nav-card mb-12"><canvas id="scoreChart" height="150"></canvas></div>
         <div class="table-wrapper">
             <table>
-                <thead><tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th></tr></thead>
+                <thead><tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th><th>Action</th></tr></thead>
                 <tbody id="mock-history-body"></tbody>
             </table>
         </div>
@@ -126,8 +128,6 @@
 
     <div id="page-feedback" class="page-content hidden max-w-xl mx-auto p-8 text-center">
         <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-12">FEEDBACK</h1>
-        <p class="text-xs text-gray-500 mb-8">Found a bug or have a feature request? Let me know.</p>
-        
         <form action="https://formspree.io/f/xdawaekk" method="POST" class="text-left" id="feedback-form">
             <input type="text" name="name" placeholder="Your Name" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none focus:border-white transition">
             <input type="email" name="email" placeholder="Your Email" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none focus:border-white transition">
@@ -160,7 +160,6 @@
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + pageId).classList.add('active');
             if(pageId === 'history') renderHistory();
-            window.scrollTo(0,0);
         }
 
         function switchTab(sub) {
@@ -208,36 +207,55 @@
             });
         }
 
+        // TIMER & SESSION LOGIC
         let timerSeconds = 0, timerInterval = null;
         let todaySeconds = parseInt(localStorage.getItem('todayStudyTime') || '0');
         
         function toggleTimer() {
             if (timerInterval) {
                 clearInterval(timerInterval); timerInterval = null;
-                document.getElementById('timer-control').innerText = 'Start Session';
+                document.getElementById('timer-control').innerText = 'Resume Session';
             } else {
                 timerInterval = setInterval(() => {
-                    timerSeconds++; todaySeconds++;
-                    localStorage.setItem('todayStudyTime', todaySeconds);
+                    timerSeconds++;
                     updateTimerDisplay();
                 }, 1000);
                 document.getElementById('timer-control').innerText = 'Pause';
             }
         }
 
-        function resetTimer() { 
-            clearInterval(timerInterval); timerInterval = null; 
-            timerSeconds = 0; updateTimerDisplay(); 
+        function endSession() {
+            if(timerSeconds < 10 && timerSeconds > 0) {
+                alert("Session too short to record!");
+                return;
+            }
+            clearInterval(timerInterval);
+            timerInterval = null;
+            todaySeconds += timerSeconds;
+            localStorage.setItem('todayStudyTime', todaySeconds);
+            
+            // Focus Points (1 point per 10 mins)
+            let points = Math.floor(todaySeconds / 600);
+            document.getElementById('focus-points').innerText = points;
+            
+            timerSeconds = 0;
+            updateTimerDisplay();
+            updateTotalDisplay();
             document.getElementById('timer-control').innerText = 'Start Session';
+            alert("Session recorded!");
         }
 
         function updateTimerDisplay() {
             const h = Math.floor(timerSeconds / 3600), m = Math.floor((timerSeconds % 3600) / 60), s = timerSeconds % 60;
             document.getElementById('timer-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            const th = Math.floor(todaySeconds / 3600), tm = Math.floor((todaySeconds % 3600) / 60);
-            document.getElementById('today-total').innerText = `Total: ${th}h ${tm}m`;
         }
 
+        function updateTotalDisplay() {
+            const th = Math.floor(todaySeconds / 3600), tm = Math.floor((todaySeconds % 3600) / 60);
+            document.getElementById('today-total').innerText = `${th}h ${tm}m`;
+        }
+
+        // MOCK LOGIC WITH DELETE
         let myChart;
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
@@ -249,13 +267,20 @@
             renderHistory();
         }
 
+        function deleteMock(idx) {
+            let results = JSON.parse(localStorage.getItem('mockHistory') || '[]');
+            results.splice(idx, 1);
+            localStorage.setItem('mockHistory', JSON.stringify(results));
+            renderHistory();
+        }
+
         function renderHistory() {
             const body = document.getElementById('mock-history-body');
             body.innerHTML = '';
             const labels = [], chartData = [];
             const data = JSON.parse(localStorage.getItem('mockHistory') || '[]');
             data.forEach((res, i) => {
-                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td class="text-white">${res.total}</td><td>${res.date}</td></tr>`);
+                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td class="text-white">${res.total}</td><td>${res.date}</td><td><span class="del-btn" onclick="deleteMock(${i})">Del</span></td></tr>`);
                 labels.push(`#${i+1}`); chartData.push(res.total);
             });
             if (myChart) myChart.destroy();
@@ -274,26 +299,19 @@
             const status = document.getElementById('form-status');
             const btn = document.getElementById('submit-btn');
             btn.innerText = 'SENDING...';
-            
             const data = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                body: data,
-                headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                btn.innerText = 'SEND MESSAGE';
-                status.classList.remove('hidden');
-                form.reset();
+            fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' }
+            }).then(() => {
+                btn.innerText = 'SEND MESSAGE'; status.classList.remove('hidden'); form.reset();
                 setTimeout(() => status.classList.add('hidden'), 5000);
-            }).catch(error => {
-                btn.innerText = 'ERROR';
             });
         });
 
         window.addEventListener('load', () => {
             setTimeout(() => { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display='none', 800); }, 600);
             renderTable();
-            updateTimerDisplay();
+            updateTotalDisplay();
+            document.getElementById('focus-points').innerText = Math.floor(todaySeconds / 600);
         });
     </script>
 </body>
