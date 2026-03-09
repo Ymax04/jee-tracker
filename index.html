@@ -3,179 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JEE 2026 Pro Planner | Syllabus, Analytics & AI</title>
     
-    <title>JEE 2026 Planner | Tracker & AI Assistant</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; margin: 0; -webkit-font-smoothing: antialiased; }
         
-        /* PREVIOUS STYLES */
-        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s; }
-        .loader-text { color: #fff; font-size: 10px; letter-spacing: 5px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
-        .progress-sub { color: #555; font-size: 11px; margin-bottom: 5px; }
-        .progress-bar-bg { background: #111; height: 1px; width: 100%; }
-        .progress-bar-fill { background: #fff; height: 1px; transition: width 0.8s ease; }
-        .table-wrapper { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-spacing: 0; }
-        thead th { background: #000; color: #444; font-size: 9px; text-transform: uppercase; padding: 15px 10px; border-bottom: 1px solid #111; }
-        tbody td { padding: 15px 10px; border-bottom: 1px solid #0a0a0a; font-size: 13px; color: #888; text-align: center; }
-        .topic-col { text-align: left !important; min-width: 220px; }
-        .category-row td { background: #000; color: #222; font-size: 10px; text-transform: uppercase; padding: 35px 10px 10px; text-align: left; }
-        .cb { appearance: none; width: 16px; height: 16px; border: 1px solid #222; border-radius: 2px; cursor: pointer; position: relative; }
-        .cb:checked { background: #fff; }
-        .cb:checked::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid #000; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-        .nav-card { border: 1px solid #111; background: #050505; padding: 20px; }
-        .btn-main { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 10px 20px; transition: 0.3s; cursor: pointer; }
-        .btn-main:hover { border-color: #fff; color: #fff; }
-        .del-btn { color: #333; font-size: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px; z-index: 1000; }
-        .nav-item { font-size: 10px; text-transform: uppercase; color: #444; letter-spacing: 1px; cursor: pointer; }
-        .nav-item.active { color: #fff; }
-        .hidden { display: none; }
+        :root { --bg: #000; --card: #050505; --border: #111; --accent: #fff; --text-dim: #444; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        /* AI CHAT STYLES */
-        #ai-bubble { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; z-index: 2000; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        #ai-window { position: fixed; bottom: 140px; right: 20px; width: 300px; height: 400px; background: #0a0a0a; border: 1px solid #222; border-radius: 12px; z-index: 2000; display: flex; flexDirection: column; overflow: hidden; }
-        #ai-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; line-height: 1.5; }
-        .bot-msg { background: #111; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 2px solid #fff; }
-        .user-msg { background: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: right; }
-        #ai-input-area { border-top: 1px solid #111; padding: 10px; display: flex; }
-        #ai-input { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 12px; }
+        /* LOADER */
+        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s; }
+        .loader-text { font-size: 10px; letter-spacing: 8px; animation: pulse 2s infinite; color: #fff; }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+
+        /* UI ELEMENTS */
+        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 20px; transition: 0.3s; }
+        .btn-pro { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 12px 24px; letter-spacing: 1px; transition: 0.3s; cursor: pointer; background: transparent; }
+        .btn-pro:hover { border-color: #fff; color: #fff; }
+        
+        .progress-sub { color: #555; font-size: 11px; margin-bottom: 6px; }
+        .progress-bar-bg { background: #111; height: 2px; width: 100%; position: relative; }
+        .progress-bar-fill { background: #fff; height: 100%; width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* TABLE STYLES */
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-spacing: 0; border-collapse: collapse; }
+        thead th { background: #000; color: #444; font-size: 9px; text-transform: uppercase; padding: 18px 10px; border-bottom: 1px solid var(--border); text-align: center; }
+        tbody td { padding: 16px 10px; border-bottom: 1px solid #0a0a0a; font-size: 13px; color: #888; text-align: center; }
+        .topic-col { text-align: left !important; min-width: 240px; color: #bbb !important; }
+        .category-row td { background: #020202; color: #333; font-size: 10px; text-transform: uppercase; padding: 40px 10px 10px; text-align: left; letter-spacing: 2px; }
+
+        /* CHECKBOXES */
+        .cb { appearance: none; width: 18px; height: 18px; border: 1px solid #222; border-radius: 2px; cursor: pointer; position: relative; transition: 0.2s; }
+        .cb:checked { background: #fff; border-color: #fff; }
+        .cb:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000; font-size: 12px; }
+
+        /* COMING SOON OVERLAY */
+        .coming-soon-container { position: relative; overflow: hidden; }
+        .coming-soon-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; border-radius: 4px; border: 1px dashed #222; }
+        .cs-text { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: #555; }
+
+        /* AI ASSISTANT */
+        #ai-bubble { position: fixed; bottom: 90px; right: 20px; width: 54px; height: 54px; background: #fff; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2000; box-shadow: 0 10px 30px rgba(255,255,255,0.1); transition: 0.3s; }
+        #ai-bubble:hover { transform: scale(1.1); }
+        #ai-window { position: fixed; bottom: 160px; right: 20px; width: 320px; height: 450px; background: #080808; border: 1px solid #222; border-radius: 8px; z-index: 2000; display: none; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        #ai-msg-container { flex: 1; padding: 20px; overflow-y: auto; font-size: 13px; color: #ccc; }
+        .bot-msg { background: #111; padding: 12px; border-radius: 4px; margin-bottom: 12px; border-left: 2px solid #fff; line-height: 1.6; }
+        .user-msg { background: #1a1a1a; padding: 12px; border-radius: 4px; margin-bottom: 12px; text-align: right; color: #fff; }
+        #ai-form { border-top: 1px solid #111; padding: 15px; display: flex; }
+        #ai-input { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 13px; }
+
+        /* BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 20px 10px; z-index: 1000; }
+        .nav-item { font-size: 9px; text-transform: uppercase; color: #444; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: #fff; }
+
+        .hidden { display: none; }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-32">
 
-    <div id="loader"><div class="loader-text">LOADING</div></div>
+    <div id="loader"><div class="loader-text">INITIALIZING CORE</div></div>
 
-    <div id="ai-bubble" onclick="toggleAI()">AI</div>
-    <div id="ai-window" class="hidden flex flex-col">
-        <div class="p-3 border-b border-[#111] text-[10px] uppercase tracking-widest text-gray-500 flex justify-between">
-            <span>JEE Companion</span>
-            <span onclick="toggleAI()" class="cursor-pointer">✕</span>
+    <div id="ai-bubble" onclick="toggleAI()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </div>
+    <div id="ai-window" class="flex flex-col">
+        <div class="p-4 border-b border-[#111] flex justify-between items-center bg-[#050505]">
+            <span class="text-[9px] uppercase tracking-[0.3em] text-gray-500">AI Professional Advisor</span>
+            <span onclick="toggleAI()" class="cursor-pointer text-gray-600 hover:text-white">✕</span>
         </div>
-        <div id="ai-messages">
-            <div class="bot-msg">Hello! I'm your JEE assistant. Ask me about your schedule, motivation, or specific subjects!</div>
+        <div id="ai-msg-container">
+            <div class="bot-msg">Welcome, Aspirant. I am your specialized JEE Advisor. Ask me about backlogs, subject strategies, or motivation.</div>
         </div>
-        <div id="ai-input-area">
-            <input type="text" id="ai-input" placeholder="Type a message..." onkeypress="handleChat(event)">
-        </div>
+        <form id="ai-form" onsubmit="handleAdvisorChat(event)">
+            <input type="text" id="ai-input" placeholder="Ask your advisor..." autocomplete="off">
+        </form>
     </div>
 
     <div id="page-tracker" class="page-content">
-        <header class="p-8 max-w-5xl mx-auto mt-6 text-center">
-            <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-2">JEE 2026 / SYLLABUS</h1>
-            <p class="text-[8px] text-blue-400 uppercase tracking-[0.3em] animate-pulse mb-8">More pro features coming soon...</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div><div class="flex justify-between progress-sub"><span>Math</span><span id="math-perc">0%</span></div><div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill"></div></div></div>
-                <div><div class="flex justify-between progress-sub"><span>Physics</span><span id="physics-perc">0%</span></div><div class="progress-bar-bg"><div id="physics-bar" class="progress-bar-fill"></div></div></div>
-                <div><div class="flex justify-between progress-sub"><span>Chemistry</span><span id="chemistry-perc">0%</span></div><div class="progress-bar-bg"><div id="chem-bar" class="progress-bar-fill"></div></div></div>
-            </div>
-        </header>
-        <nav class="flex justify-center gap-8 max-w-5xl mx-auto border-b border-[#111] mb-4">
-            <button onclick="switchTab('math')" id="tab-math" class="text-[10px] uppercase p-4 text-white border-b border-white">Math</button>
-            <button onclick="switchTab('physics')" id="tab-physics" class="text-[10px] uppercase p-4 text-gray-600">Physics</button>
-            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="text-[10px] uppercase p-4 text-gray-600">Chemistry</button>
-        </nav>
-        <div class="max-w-5xl mx-auto px-4 table-wrapper"><table id="tracker-table"><thead><tr><th class="w-10">#</th><th class="topic-col">Topic</th><th>ST</th><th>PB</th><th>PM</th><th>TS</th><th>R1</th><th>R2</th><th>FR</th></tr></thead><tbody id="tracker-body"></tbody></table></div>
-    </div>
-
-    <div id="page-rankings" class="page-content hidden max-w-5xl mx-auto p-8">
-        <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-12">LIVE COMPETITION</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div class="nav-card">
-                <p class="text-[9px] text-gray-500 uppercase mb-2">Current Session</p>
-                <h2 id="timer-display" class="text-4xl font-light mb-6">00:00:00</h2>
-                <div class="flex gap-4">
-                    <button onclick="toggleTimer()" id="timer-control" class="btn-main">Start Session</button>
-                    <button onclick="endSession()" class="btn-main">End Session</button>
+        <header class="p-10 max-w-5xl mx-auto mt-4 text-center">
+            <h1 class="text-[10px] tracking-[0.6em] text-gray-600 uppercase mb-3">JEE 2026 / SYLLABUS CORE</h1>
+            <p class="text-[8px] text-blue-500 uppercase tracking-[0.4em] animate-pulse mb-12">System Live: All Features Active</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div>
+                    <div class="flex justify-between progress-sub"><span>Mathematics</span><span id="math-perc">0%</span></div>
+                    <div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between progress-sub"><span>Physics</span><span id="physics-perc">0%</span></div>
+                    <div class="progress-bar-bg"><div id="physics-bar" class="progress-bar-fill"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between progress-sub"><span>Chemistry</span><span id="chemistry-perc">0%</span></div>
+                    <div class="progress-bar-bg"><div id="chem-bar" class="progress-bar-fill"></div></div>
                 </div>
             </div>
-            <div class="nav-card text-center">
-                <p class="text-[9px] text-gray-500 uppercase mb-2">Today's Focus Status</p>
-                <h2 id="today-total" class="text-4xl font-light mb-2">0h 0m</h2>
+        </header>
+        
+        <nav class="flex justify-center gap-10 max-w-5xl mx-auto border-b border-[#111] mb-6">
+            <button onclick="switchTab('math')" id="tab-math" class="text-[10px] uppercase p-5 text-white border-b-2 border-white">Mathematics</button>
+            <button onclick="switchTab('physics')" id="tab-physics" class="text-[10px] uppercase p-5 text-gray-600 hover:text-gray-300">Physics</button>
+            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="text-[10px] uppercase p-5 text-gray-600 hover:text-gray-300">Chemistry</button>
+        </nav>
+
+        <div class="max-w-6xl mx-auto px-6 table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="w-12">#</th>
+                        <th class="topic-col">Topic Name</th>
+                        <th>ST</th><th>PB</th><th>PM</th><th>TS</th><th>R1</th><th>R2</th><th>FR</th>
+                    </tr>
+                </thead>
+                <tbody id="tracker-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="page-rankings" class="page-content hidden max-w-5xl mx-auto p-10">
+        <h1 class="text-[10px] tracking-[0.6em] text-gray-500 uppercase mb-16">LIVE ARENA</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
+            <div class="glass-card">
+                <p class="text-[9px] text-gray-600 uppercase tracking-widest mb-4">Focus Timer</p>
+                <h2 id="timer-display" class="text-5xl font-extralight mb-8 tracking-tighter">00:00:00</h2>
+                <div class="flex gap-4">
+                    <button onclick="toggleTimer()" id="timer-control" class="btn-pro">Start Session</button>
+                    <button onclick="endSession()" class="btn-pro">End & Record</button>
+                </div>
+            </div>
+            <div class="glass-card text-center flex flex-col justify-center">
+                <p class="text-[9px] text-gray-600 uppercase tracking-widest mb-4">Daily Study Total</p>
+                <h2 id="today-total" class="text-5xl font-extralight tracking-tighter">0h 0m</h2>
+                <div class="mt-6 flex justify-center gap-6">
+                    <div><p class="text-[8px] text-gray-500 uppercase">Rank</p><p class="text-sm">#--</p></div>
+                    <div><p class="text-[8px] text-gray-500 uppercase">Points</p><p id="focus-points" class="text-sm">0</p></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="page-history" class="page-content hidden max-w-5xl mx-auto p-8">
-        <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-8">MOCK ANALYSIS</h1>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-            <input type="number" id="m-score" placeholder="MATH" class="bg-transparent border-b border-[#111] p-3 text-sm outline-none">
-            <input type="number" id="p-score" placeholder="PHYSICS" class="bg-transparent border-b border-[#111] p-3 text-sm outline-none">
-            <input type="number" id="c-score" placeholder="CHEMISTRY" class="bg-transparent border-b border-[#111] p-3 text-sm outline-none">
-            <button onclick="addMockResult()" class="btn-main">Save Mock</button>
+        <div class="glass-card coming-soon-container h-64">
+            <div class="coming-soon-overlay">
+                <p class="cs-text">Global Leaderboard</p>
+                <p class="text-[7px] text-gray-600 uppercase mt-2">Connecting to Arena Servers...</p>
+            </div>
+            <h3 class="text-[10px] uppercase tracking-widest text-gray-800">Rankings</h3>
         </div>
-        <div class="nav-card mb-12"><canvas id="scoreChart" height="150"></canvas></div>
-        <div class="table-wrapper"><table><thead><tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th><th>Action</th></tr></thead><tbody id="mock-history-body"></tbody></table></div>
     </div>
 
-    <div id="page-feedback" class="page-content hidden max-w-xl mx-auto p-8 text-center">
-        <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-12">FEEDBACK</h1>
-        <form action="https://formspree.io/f/xdawaekk" method="POST" id="feedback-form">
-            <input type="text" name="name" placeholder="Name" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none">
-            <input type="email" name="email" placeholder="Email" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none">
-            <textarea name="message" placeholder="Message" required class="w-full bg-transparent border-b border-[#111] py-4 mb-12 text-sm outline-none h-32"></textarea>
-            <button type="submit" id="submit-btn" class="w-full btn-main py-4">Send</button>
+    <div id="page-history" class="page-content hidden max-w-5xl mx-auto p-10">
+        <h1 class="text-[10px] tracking-[0.6em] text-gray-500 uppercase mb-10">MOCK ANALYTICS</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <input type="number" id="m-score" placeholder="MATH" class="bg-transparent border-b border-[#222] p-4 text-sm outline-none focus:border-white transition">
+            <input type="number" id="p-score" placeholder="PHYSICS" class="bg-transparent border-b border-[#222] p-4 text-sm outline-none focus:border-white transition">
+            <input type="number" id="c-score" placeholder="CHEMISTRY" class="bg-transparent border-b border-[#222] p-4 text-sm outline-none focus:border-white transition">
+            <button onclick="addMockResult()" class="btn-pro">Record Mock</button>
+        </div>
+
+        <div class="glass-card mb-12 h-64">
+            <canvas id="scoreChart"></canvas>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th><th>Action</th></tr></thead>
+                <tbody id="mock-history-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="page-feedback" class="page-content hidden max-w-xl mx-auto p-10 text-center">
+        <h1 class="text-[10px] tracking-[0.6em] text-gray-500 uppercase mb-16">COMMUNICATION</h1>
+        <p class="text-xs text-gray-500 mb-10 leading-loose">Found a bug or need a feature? Send it directly to the developer team.</p>
+        
+        <form action="https://formspree.io/f/xdawaekk" method="POST" class="text-left" id="feedback-form">
+            <input type="text" name="name" placeholder="Full Name" required class="w-full bg-transparent border-b border-[#111] py-5 mb-8 text-sm outline-none focus:border-white transition">
+            <input type="email" name="email" placeholder="Email Address" required class="w-full bg-transparent border-b border-[#111] py-5 mb-8 text-sm outline-none focus:border-white transition">
+            <textarea name="message" placeholder="Message or Feature Request..." required class="w-full bg-transparent border-b border-[#111] py-5 mb-16 text-sm outline-none focus:border-white transition h-32"></textarea>
+            <button type="submit" id="submit-btn" class="w-full btn-pro py-5">Push to Developer</button>
+            <p id="form-status" class="mt-6 text-[9px] uppercase tracking-widest text-green-500 hidden text-center">Transmission Successful</p>
         </form>
     </div>
 
     <nav class="bottom-nav">
         <div onclick="showPage('tracker')" class="nav-item active" id="btn-tracker">Tracker</div>
-        <div onclick="showPage('rankings')" class="nav-item" id="btn-rankings">Competition</div>
-        <div onclick="showPage('history')" class="nav-item" id="btn-history">Mocks</div>
-        <div onclick="showPage('feedback')" class="nav-item" id="btn-feedback">Feedback</div>
+        <div onclick="showPage('rankings')" class="nav-item" id="btn-rankings">Arena</div>
+        <div onclick="showPage('history')" class="nav-item" id="btn-history">Analysis</div>
+        <div onclick="showPage('feedback')" class="nav-item" id="btn-feedback">Support</div>
     </nav>
 
     <script>
-        // AI LOGIC
-        const aiResponses = {
-            "hello": "Hi there! Ready to crush some JEE goals today?",
-            "physics": "Physics is all about visualization. Try solving 'Irodov' for concepts, but stick to NCERT for basics!",
-            "math": "Math needs practice. Don't just read the solutions, solve them till your hands ache.",
-            "chemistry": "Organic needs revision every day. Inorganic? Stick to NCERT like a bible.",
-            "tired": "Take a 15-minute power nap. JEE is a marathon, not a sprint. You got this!",
-            "schedule": "Aim for 3 hours per subject. Spend the last 2 hours of your day only on revision.",
-            "default": "That's interesting! Keep focusing on your weak topics. Remember: Consistency > Intensity."
-        };
-
-        function toggleAI() {
-            document.getElementById('ai-window').classList.toggle('hidden');
-        }
-
-        function handleChat(e) {
-            if (e.key === 'Enter') {
-                const input = document.getElementById('ai-input');
-                const msg = input.value.toLowerCase();
-                if (!msg) return;
-
-                // Add User Message
-                addMsg(input.value, 'user');
-                input.value = '';
-
-                // Generate Response
-                setTimeout(() => {
-                    let response = aiResponses.default;
-                    for (let key in aiResponses) {
-                        if (msg.includes(key)) response = aiResponses[key];
-                    }
-                    addMsg(response, 'bot');
-                }, 600);
-            }
-        }
-
-        function addMsg(text, type) {
-            const container = document.getElementById('ai-messages');
-            const div = document.createElement('div');
-            div.className = type === 'user' ? 'user-msg' : 'bot-msg';
-            div.innerText = text;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // CORE LOGIC (Same as previous versions)
+        // --- DATA ENGINE ---
         const fullData = {
             math: { "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"] },
             physics: { "Category 1": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], "Category 2": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], "Category 3": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], "Category 4": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"] },
@@ -185,23 +213,26 @@
         const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fr'];
         let currentSub = 'math';
 
+        // --- NAVIGATION ---
         function showPage(pageId) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
             document.getElementById('page-' + pageId).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + pageId).classList.add('active');
             if(pageId === 'history') renderHistory();
+            window.scrollTo(0,0);
         }
 
         function switchTab(sub) {
             currentSub = sub;
             ['math', 'physics', 'chemistry'].forEach(s => {
                 const btn = document.getElementById('tab-' + s);
-                btn.className = (s === sub) ? 'text-[10px] uppercase p-4 text-white border-b border-white' : 'text-[10px] uppercase p-4 text-gray-600';
+                btn.className = (s === sub) ? 'text-[10px] uppercase p-5 text-white border-b-2 border-white' : 'text-[10px] uppercase p-5 text-gray-600 hover:text-gray-300';
             });
             renderTable();
         }
 
+        // --- TRACKER ENGINE ---
         function renderTable() {
             const body = document.getElementById('tracker-body');
             body.innerHTML = '';
@@ -210,7 +241,7 @@
                 body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9">${cat}</td></tr>`);
                 topics.forEach(topic => {
                     const rowId = `${currentSub}-${count}`;
-                    let rowHtml = `<tr><td style="color:#222">${count}</td><td class="topic-col" style="color:#bbb">${topic}</td>`;
+                    let rowHtml = `<tr><td>${count}</td><td class="topic-col">${topic}</td>`;
                     cols.forEach(col => {
                         const checkId = `${rowId}-${col}`;
                         rowHtml += `<td><input type="checkbox" ${localStorage.getItem(checkId) === 'true' ? 'checked' : ''} class="cb" onchange="save('${checkId}', this.checked)"></td>`;
@@ -223,6 +254,7 @@
         }
 
         function save(id, val) { localStorage.setItem(id, val); updateStats(); }
+
         function updateStats() {
             ['math', 'physics', 'chemistry'].forEach(s => {
                 let done = 0, total = 0;
@@ -238,13 +270,14 @@
             });
         }
 
+        // --- TIMER & ARENA ---
         let timerSeconds = 0, timerInterval = null;
         let todaySeconds = parseInt(localStorage.getItem('todayStudyTime') || '0');
-        
+
         function toggleTimer() {
             if (timerInterval) {
                 clearInterval(timerInterval); timerInterval = null;
-                document.getElementById('timer-control').innerText = 'Resume';
+                document.getElementById('timer-control').innerText = 'Resume Session';
             } else {
                 timerInterval = setInterval(() => { timerSeconds++; updateTimerDisplay(); }, 1000);
                 document.getElementById('timer-control').innerText = 'Pause';
@@ -252,12 +285,14 @@
         }
 
         function endSession() {
+            if(timerSeconds < 5 && timerSeconds > 0) return alert("Session too short!");
+            clearInterval(timerInterval); timerInterval = null;
             todaySeconds += timerSeconds;
             localStorage.setItem('todayStudyTime', todaySeconds);
             timerSeconds = 0;
-            updateTimerDisplay();
-            updateTotalDisplay();
-            alert("Session Saved!");
+            updateTimerDisplay(); updateTotalDisplay();
+            document.getElementById('timer-control').innerText = 'Start Session';
+            alert("Session recorded in daily arena total.");
         }
 
         function updateTimerDisplay() {
@@ -268,22 +303,58 @@
         function updateTotalDisplay() {
             const th = Math.floor(todaySeconds/3600), tm = Math.floor((todaySeconds%3600)/60);
             document.getElementById('today-total').innerText = `${th}h ${tm}m`;
+            document.getElementById('focus-points').innerText = Math.floor(todaySeconds / 600);
         }
 
+        // --- AI ADVISOR (TRAINED LOGIC) ---
+        const advisorQuotes = {
+            "backlog": "Advisor: Priority 1 is your current class. Dedicate 2 hours daily to backlogs using the 'One Shot' method. Don't drown in the past.",
+            "test": "Advisor: A mock test is a mirror. If you don't analyze it for 3 hours, the 3 hours of testing was a waste of time.",
+            "physics": "Advisor: Concepts first, formulas later. If you can't derive it, you don't know it. Focus on HCV and PYQs.",
+            "math": "Advisor: Mathematics is a contact sport. You must solve. Reading math is like watching someone else go to the gym.",
+            "tired": "Advisor: Burnout is real. Take tonight off. Sleep 8 hours. Tomorrow, start with your favorite subject.",
+            "default": "Advisor: Stay disciplined. Excellence is not an act, but a habit. What's our focus for the next session?"
+        };
+
+        function toggleAI() { const w = document.getElementById('ai-window'); w.style.display = (w.style.display === 'flex') ? 'none' : 'flex'; }
+        
+        function handleAdvisorChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('ai-input');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            const container = document.getElementById('ai-msg-container');
+            container.insertAdjacentHTML('beforeend', `<div class="user-msg">${msg}</div>`);
+            input.value = '';
+
+            setTimeout(() => {
+                let reply = advisorQuotes.default;
+                const lower = msg.toLowerCase();
+                for (let key in advisorQuotes) { if(lower.includes(key)) reply = advisorQuotes[key]; }
+                container.insertAdjacentHTML('beforeend', `<div class="bot-msg">${reply}</div>`);
+                container.scrollTop = container.scrollHeight;
+            }, 600);
+        }
+
+        // --- MOCK ANALYTICS ---
         let myChart;
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
             const p = parseInt(document.getElementById('p-score').value) || 0;
             const c = parseInt(document.getElementById('c-score').value) || 0;
             const results = JSON.parse(localStorage.getItem('mockHistory') || '[]');
-            results.push({ m, p, c, total: m+p+c, date: new Date().toLocaleDateString() });
+            results.push({ m, p, c, total: m+p+c, date: new Date().toLocaleDateString('en-GB') });
             localStorage.setItem('mockHistory', JSON.stringify(results));
             renderHistory();
+            document.getElementById('m-score').value = '';
+            document.getElementById('p-score').value = '';
+            document.getElementById('c-score').value = '';
         }
 
-        function deleteMock(i) {
+        function deleteMock(idx) {
             let res = JSON.parse(localStorage.getItem('mockHistory'));
-            res.splice(i, 1);
+            res.splice(idx, 1);
             localStorage.setItem('mockHistory', JSON.stringify(res));
             renderHistory();
         }
@@ -294,16 +365,38 @@
             const labels = [], chartData = [];
             const data = JSON.parse(localStorage.getItem('mockHistory') || '[]');
             data.forEach((res, i) => {
-                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td class="text-white">${res.total}</td><td>${res.date}</td><td><span class="del-btn" onclick="deleteMock(${i})">Del</span></td></tr>`);
+                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td class="text-white">${res.total}</td><td class="text-[10px]">${res.date}</td><td><span class="text-red-900 cursor-pointer" onclick="deleteMock(${i})">DEL</span></td></tr>`);
                 labels.push(`#${i+1}`); chartData.push(res.total);
             });
             if (myChart) myChart.destroy();
             const ctx = document.getElementById('scoreChart').getContext('2d');
-            myChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ data: chartData, borderColor: '#fff', tension: 0.2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#111' } } } } });
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets: [{ data: chartData, borderColor: '#fff', tension: 0.3, pointBackgroundColor: '#fff', borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#0a0a0a' }, ticks: { color: '#444', font: { size: 9 } } } } }
+            });
         }
 
+        // --- FEEDBACK ---
+        const form = document.getElementById('feedback-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const status = document.getElementById('form-status');
+            btn.innerText = 'TRANSMITTING...';
+            fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+            .then(() => {
+                btn.innerText = 'PUSH TO DEVELOPER'; status.classList.remove('hidden'); form.reset();
+                setTimeout(() => status.classList.add('hidden'), 4000);
+            });
+        });
+
+        // --- INITIALIZE ---
         window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display='none', 800); }, 600);
+            setTimeout(() => { 
+                document.getElementById('loader').style.opacity = '0'; 
+                setTimeout(() => document.getElementById('loader').style.display='none', 800); 
+            }, 1000);
             renderTable();
             updateTotalDisplay();
         });
