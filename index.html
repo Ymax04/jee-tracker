@@ -39,7 +39,7 @@
         .cb:checked::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid #000; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         
         .nav-card { border: 1px solid #111; background: #050505; padding: 20px; }
-        .btn-main { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 10px 20px; transition: 0.3s; }
+        .btn-main { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 10px 20px; transition: 0.3s; cursor: pointer; }
         .btn-main:hover { border-color: #fff; color: #fff; }
 
         /* BOTTOM NAV */
@@ -128,10 +128,12 @@
         <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-12">FEEDBACK</h1>
         <p class="text-xs text-gray-500 mb-8">Found a bug or have a feature request? Let me know.</p>
         
-        <form action="https://formspree.io/f/maxyadav1233@gmail.com" method="POST" class="text-left">
+        <form action="https://formspree.io/f/xdawaekk" method="POST" class="text-left" id="feedback-form">
             <input type="text" name="name" placeholder="Your Name" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none focus:border-white transition">
+            <input type="email" name="email" placeholder="Your Email" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none focus:border-white transition">
             <textarea name="message" placeholder="What's on your mind?" required class="w-full bg-transparent border-b border-[#111] py-4 mb-12 text-sm outline-none focus:border-white transition h-32"></textarea>
-            <button type="submit" class="w-full btn-main py-4">Send Message</button>
+            <button type="submit" id="submit-btn" class="w-full btn-main py-4">Send Message</button>
+            <p id="form-status" class="mt-4 text-[10px] uppercase tracking-widest text-green-500 hidden text-center">Message Sent!</p>
         </form>
     </div>
 
@@ -143,7 +145,6 @@
     </nav>
 
     <script>
-        // DATA & CORE LOGIC
         const fullData = {
             math: { "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"] },
             physics: { "Category 1": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], "Category 2": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], "Category 3": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], "Category 4": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"] },
@@ -153,7 +154,6 @@
         const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fr'];
         let currentSub = 'math';
 
-        // NAVIGATION
         function showPage(pageId) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
             document.getElementById('page-' + pageId).classList.remove('hidden');
@@ -208,7 +208,6 @@
             });
         }
 
-        // TIMER LOGIC
         let timerSeconds = 0, timerInterval = null;
         let todaySeconds = parseInt(localStorage.getItem('todayStudyTime') || '0');
         
@@ -239,7 +238,6 @@
             document.getElementById('today-total').innerText = `Total: ${th}h ${tm}m`;
         }
 
-        // MOCK LOGIC
         let myChart;
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
@@ -269,7 +267,29 @@
             });
         }
 
-        // INIT
+        // Form Logic
+        const form = document.getElementById('feedback-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('form-status');
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = 'SENDING...';
+            
+            const data = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                btn.innerText = 'SEND MESSAGE';
+                status.classList.remove('hidden');
+                form.reset();
+                setTimeout(() => status.classList.add('hidden'), 5000);
+            }).catch(error => {
+                btn.innerText = 'ERROR';
+            });
+        });
+
         window.addEventListener('load', () => {
             setTimeout(() => { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display='none', 800); }, 600);
             renderTable();
