@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEE 2026 Planner</title>
+    
+    <title>JEE 2026 Planner | Best IIT-JEE Syllabus Tracker & Mock Analysis</title>
+    <meta name="description" content="Free minimalist JEE 2026 syllabus tracker and mock test analyzer. Track progress in Math, Physics, and Chemistry and visualize your scores.">
+    <meta name="keywords" content="JEE 2026, JEE tracker, IIT JEE syllabus, mock test analyzer, JEE planner">
+    <meta name="google-site-verification" content="googleb8d38b7a2f5cbe1c.html" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -221,14 +226,14 @@
                     const k = localStorage.key(i);
                     if (k && k.startsWith(s + '-') && localStorage.getItem(k) === 'true') done++;
                 }
-                const p = Math.round((done / total) * 100) || 0;
+                // FIXED: Capped at 100 to fix 101% bug
+                const p = Math.min(Math.round((done / total) * 100), 100) || 0;
                 document.getElementById(`${s}-perc`).innerText = p + '%';
                 const barId = s === 'chemistry' ? 'chem-bar' : s + '-bar';
                 if (document.getElementById(barId)) document.getElementById(barId).style.width = p + '%';
             });
         }
 
-        // FIXED HISTORY LOGIC
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
             const p = parseInt(document.getElementById('p-score').value) || 0;
@@ -254,8 +259,6 @@
             const body = document.getElementById('mock-history-body');
             body.innerHTML = '';
             const labels = [], chartData = [];
-
-            // Read the latest array from storage to be safe
             const currentData = JSON.parse(localStorage.getItem('mockHistory') || '[]');
 
             currentData.forEach((res, i) => {
@@ -268,7 +271,6 @@
                     <td>${res.date}</td>
                     <td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td>
                 </tr>`;
-                // Inserts at the top so Mock #5 is the first thing you see
                 body.insertAdjacentHTML('afterbegin', row);
                 labels.push(`#${i+1}`);
                 chartData.push(res.total);
