@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>JEE 2026 Planner | Best IIT-JEE Syllabus Tracker & Mock Analysis</title>
-    <meta name="description" content="Free minimalist JEE 2026 syllabus tracker and mock test analyzer. Track progress in Math, Physics, and Chemistry and visualize your scores.">
-    <meta name="keywords" content="JEE 2026, JEE tracker, IIT JEE syllabus, mock test analyzer, JEE planner">
+    <meta name="description" content="Free minimalist JEE 2026 syllabus tracker and mock test analyzer.">
     <meta name="google-site-verification" content="googleb8d38b7a2f5cbe1c.html" />
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,186 +13,137 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
         
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #000000; 
-            color: #ffffff; 
-            margin: 0; 
-            overflow-y: auto; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; margin: 0; -webkit-font-smoothing: antialiased; }
 
-        /* PREMIUM LOADER */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .loader-text { 
-            color: #ffffff; font-size: 10px; text-transform: uppercase; 
-            letter-spacing: 5px; font-weight: 300; opacity: 0.6;
-            animation: pulse 2s infinite;
-        }
+        /* LOADER */
+        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s; }
+        .loader-text { color: #fff; font-size: 10px; letter-spacing: 5px; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
 
-        /* HEADER & PROGRESS */
+        /* PROGRESS BARS */
         .progress-sub { color: #555; font-size: 11px; margin-bottom: 5px; }
         .progress-bar-bg { background: #111; height: 1px; width: 100%; }
-        .progress-bar-fill { background: #ffffff; height: 1px; transition: width 0.8s ease; }
+        .progress-bar-fill { background: #fff; height: 1px; transition: width 0.8s ease; }
 
-        /* TABLE & STICKY NAV */
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { border-collapse: separate; border-spacing: 0; width: 100%; }
-
-        thead th {
-            background-color: #000; color: #444; font-weight: 500; 
-            font-size: 9px; text-transform: uppercase; padding: 15px 10px; 
-            border-bottom: 1px solid #111; text-align: center;
-        }
-
-        .topic-col { text-align: left !important; min-width: 220px; }
+        /* TABLE */
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-spacing: 0; }
+        thead th { background: #000; color: #444; font-size: 9px; text-transform: uppercase; padding: 15px 10px; border-bottom: 1px solid #111; }
         tbody td { padding: 15px 10px; border-bottom: 1px solid #0a0a0a; font-size: 13px; color: #888; text-align: center; }
+        .topic-col { text-align: left !important; min-width: 220px; }
+        .category-row td { background: #000; color: #222; font-size: 10px; text-transform: uppercase; padding: 35px 10px 10px; text-align: left; }
 
-        .category-row td {
-            background-color: #000; color: #222; font-size: 10px;
-            text-transform: uppercase; letter-spacing: 1px; padding: 35px 10px 10px;
-            text-align: left; border: none;
-        }
-
-        /* CHECKBOX */
-        .cb {
-            appearance: none; width: 16px; height: 16px; border: 1px solid #222;
-            border-radius: 2px; cursor: pointer; transition: 0.2s; position: relative;
-        }
-        .cb:checked { background: #ffffff; border-color: #ffffff; }
-        .cb:checked::after {
-            content: ''; position: absolute; left: 5px; top: 2px;
-            width: 4px; height: 8px; border: solid #000;
-            border-width: 0 2px 2px 0; transform: rotate(45deg);
-        }
-
-        /* HISTORY COMPONENTS */
-        .mock-input {
-            background: transparent; border-bottom: 1px solid #111; color: #fff;
-            padding: 12px; font-size: 13px; width: 100%; text-align: center;
-            outline: none; transition: 0.3s;
-        }
-        .mock-input:focus { border-color: #444; }
-        .history-card { border: 1px solid #0a0a0a; padding: 20px; margin-top: 20px; background: #000; }
+        /* UI ELEMENTS */
+        .cb { appearance: none; width: 16px; height: 16px; border: 1px solid #222; border-radius: 2px; cursor: pointer; position: relative; }
+        .cb:checked { background: #fff; }
+        .cb:checked::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid #000; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         
-        #record-btn, .timer-btn {
-            background: transparent; color: #666; border: 1px solid #111;
-            transition: all 0.3s ease; font-weight: 400; cursor: pointer;
-        }
-        #record-btn:hover, .timer-btn:hover { border-color: #444; color: #fff; background: #050505; }
+        .nav-card { border: 1px solid #111; background: #050505; padding: 20px; }
+        .btn-main { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 10px 20px; transition: 0.3s; }
+        .btn-main:hover { border-color: #fff; color: #fff; }
 
-        .del-btn { color: #333; font-size: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .del-btn:hover { color: #ff4d4d; }
+        /* BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px; z-index: 1000; }
+        .nav-item { font-size: 10px; text-transform: uppercase; color: #444; letter-spacing: 1px; cursor: pointer; }
+        .nav-item.active { color: #fff; }
 
-        .tab-btn { color: #444; font-size: 11px; font-weight: 500; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .tab-btn.active { color: #fff !important; border-bottom: 1px solid #fff !important; }
-
-        /* TIMER BOX */
-        .timer-box { border: 1px solid #111; padding: 15px; background: #050505; text-align: center; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
     <div id="loader"><div class="loader-text">LOADING</div></div>
 
-    <header class="p-8 max-w-5xl mx-auto mt-6">
-        <div class="flex justify-between items-center mb-12">
-            <div>
-                <h1 class="text-[10px] font-medium tracking-[0.4em] text-gray-500 uppercase">JEE 2026</h1>
-                <p id="rank-display" class="text-[8px] text-gray-700 tracking-widest uppercase mt-1">Global Rank: #--</p>
+    <div id="page-tracker" class="page-content">
+        <header class="p-8 max-w-5xl mx-auto mt-6">
+            <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-8">JEE 2026 / SYLLABUS</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div><div class="flex justify-between progress-sub"><span>Math</span><span id="math-perc">0%</span></div><div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill"></div></div></div>
+                <div><div class="flex justify-between progress-sub"><span>Physics</span><span id="physics-perc">0%</span></div><div class="progress-bar-bg"><div id="physics-bar" class="progress-bar-fill"></div></div></div>
+                <div><div class="flex justify-between progress-sub"><span>Chemistry</span><span id="chemistry-perc">0%</span></div><div class="progress-bar-bg"><div id="chem-bar" class="progress-bar-fill"></div></div></div>
             </div>
-            <div class="flex gap-8">
-                <span id="nav-focus" onclick="showSection('tracker')" class="text-[9px] text-white uppercase tracking-widest cursor-pointer">Focus</span>
-                <span id="nav-history" onclick="showSection('history')" class="text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition">History</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div class="timer-box col-span-1 md:col-span-2 flex flex-col justify-center">
-                <div class="flex justify-between items-center px-4">
-                    <div class="text-left">
-                        <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Session Timer</p>
-                        <h2 id="timer-display" class="text-2xl font-light tracking-tighter">00:00:00</h2>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="toggleTimer()" id="timer-control" class="timer-btn text-[9px] px-4 py-2 uppercase tracking-widest">Start</button>
-                        <button onclick="resetTimer()" class="timer-btn text-[9px] px-4 py-2 uppercase tracking-widest">Reset</button>
-                    </div>
-                </div>
-            </div>
-            <div class="timer-box flex flex-col justify-center">
-                <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Today's Total</p>
-                <h2 id="today-total" class="text-xl font-light tracking-tighter">0h 0m</h2>
-            </div>
-            <div class="timer-box flex flex-col justify-center">
-                <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Focus Score</p>
-                <h2 class="text-xl font-light tracking-tighter text-gray-600">--</h2>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div>
-                <div class="flex justify-between progress-sub"><span>Math</span><span id="math-perc">0%</span></div>
-                <div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill" style="width: 0%"></div></div>
-            </div>
-            <div>
-                <div class="flex justify-between progress-sub"><span>Physics</span><span id="physics-perc">0%</span></div>
-                <div class="progress-bar-bg"><div id="physics-bar" class="progress-bar-fill" style="width: 0%"></div></div>
-            </div>
-            <div>
-                <div class="flex justify-between progress-sub"><span>Chemistry</span><span id="chemistry-perc">0%</span></div>
-                <div class="progress-bar-bg"><div id="chem-bar" class="progress-bar-fill" style="width: 0%"></div></div>
-            </div>
-        </div>
-    </header>
-
-    <div id="section-tracker">
-        <nav class="flex justify-center gap-12 max-w-5xl mx-auto px-4 border-b border-[#111]">
-            <button onclick="switchTab('math')" id="tab-math" class="tab-btn active py-4">Mathematics</button>
-            <button onclick="switchTab('physics')" id="tab-physics" class="tab-btn py-4">Physics</button>
-            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="tab-btn py-4">Chemistry</button>
+        </header>
+        
+        <nav class="flex justify-center gap-8 max-w-5xl mx-auto border-b border-[#111] mb-4">
+            <button onclick="switchTab('math')" id="tab-math" class="text-[10px] uppercase p-4 text-white border-b border-white">Math</button>
+            <button onclick="switchTab('physics')" id="tab-physics" class="text-[10px] uppercase p-4 text-gray-600">Physics</button>
+            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="text-[10px] uppercase p-4 text-gray-600">Chemistry</button>
         </nav>
-        <main class="max-w-5xl mx-auto px-4 mt-4">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr><th class="w-10">#</th><th class="topic-col">Topic</th><th>Status</th><th>PYQ(B)</th><th>PYQ(M)</th><th>Test</th><th>R1</th><th>R2</th><th>Form</th></tr>
-                    </thead>
-                    <tbody id="tracker-body"></tbody>
-                </table>
-            </div>
-        </main>
+
+        <div class="max-w-5xl mx-auto px-4 table-wrapper">
+            <table>
+                <thead><tr><th class="w-10">#</th><th class="topic-col">Topic</th><th>ST</th><th>PB</th><th>PM</th><th>TS</th><th>R1</th><th>R2</th><th>FR</th></tr></thead>
+                <tbody id="tracker-body"></tbody>
+            </table>
+        </div>
     </div>
 
-    <div id="section-history" class="hidden max-w-5xl mx-auto px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 items-end">
-            <div><input type="number" id="m-score" placeholder="MATH" class="mock-input"></div>
-            <div><input type="number" id="p-score" placeholder="PHYSICS" class="mock-input"></div>
-            <div><input type="number" id="c-score" placeholder="CHEMISTRY" class="mock-input"></div>
-            <button onclick="addMockResult()" id="record-btn" class="text-[10px] py-3 uppercase tracking-[0.2em]">Record Score</button>
+    <div id="page-rankings" class="page-content hidden max-w-5xl mx-auto p-8">
+        <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-12">LIVE COMPETITION</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="nav-card">
+                <p class="text-[9px] text-gray-500 uppercase mb-2">Focus Timer</p>
+                <h2 id="timer-display" class="text-4xl font-light mb-6">00:00:00</h2>
+                <div class="flex gap-4">
+                    <button onclick="toggleTimer()" id="timer-control" class="btn-main">Start Session</button>
+                    <button onclick="resetTimer()" class="btn-main">Reset</button>
+                </div>
+            </div>
+            <div class="nav-card text-center">
+                <p class="text-[9px] text-gray-500 uppercase mb-2">Today's Study Rank</p>
+                <h2 class="text-4xl font-light text-gray-800">#--</h2>
+                <p id="today-total" class="text-[11px] text-gray-400 mt-4">Total: 0h 0m</p>
+            </div>
         </div>
 
-        <div class="history-card">
-            <canvas id="scoreChart" height="180"></canvas>
+        <div class="nav-card">
+            <h3 class="text-[10px] uppercase tracking-widest text-gray-500 mb-6">Global Leaderboard (Live Soon)</h3>
+            <div class="opacity-20">
+                <div class="flex justify-between py-3 border-b border-[#111] text-xs"><span>1. Aryan Singh</span><span>14h 20m</span></div>
+                <div class="flex justify-between py-3 border-b border-[#111] text-xs"><span>2. Rahul K.</span><span>12h 05m</span></div>
+                <div class="flex justify-between py-3 text-xs"><span>3. Ishita P.</span><span>10h 50m</span></div>
+            </div>
         </div>
+    </div>
 
-        <div class="mt-16 table-wrapper">
+    <div id="page-history" class="page-content hidden max-w-5xl mx-auto p-8">
+        <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-8">MOCK ANALYSIS</h1>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+            <input type="number" id="m-score" placeholder="MATH" class="bg-transparent border-b border-[#111] p-3 text-sm outline-none">
+            <input type="number" id="p-score" placeholder="PHYSICS" class="bg-transparent border-b border-[#111] p-3 text-sm outline-none">
+            <input type="number" id="c-score" placeholder="CHEMISTRY" class="bg-transparent border-b border-[#111] p-3 text-sm outline-none">
+            <button onclick="addMockResult()" class="btn-main">Save Mock</button>
+        </div>
+        <div class="nav-card mb-12"><canvas id="scoreChart" height="150"></canvas></div>
+        <div class="table-wrapper">
             <table>
-                <thead>
-                    <tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th><th>Action</th></tr>
-                </thead>
+                <thead><tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th></tr></thead>
                 <tbody id="mock-history-body"></tbody>
             </table>
         </div>
     </div>
 
+    <div id="page-feedback" class="page-content hidden max-w-xl mx-auto p-8 text-center">
+        <h1 class="text-[10px] tracking-[0.4em] text-gray-500 uppercase mb-12">FEEDBACK</h1>
+        <p class="text-xs text-gray-500 mb-8">Found a bug or have a feature request? Let me know.</p>
+        
+        <form action="https://formspree.io/f/maxyadav1233@gmail.com" method="POST" class="text-left">
+            <input type="text" name="name" placeholder="Your Name" required class="w-full bg-transparent border-b border-[#111] py-4 mb-6 text-sm outline-none focus:border-white transition">
+            <textarea name="message" placeholder="What's on your mind?" required class="w-full bg-transparent border-b border-[#111] py-4 mb-12 text-sm outline-none focus:border-white transition h-32"></textarea>
+            <button type="submit" class="w-full btn-main py-4">Send Message</button>
+        </form>
+    </div>
+
+    <nav class="bottom-nav">
+        <div onclick="showPage('tracker')" class="nav-item active" id="btn-tracker">Tracker</div>
+        <div onclick="showPage('rankings')" class="nav-item" id="btn-rankings">Competition</div>
+        <div onclick="showPage('history')" class="nav-item" id="btn-history">Mocks</div>
+        <div onclick="showPage('feedback')" class="nav-item" id="btn-feedback">Feedback</div>
+    </nav>
+
     <script>
+        // DATA & CORE LOGIC
         const fullData = {
             math: { "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"] },
             physics: { "Category 1": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], "Category 2": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], "Category 3": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], "Category 4": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"] },
@@ -202,26 +152,23 @@
 
         const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fr'];
         let currentSub = 'math';
-        let mockResults = JSON.parse(localStorage.getItem('mockHistory') || '[]');
 
-        function hideLoader() { 
-            const l = document.getElementById('loader');
-            l.style.opacity = '0'; 
-            setTimeout(() => { l.style.display = 'none'; }, 800); 
-        }
-        window.addEventListener('load', () => setTimeout(hideLoader, 600));
-
-        function showSection(sec) {
-            document.getElementById('section-tracker').classList.toggle('hidden', sec !== 'tracker');
-            document.getElementById('section-history').classList.toggle('hidden', sec !== 'history');
-            document.getElementById('nav-focus').className = (sec === 'tracker') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer';
-            document.getElementById('nav-history').className = (sec === 'history') ? 'text-[9px] text-white uppercase tracking-widest cursor-pointer' : 'text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer';
-            if(sec === 'history') renderHistory();
+        // NAVIGATION
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + pageId).classList.add('active');
+            if(pageId === 'history') renderHistory();
+            window.scrollTo(0,0);
         }
 
         function switchTab(sub) {
             currentSub = sub;
-            ['math', 'physics', 'chemistry'].forEach(s => document.getElementById(`tab-${s}`).classList.toggle('active', s === sub));
+            ['math', 'physics', 'chemistry'].forEach(s => {
+                const btn = document.getElementById('tab-' + s);
+                btn.className = (s === sub) ? 'text-[10px] uppercase p-4 text-white border-b border-white' : 'text-[10px] uppercase p-4 text-gray-600';
+            });
             renderTable();
         }
 
@@ -246,7 +193,6 @@
         }
 
         function save(id, val) { localStorage.setItem(id, val); updateStats(); }
-
         function updateStats() {
             ['math', 'physics', 'chemistry'].forEach(s => {
                 let done = 0, total = 0;
@@ -263,119 +209,72 @@
         }
 
         // TIMER LOGIC
-        let timerSeconds = 0;
-        let timerInterval = null;
+        let timerSeconds = 0, timerInterval = null;
         let todaySeconds = parseInt(localStorage.getItem('todayStudyTime') || '0');
-        let lastDate = localStorage.getItem('lastStudyDate') || new Date().toLocaleDateString();
-
-        function checkDateReset() {
-            const now = new Date().toLocaleDateString();
-            if (lastDate !== now) {
-                todaySeconds = 0;
-                lastDate = now;
-                localStorage.setItem('todayStudyTime', '0');
-                localStorage.setItem('lastStudyDate', now);
-            }
-            updateTotalDisplay();
-        }
-
+        
         function toggleTimer() {
             if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                document.getElementById('timer-control').innerText = 'Start';
+                clearInterval(timerInterval); timerInterval = null;
+                document.getElementById('timer-control').innerText = 'Start Session';
             } else {
                 timerInterval = setInterval(() => {
-                    timerSeconds++;
-                    todaySeconds++;
+                    timerSeconds++; todaySeconds++;
                     localStorage.setItem('todayStudyTime', todaySeconds);
                     updateTimerDisplay();
-                    updateTotalDisplay();
                 }, 1000);
                 document.getElementById('timer-control').innerText = 'Pause';
             }
         }
 
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            timerSeconds = 0;
-            updateTimerDisplay();
-            document.getElementById('timer-control').innerText = 'Start';
+        function resetTimer() { 
+            clearInterval(timerInterval); timerInterval = null; 
+            timerSeconds = 0; updateTimerDisplay(); 
+            document.getElementById('timer-control').innerText = 'Start Session';
         }
 
         function updateTimerDisplay() {
-            const h = Math.floor(timerSeconds / 3600);
-            const m = Math.floor((timerSeconds % 3600) / 60);
-            const s = timerSeconds % 60;
-            document.getElementById('timer-display').innerText = 
-                `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            const h = Math.floor(timerSeconds / 3600), m = Math.floor((timerSeconds % 3600) / 60), s = timerSeconds % 60;
+            document.getElementById('timer-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            const th = Math.floor(todaySeconds / 3600), tm = Math.floor((todaySeconds % 3600) / 60);
+            document.getElementById('today-total').innerText = `Total: ${th}h ${tm}m`;
         }
 
-        function updateTotalDisplay() {
-            const h = Math.floor(todaySeconds / 3600);
-            const m = Math.floor((todaySeconds % 3600) / 60);
-            document.getElementById('today-total').innerText = `${h}h ${m}m`;
-        }
-
+        // MOCK LOGIC
+        let myChart;
         function addMockResult() {
             const m = parseInt(document.getElementById('m-score').value) || 0;
             const p = parseInt(document.getElementById('p-score').value) || 0;
             const c = parseInt(document.getElementById('c-score').value) || 0;
-            const total = m + p + c;
-            const date = new Date().toLocaleDateString('en-GB');
-            mockResults.push({ m, p, c, total, date });
-            localStorage.setItem('mockHistory', JSON.stringify(mockResults));
-            ['m-score', 'p-score', 'c-score'].forEach(id => document.getElementById(id).value = '');
+            const results = JSON.parse(localStorage.getItem('mockHistory') || '[]');
+            results.push({ m, p, c, total: m+p+c, date: new Date().toLocaleDateString('en-GB') });
+            localStorage.setItem('mockHistory', JSON.stringify(results));
             renderHistory();
         }
 
-        function deleteMock(idx) {
-            mockResults.splice(idx, 1);
-            localStorage.setItem('mockHistory', JSON.stringify(mockResults));
-            renderHistory();
-        }
-
-        let myChart;
         function renderHistory() {
             const body = document.getElementById('mock-history-body');
             body.innerHTML = '';
             const labels = [], chartData = [];
-            const currentData = JSON.parse(localStorage.getItem('mockHistory') || '[]');
-            currentData.forEach((res, i) => {
-                const row = `<tr><td>${i + 1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td style="color:#fff; font-weight:600;">${res.total}</td><td>${res.date}</td><td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td></tr>`;
-                body.insertAdjacentHTML('afterbegin', row);
-                labels.push(`#${i+1}`);
-                chartData.push(res.total);
+            const data = JSON.parse(localStorage.getItem('mockHistory') || '[]');
+            data.forEach((res, i) => {
+                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td class="text-white">${res.total}</td><td>${res.date}</td></tr>`);
+                labels.push(`#${i+1}`); chartData.push(res.total);
             });
             if (myChart) myChart.destroy();
             const ctx = document.getElementById('scoreChart').getContext('2d');
             myChart = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: chartData,
-                        borderColor: '#ffffff',
-                        borderWidth: 1.5,
-                        pointBackgroundColor: '#fff',
-                        pointRadius: 3,
-                        tension: 0.2
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#333', font: { size: 9 } } },
-                        y: { grid: { color: '#0a0a0a' }, ticks: { color: '#333', font: { size: 9 } } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
+                data: { labels, datasets: [{ data: chartData, borderColor: '#fff', tension: 0.2 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#111' } } } }
             });
         }
 
-        checkDateReset();
-        renderTable();
+        // INIT
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display='none', 800); }, 600);
+            renderTable();
+            updateTimerDisplay();
+        });
     </script>
 </body>
 </html>
