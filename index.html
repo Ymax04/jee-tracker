@@ -82,17 +82,20 @@
         .mock-input:focus { border-color: #444; }
         .history-card { border: 1px solid #0a0a0a; padding: 20px; margin-top: 20px; background: #000; }
         
-        #record-btn {
+        #record-btn, .timer-btn {
             background: transparent; color: #666; border: 1px solid #111;
             transition: all 0.3s ease; font-weight: 400; cursor: pointer;
         }
-        #record-btn:hover { border-color: #444; color: #fff; background: #050505; }
+        #record-btn:hover, .timer-btn:hover { border-color: #444; color: #fff; background: #050505; }
 
         .del-btn { color: #333; font-size: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .del-btn:hover { color: #ff4d4d; }
 
         .tab-btn { color: #444; font-size: 11px; font-weight: 500; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .tab-btn.active { color: #fff !important; border-bottom: 1px solid #fff !important; }
+
+        /* TIMER BOX */
+        .timer-box { border: 1px solid #111; padding: 15px; background: #050505; text-align: center; }
     </style>
 </head>
 <body class="pb-20">
@@ -101,10 +104,36 @@
 
     <header class="p-8 max-w-5xl mx-auto mt-6">
         <div class="flex justify-between items-center mb-12">
-            <h1 class="text-[10px] font-medium tracking-[0.4em] text-gray-500 uppercase">JEE 2026</h1>
+            <div>
+                <h1 class="text-[10px] font-medium tracking-[0.4em] text-gray-500 uppercase">JEE 2026</h1>
+                <p id="rank-display" class="text-[8px] text-gray-700 tracking-widest uppercase mt-1">Global Rank: #--</p>
+            </div>
             <div class="flex gap-8">
                 <span id="nav-focus" onclick="showSection('tracker')" class="text-[9px] text-white uppercase tracking-widest cursor-pointer">Focus</span>
                 <span id="nav-history" onclick="showSection('history')" class="text-[9px] text-gray-700 uppercase tracking-widest cursor-pointer hover:text-white transition">History</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="timer-box col-span-1 md:col-span-2 flex flex-col justify-center">
+                <div class="flex justify-between items-center px-4">
+                    <div class="text-left">
+                        <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Session Timer</p>
+                        <h2 id="timer-display" class="text-2xl font-light tracking-tighter">00:00:00</h2>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="toggleTimer()" id="timer-control" class="timer-btn text-[9px] px-4 py-2 uppercase tracking-widest">Start</button>
+                        <button onclick="resetTimer()" class="timer-btn text-[9px] px-4 py-2 uppercase tracking-widest">Reset</button>
+                    </div>
+                </div>
+            </div>
+            <div class="timer-box flex flex-col justify-center">
+                <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Today's Total</p>
+                <h2 id="today-total" class="text-xl font-light tracking-tighter">0h 0m</h2>
+            </div>
+            <div class="timer-box flex flex-col justify-center">
+                <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Focus Score</p>
+                <h2 class="text-xl font-light tracking-tighter text-gray-600">--</h2>
             </div>
         </div>
 
@@ -226,12 +255,67 @@
                     const k = localStorage.key(i);
                     if (k && k.startsWith(s + '-') && localStorage.getItem(k) === 'true') done++;
                 }
-                // FIXED: Capped at 100 to fix 101% bug
                 const p = Math.min(Math.round((done / total) * 100), 100) || 0;
                 document.getElementById(`${s}-perc`).innerText = p + '%';
                 const barId = s === 'chemistry' ? 'chem-bar' : s + '-bar';
                 if (document.getElementById(barId)) document.getElementById(barId).style.width = p + '%';
             });
+        }
+
+        // TIMER LOGIC
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let todaySeconds = parseInt(localStorage.getItem('todayStudyTime') || '0');
+        let lastDate = localStorage.getItem('lastStudyDate') || new Date().toLocaleDateString();
+
+        function checkDateReset() {
+            const now = new Date().toLocaleDateString();
+            if (lastDate !== now) {
+                todaySeconds = 0;
+                lastDate = now;
+                localStorage.setItem('todayStudyTime', '0');
+                localStorage.setItem('lastStudyDate', now);
+            }
+            updateTotalDisplay();
+        }
+
+        function toggleTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                document.getElementById('timer-control').innerText = 'Start';
+            } else {
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    todaySeconds++;
+                    localStorage.setItem('todayStudyTime', todaySeconds);
+                    updateTimerDisplay();
+                    updateTotalDisplay();
+                }, 1000);
+                document.getElementById('timer-control').innerText = 'Pause';
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerSeconds = 0;
+            updateTimerDisplay();
+            document.getElementById('timer-control').innerText = 'Start';
+        }
+
+        function updateTimerDisplay() {
+            const h = Math.floor(timerSeconds / 3600);
+            const m = Math.floor((timerSeconds % 3600) / 60);
+            const s = timerSeconds % 60;
+            document.getElementById('timer-display').innerText = 
+                `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function updateTotalDisplay() {
+            const h = Math.floor(todaySeconds / 3600);
+            const m = Math.floor((todaySeconds % 3600) / 60);
+            document.getElementById('today-total').innerText = `${h}h ${m}m`;
         }
 
         function addMockResult() {
@@ -240,10 +324,8 @@
             const c = parseInt(document.getElementById('c-score').value) || 0;
             const total = m + p + c;
             const date = new Date().toLocaleDateString('en-GB');
-
             mockResults.push({ m, p, c, total, date });
             localStorage.setItem('mockHistory', JSON.stringify(mockResults));
-            
             ['m-score', 'p-score', 'c-score'].forEach(id => document.getElementById(id).value = '');
             renderHistory();
         }
@@ -260,22 +342,12 @@
             body.innerHTML = '';
             const labels = [], chartData = [];
             const currentData = JSON.parse(localStorage.getItem('mockHistory') || '[]');
-
             currentData.forEach((res, i) => {
-                const row = `<tr>
-                    <td>${i + 1}</td>
-                    <td>${res.m}</td>
-                    <td>${res.p}</td>
-                    <td>${res.c}</td>
-                    <td style="color:#fff; font-weight:600;">${res.total}</td>
-                    <td>${res.date}</td>
-                    <td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td>
-                </tr>`;
+                const row = `<tr><td>${i + 1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td style="color:#fff; font-weight:600;">${res.total}</td><td>${res.date}</td><td><span class="del-btn" onclick="deleteMock(${i})">Delete</span></td></tr>`;
                 body.insertAdjacentHTML('afterbegin', row);
                 labels.push(`#${i+1}`);
                 chartData.push(res.total);
             });
-
             if (myChart) myChart.destroy();
             const ctx = document.getElementById('scoreChart').getContext('2d');
             myChart = new Chart(ctx, {
@@ -302,6 +374,7 @@
             });
         }
 
+        checkDateReset();
         renderTable();
     </script>
 </body>
