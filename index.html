@@ -1,405 +1,1689 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEE 2026 Pro Planner | Syllabus, Analytics & AI</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-        
-        :root { --bg: #000; --card: #050505; --border: #111; --accent: #fff; --text-dim: #444; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDA MISSION — OPERATION KARGIL</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap');
 
-        /* LOADER */
-        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s; }
-        .loader-text { font-size: 10px; letter-spacing: 8px; animation: pulse 2s infinite; color: #fff; }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  :root {
+    --bg: #070b0f;
+    --bg2: #0d1520;
+    --bg3: #111d2e;
+    --accent: #00d4ff;
+    --accent2: #ff6b00;
+    --green: #00ff88;
+    --red: #ff3b3b;
+    --amber: #ffb800;
+    --text: #e8f4ff;
+    --text2: #7a9bb5;
+    --border: rgba(0,212,255,0.15);
+    --border2: rgba(0,212,255,0.08);
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+  }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-        /* UI ELEMENTS */
-        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 20px; transition: 0.3s; }
-        .btn-pro { border: 1px solid #222; color: #666; font-size: 10px; text-transform: uppercase; padding: 12px 24px; letter-spacing: 1px; transition: 0.3s; cursor: pointer; background: transparent; }
-        .btn-pro:hover { border-color: #fff; color: #fff; }
-        
-        .progress-sub { color: #555; font-size: 11px; margin-bottom: 6px; }
-        .progress-bar-bg { background: #111; height: 2px; width: 100%; position: relative; }
-        .progress-bar-fill { background: #fff; height: 100%; width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-        /* TABLE STYLES */
-        .table-wrapper { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-spacing: 0; border-collapse: collapse; }
-        thead th { background: #000; color: #444; font-size: 9px; text-transform: uppercase; padding: 18px 10px; border-bottom: 1px solid var(--border); text-align: center; }
-        tbody td { padding: 16px 10px; border-bottom: 1px solid #0a0a0a; font-size: 13px; color: #888; text-align: center; }
-        .topic-col { text-align: left !important; min-width: 240px; color: #bbb !important; }
-        .category-row td { background: #020202; color: #333; font-size: 10px; text-transform: uppercase; padding: 40px 10px 10px; text-align: left; letter-spacing: 2px; }
+  /* ====== GATE / PASSCODE SCREEN ====== */
+  #gate {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #000;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+  }
 
-        /* CHECKBOXES */
-        .cb { appearance: none; width: 18px; height: 18px; border: 1px solid #222; border-radius: 2px; cursor: pointer; position: relative; transition: 0.2s; }
-        .cb:checked { background: #fff; border-color: #fff; }
-        .cb:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000; font-size: 12px; }
+  .gate-bg {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,212,255,0.03) 40px, rgba(0,212,255,0.03) 41px),
+      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,212,255,0.03) 40px, rgba(0,212,255,0.03) 41px);
+  }
 
-        /* COMING SOON OVERLAY */
-        .coming-soon-container { position: relative; overflow: hidden; }
-        .coming-soon-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; border-radius: 4px; border: 1px dashed #222; }
-        .cs-text { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: #555; }
+  .gate-shutter-top, .gate-shutter-bottom {
+    position: absolute; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, #050a0f 0%, #0a1520 100%);
+    display: flex; align-items: flex-end; justify-content: center;
+    transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+    z-index: 2;
+    border: 1px solid rgba(0,212,255,0.1);
+  }
+  .gate-shutter-top {
+    top: 0;
+    background: linear-gradient(180deg, #020507 0%, #0d1a28 100%);
+    align-items: flex-end;
+  }
+  .gate-shutter-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, #020507 0%, #0d1a28 100%);
+    align-items: flex-start;
+  }
+  .gate-shutter-top.open { transform: translateY(-100%); }
+  .gate-shutter-bottom.open { transform: translateY(100%); }
 
-        /* AI ASSISTANT */
-        #ai-bubble { position: fixed; bottom: 90px; right: 20px; width: 54px; height: 54px; background: #fff; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2000; box-shadow: 0 10px 30px rgba(255,255,255,0.1); transition: 0.3s; }
-        #ai-bubble:hover { transform: scale(1.1); }
-        #ai-window { position: fixed; bottom: 160px; right: 20px; width: 320px; height: 450px; background: #080808; border: 1px solid #222; border-radius: 8px; z-index: 2000; display: none; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        #ai-msg-container { flex: 1; padding: 20px; overflow-y: auto; font-size: 13px; color: #ccc; }
-        .bot-msg { background: #111; padding: 12px; border-radius: 4px; margin-bottom: 12px; border-left: 2px solid #fff; line-height: 1.6; }
-        .user-msg { background: #1a1a1a; padding: 12px; border-radius: 4px; margin-bottom: 12px; text-align: right; color: #fff; }
-        #ai-form { border-top: 1px solid #111; padding: 15px; display: flex; }
-        #ai-input { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 13px; }
+  /* shutter lines */
+  .shutter-lines {
+    width: 100%; padding: 10px 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .shutter-line {
+    height: 3px; margin: 0 20px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+    border-radius: 2px;
+  }
 
-        /* BOTTOM NAV */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 20px 10px; z-index: 1000; }
-        .nav-item { font-size: 9px; text-transform: uppercase; color: #444; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: #fff; }
+  .gate-content {
+    position: relative; z-index: 5;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 28px;
+    padding: 40px;
+  }
 
-        .hidden { display: none; }
-    </style>
+  .gate-emblem {
+    width: 80px; height: 80px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    box-shadow: var(--glow);
+    animation: pulse-ring 2s infinite;
+    position: relative;
+  }
+  .gate-emblem::before {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,255,0.2);
+    animation: pulse-ring 2s infinite 0.5s;
+  }
+
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(0,212,255,0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(0,212,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,212,255,0); }
+  }
+
+  .gate-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 32px; font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,212,255,0.5);
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .gate-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--text2);
+    letter-spacing: 3px;
+    text-align: center;
+  }
+
+  .passcode-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: var(--text2);
+    letter-spacing: 4px; text-transform: uppercase;
+    text-align: center;
+  }
+
+  .passcode-dots {
+    display: flex; gap: 16px; align-items: center;
+    justify-content: center;
+  }
+  .dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .dot.filled { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  .passcode-input {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 8px;
+    text-align: center;
+    padding: 14px 24px;
+    width: 260px;
+    outline: none;
+    transition: all 0.3s;
+  }
+  .passcode-input:focus {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    background: rgba(0,212,255,0.08);
+  }
+  .passcode-input.error {
+    border-color: var(--red);
+    animation: shake 0.4s ease;
+    color: var(--red);
+  }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-8px)}
+    40%{transform:translateX(8px)}
+    60%{transform:translateX(-8px)}
+    80%{transform:translateX(8px)}
+  }
+
+  .gate-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px; font-weight: 600;
+    letter-spacing: 4px;
+    padding: 12px 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+  .gate-btn:hover {
+    background: rgba(0,212,255,0.1);
+    box-shadow: var(--glow);
+  }
+
+  .gate-hint {
+    font-size: 11px; color: rgba(122,155,181,0.5);
+    font-family: 'Share Tech Mono', monospace;
+    text-align: center; max-width: 280px;
+    line-height: 1.6;
+  }
+
+  .gate-error {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--red);
+    letter-spacing: 2px;
+    height: 18px;
+  }
+
+  /* scanning line animation */
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.3;
+    animation: scan 4s linear infinite;
+    z-index: 3;
+  }
+  @keyframes scan {
+    0% { top: -2px; }
+    100% { top: 100%; }
+  }
+
+  /* ACCESS GRANTED overlay */
+  #access-granted {
+    position: fixed; inset: 0; z-index: 999;
+    display: none; align-items: center; justify-content: center;
+    background: transparent;
+    pointer-events: none;
+  }
+  #access-granted.show {
+    display: flex;
+    animation: fade-out 0.5s ease 2s forwards;
+  }
+  .access-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 48px; font-weight: 700;
+    color: var(--green);
+    letter-spacing: 8px;
+    text-shadow: 0 0 40px var(--green);
+    animation: access-flash 0.3s ease;
+  }
+  @keyframes access-flash {
+    0%{opacity:0;transform:scale(0.8)}
+    50%{opacity:1;transform:scale(1.05)}
+    100%{opacity:1;transform:scale(1)}
+  }
+  @keyframes fade-out {
+    to{opacity:0}
+  }
+
+  /* ====== MAIN APP ====== */
+  #app { display: none; min-height: 100vh; }
+  #app.visible { display: block; }
+
+  /* top bar */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,11,15,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center;
+    height: 60px; gap: 32px;
+  }
+
+  .logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--text2); font-weight: 400; font-size: 12px; }
+
+  .nav-tabs {
+    display: flex; gap: 0;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .nav-tab {
+    padding: 8px 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none; background: none;
+    text-transform: uppercase;
+  }
+  .nav-tab.active {
+    background: rgba(0,212,255,0.12);
+    color: var(--accent);
+  }
+  .nav-tab:hover:not(.active) {
+    color: var(--text); background: rgba(255,255,255,0.04);
+  }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .day-counter {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--text2);
+    letter-spacing: 1px;
+  }
+  .day-counter span { color: var(--accent2); font-size: 15px; font-weight: bold; }
+
+  /* ====== VIEWS ====== */
+  .view { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
+  .view.active { display: block; }
+
+  /* ====== MISSION (TODAY) VIEW ====== */
+  .mission-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    gap: 20px;
+  }
+  .date-block {}
+  .date-big {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 64px; font-weight: 700;
+    line-height: 1; color: var(--text);
+    letter-spacing: -2px;
+  }
+  .date-big span { font-size: 28px; color: var(--text2); margin-left: 4px; }
+  .date-day {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--accent);
+    letter-spacing: 4px; margin-top: 4px;
+  }
+  .mission-quote {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--text2);
+    text-align: right; font-style: italic;
+    max-width: 260px;
+    opacity: 0.7;
+  }
+
+  .progress-strip {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .strip-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: var(--text2);
+    letter-spacing: 2px; white-space: nowrap;
+  }
+  .strip-bar-bg {
+    flex: 1; height: 6px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 99px; overflow: hidden;
+    border: 1px solid var(--border2);
+  }
+  .strip-bar-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    transition: width 0.8s ease;
+    position: relative;
+  }
+  .strip-bar-fill::after {
+    content: '';
+    position: absolute; right: -1px; top: -2px;
+    width: 10px; height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+  }
+  .strip-pct {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; color: var(--green);
+    font-weight: bold; min-width: 40px;
+  }
+
+  .section-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; letter-spacing: 4px;
+    color: var(--text2); text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-eyebrow::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  .block-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .block-header {
+    display: flex; align-items: center;
+    padding: 12px 16px; gap: 10px;
+    border-bottom: 1px solid var(--border2);
+  }
+  .block-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--text2);
+    letter-spacing: 1px;
+  }
+  .block-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 3px; color: var(--accent);
+    text-transform: uppercase;
+  }
+  .block-time {
+    margin-left: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: var(--text2);
+  }
+
+  .task-row {
+    display: flex; align-items: center;
+    padding: 12px 16px; gap: 12px;
+    border-bottom: 1px solid var(--border2);
+    transition: background 0.2s;
+  }
+  .task-row:last-child { border-bottom: none; }
+  .task-row:hover { background: rgba(0,212,255,0.03); }
+
+  .task-check {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+    background: transparent;
+  }
+  .task-check:hover { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .task-check.done {
+    background: rgba(0,255,136,0.15);
+    border-color: var(--green);
+  }
+  .task-check.done::after {
+    content: '✓'; color: var(--green); font-size: 12px; font-weight: bold;
+  }
+
+  .task-info { flex: 1; }
+  .task-name {
+    font-size: 14px; color: var(--text);
+    transition: all 0.2s; line-height: 1.4;
+  }
+  .task-row.completed .task-name {
+    text-decoration: line-through; color: var(--text2);
+  }
+  .task-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--text2);
+    margin-top: 2px;
+  }
+
+  .task-actions { display: flex; gap: 6px; }
+  .task-btn {
+    padding: 4px 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; letter-spacing: 1px;
+    border-radius: 3px; cursor: pointer;
+    border: 1px solid; transition: all 0.2s;
+    background: transparent;
+    text-transform: uppercase;
+  }
+  .btn-pass {
+    border-color: rgba(255,184,0,0.3);
+    color: var(--amber);
+  }
+  .btn-pass:hover {
+    background: rgba(255,184,0,0.1);
+    border-color: var(--amber);
+  }
+
+  /* backlogs */
+  .backlog-section { margin-top: 32px; }
+  .backlog-header {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 12px;
+  }
+  .backlog-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: var(--text2); text-transform: uppercase;
+  }
+  .delay-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; padding: 3px 10px;
+    border-radius: 99px;
+    background: rgba(255,59,59,0.15);
+    color: var(--red); border: 1px solid rgba(255,59,59,0.3);
+  }
+
+  .backlog-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .backlog-card {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 6px; padding: 12px;
+    font-size: 13px;
+  }
+  .backlog-card-date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .backlog-task {
+    color: var(--text2); font-size: 12px;
+    padding: 4px 0; border-bottom: 1px solid var(--border2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .backlog-task:last-child { border-bottom: none; }
+  .backlog-task .pp {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: rgba(122,155,181,0.5);
+    margin-left: auto;
+  }
+
+  /* ====== SUBJECTS VIEW ====== */
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px; margin-top: 24px;
+  }
+  .subject-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px;
+    cursor: pointer; transition: all 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .subject-card:hover {
+    border-color: rgba(0,212,255,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .subject-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .subject-card.math::before { background: var(--accent); }
+  .subject-card.english::before { background: #7c6fe0; }
+  .subject-card.physics::before { background: var(--accent2); }
+  .subject-card.gk::before { background: var(--green); }
+  .subject-card.chemistry::before { background: #ff6eb4; }
+  .subject-card.bio::before { background: #4ade80; }
+
+  .subj-card-top {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 14px;
+  }
+  .subj-card-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+  }
+  .subj-pct {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 20px; font-weight: bold;
+  }
+  .subj-bar-bg {
+    height: 4px; background: rgba(255,255,255,0.08);
+    border-radius: 99px; overflow: hidden; margin-bottom: 10px;
+  }
+  .subj-bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease; }
+  .subj-card-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--text2);
+    letter-spacing: 1px;
+  }
+  .priority-tag {
+    font-size: 10px; padding: 2px 8px; border-radius: 99px;
+    font-family: 'Share Tech Mono', monospace; letter-spacing: 1px;
+    display: inline-block; margin-top: 8px;
+  }
+  .pri-red { background: rgba(255,59,59,0.15); color: var(--red); border: 1px solid rgba(255,59,59,0.3); }
+  .pri-amber { background: rgba(255,184,0,0.15); color: var(--amber); border: 1px solid rgba(255,184,0,0.3); }
+  .pri-green { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+
+  .upcoming-section { margin-top: 32px; }
+  .upcoming-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-top: 12px;
+  }
+  .upcoming-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px; padding: 14px;
+  }
+  .upcoming-date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--accent);
+    letter-spacing: 2px; margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .upcoming-subj {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; color: var(--text2);
+    text-transform: uppercase; margin: 8px 0 4px;
+  }
+  .upcoming-task {
+    font-size: 12px; color: var(--text);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: color 0.2s;
+  }
+  .upcoming-task:hover { color: var(--accent); }
+  .upcoming-task:last-child { border-bottom: none; }
+  .upcoming-task .pp-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px; color: rgba(122,155,181,0.5);
+  }
+  .mark-done-btn {
+    font-size: 10px; padding: 2px 6px;
+    background: rgba(0,255,136,0.1);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--green); border-radius: 3px;
+    cursor: pointer; margin-left: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .mark-done-btn:hover {
+    background: rgba(0,255,136,0.2);
+  }
+
+  /* ====== PROGRESS VIEW ====== */
+  .progress-view {}
+  .stats-row {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 12px; margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px;
+    text-align: center;
+  }
+  .stat-big {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 36px; font-weight: 700;
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px; letter-spacing: 2px;
+    color: var(--text2); margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .chart-container {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px;
+    margin-bottom: 20px;
+  }
+  .chart-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 3px; color: var(--text2);
+    text-transform: uppercase; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chart-title::after {
+    content:''; flex:1; height:1px; background: var(--border);
+  }
+
+  canvas { width: 100% !important; }
+
+  .subject-progress-bars { display: flex; flex-direction: column; gap: 14px; }
+  .spb-row { display: flex; align-items: center; gap: 14px; }
+  .spb-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 2px; min-width: 110px;
+    text-transform: uppercase;
+  }
+  .spb-bg {
+    flex: 1; height: 10px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 99px; overflow: hidden;
+    border: 1px solid var(--border2);
+  }
+  .spb-fill {
+    height: 100%; border-radius: 99px;
+    transition: width 1.2s ease;
+  }
+  .spb-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; min-width: 40px; text-align: right;
+  }
+
+  /* exam countdown */
+  .countdown-box {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border: 1px solid rgba(255,107,0,0.3);
+    border-radius: 8px; padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .cd-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: var(--accent2);
+    letter-spacing: 3px; text-transform: uppercase;
+  }
+  .cd-days {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 52px; font-weight: 700;
+    color: var(--accent2); line-height: 1;
+    text-shadow: 0 0 30px rgba(255,107,0,0.4);
+  }
+  .cd-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .cd-bar-wrap { flex: 1; }
+  .cd-bar-bg {
+    height: 8px; background: rgba(0,0,0,0.5);
+    border-radius: 99px; overflow: hidden;
+    border: 1px solid rgba(255,107,0,0.2);
+    margin-bottom: 6px;
+  }
+  .cd-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--red));
+    border-radius: 99px; transition: width 1s ease;
+  }
+  .cd-pct {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: var(--text2);
+  }
+
+  /* weekly heatmap */
+  .heatmap { display: flex; gap: 6px; flex-wrap: wrap; }
+  .heat-day {
+    width: 14px; height: 14px; border-radius: 2px;
+    background: rgba(0,212,255,0.05);
+    border: 1px solid var(--border2);
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+  }
+  .heat-day.l1 { background: rgba(0,212,255,0.2); }
+  .heat-day.l2 { background: rgba(0,212,255,0.4); }
+  .heat-day.l3 { background: rgba(0,212,255,0.6); }
+  .heat-day.l4 { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+  /* toast */
+  #toast {
+    position: fixed; bottom: 32px; right: 32px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--green);
+    letter-spacing: 1px;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s;
+    z-index: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+  #toast.show {
+    transform: translateY(0); opacity: 1;
+  }
+
+  /* corner decorations */
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
+    position: fixed; width: 20px; height: 20px;
+    z-index: 50; pointer-events: none;
+  }
+  .corner-tl { top: 8px; left: 8px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+  .corner-tr { top: 8px; right: 8px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+  .corner-bl { bottom: 8px; left: 8px; border-bottom: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+  .corner-br { bottom: 8px; right: 8px; border-bottom: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+
+  /* empty state */
+  .empty-state {
+    text-align: center; padding: 40px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; color: var(--text2);
+    letter-spacing: 2px;
+  }
+  .empty-state .big { font-size: 32px; margin-bottom: 12px; }
+
+  @media (max-width: 768px) {
+    .topbar { padding: 0 16px; }
+    .view { padding: 16px; }
+    .backlog-cards { grid-template-columns: 1fr; }
+    .upcoming-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .date-big { font-size: 44px; }
+    .subjects-grid { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
-<body class="pb-32">
+<body>
 
-    <div id="loader"><div class="loader-text">INITIALIZING CORE</div></div>
+<!-- CORNER DECORATIONS -->
+<div class="corner-tl"></div>
+<div class="corner-tr"></div>
+<div class="corner-bl"></div>
+<div class="corner-br"></div>
 
-    <div id="ai-bubble" onclick="toggleAI()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+<!-- GATE SCREEN -->
+<div id="gate">
+  <div class="gate-bg"></div>
+  <div class="scan-line"></div>
+
+  <div class="gate-shutter-top" id="shutterTop">
+    <div class="shutter-lines">
+      <div class="shutter-line"></div>
+      <div class="shutter-line"></div>
+      <div class="shutter-line"></div>
     </div>
-    <div id="ai-window" class="flex flex-col">
-        <div class="p-4 border-b border-[#111] flex justify-between items-center bg-[#050505]">
-            <span class="text-[9px] uppercase tracking-[0.3em] text-gray-500">AI Professional Advisor</span>
-            <span onclick="toggleAI()" class="cursor-pointer text-gray-600 hover:text-white">✕</span>
-        </div>
-        <div id="ai-msg-container">
-            <div class="bot-msg">Welcome, Aspirant. I am your specialized JEE Advisor. Ask me about backlogs, subject strategies, or motivation.</div>
-        </div>
-        <form id="ai-form" onsubmit="handleAdvisorChat(event)">
-            <input type="text" id="ai-input" placeholder="Ask your advisor..." autocomplete="off">
-        </form>
+  </div>
+  <div class="gate-shutter-bottom" id="shutterBottom">
+    <div class="shutter-lines">
+      <div class="shutter-line"></div>
+      <div class="shutter-line"></div>
+      <div class="shutter-line"></div>
+    </div>
+  </div>
+
+  <div class="gate-content">
+    <div class="gate-emblem">🎯</div>
+    <div>
+      <div class="gate-title">OPERATION NDA</div>
+      <div class="gate-sub" style="margin-top:6px">MISSION CONTROL — CLASSIFIED</div>
+    </div>
+    <div>
+      <div class="passcode-label" style="margin-bottom:16px">ENTER ACCESS CODE</div>
+      <input
+        type="password"
+        id="passcodeInput"
+        class="passcode-input"
+        maxlength="20"
+        placeholder="············"
+        autocomplete="off"
+        onkeydown="if(event.key==='Enter')tryUnlock()"
+      />
+      <div class="gate-error" id="gateError" style="margin-top:10px; text-align:center"></div>
+    </div>
+    <button class="gate-btn" onclick="tryUnlock()">AUTHENTICATE →</button>
+    <div class="gate-hint">Hint: The institution you're fighting to join + your year of exam<br>(e.g. NDA2025)</div>
+  </div>
+</div>
+
+<!-- ACCESS GRANTED FLASH -->
+<div id="access-granted">
+  <div class="access-text">ACCESS GRANTED</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="logo">NDA <span>MISSION CONTROL</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('mission')">📡 MISSION</button>
+      <button class="nav-tab" onclick="switchTab('subjects')">📚 SUBJECTS</button>
+      <button class="nav-tab" onclick="switchTab('progress')">📊 PROGRESS</button>
+    </div>
+    <div class="topbar-right">
+      <div class="day-counter">D-DAY IN <span id="daysLeft">89</span> DAYS</div>
+    </div>
+  </div>
+
+  <!-- MISSION VIEW -->
+  <div class="view active" id="view-mission">
+    <div class="mission-header">
+      <div class="date-block">
+        <div class="date-big" id="dateNum">17<span id="dateMon">JUN</span></div>
+        <div class="date-day" id="dateDayName">WEDNESDAY</div>
+      </div>
+      <div class="mission-quote" id="dailyQuote">"Excuses don't pass exams."</div>
     </div>
 
-    <div id="page-tracker" class="page-content">
-        <header class="p-10 max-w-5xl mx-auto mt-4 text-center">
-            <h1 class="text-[10px] tracking-[0.6em] text-gray-600 uppercase mb-3">JEE 2026 / SYLLABUS CORE</h1>
-            <p class="text-[8px] text-blue-500 uppercase tracking-[0.4em] animate-pulse mb-12">System Live: All Features Active</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div>
-                    <div class="flex justify-between progress-sub"><span>Mathematics</span><span id="math-perc">0%</span></div>
-                    <div class="progress-bar-bg"><div id="math-bar" class="progress-bar-fill"></div></div>
-                </div>
-                <div>
-                    <div class="flex justify-between progress-sub"><span>Physics</span><span id="physics-perc">0%</span></div>
-                    <div class="progress-bar-bg"><div id="physics-bar" class="progress-bar-fill"></div></div>
-                </div>
-                <div>
-                    <div class="flex justify-between progress-sub"><span>Chemistry</span><span id="chemistry-perc">0%</span></div>
-                    <div class="progress-bar-bg"><div id="chem-bar" class="progress-bar-fill"></div></div>
-                </div>
+    <div class="progress-strip">
+      <div class="strip-label">TODAY'S MISSION</div>
+      <div class="strip-bar-bg">
+        <div class="strip-bar-fill" id="todayBar" style="width:0%"></div>
+      </div>
+      <div class="strip-pct" id="todayPct">0%</div>
+    </div>
+
+    <div id="todayBlocks"></div>
+    <div class="backlog-section" id="backlogSection"></div>
+  </div>
+
+  <!-- SUBJECTS VIEW -->
+  <div class="view" id="view-subjects">
+    <div class="section-eyebrow">CORE MASTERY</div>
+    <div class="subjects-grid" id="subjectsGrid"></div>
+    <div class="upcoming-section">
+      <div class="section-eyebrow" style="margin-top:28px">UPCOMING TASKS</div>
+      <div class="upcoming-grid" id="upcomingGrid"></div>
+    </div>
+  </div>
+
+  <!-- PROGRESS VIEW -->
+  <div class="view" id="view-progress">
+    <div class="countdown-box">
+      <div>
+        <div class="cd-label">EXAM COUNTDOWN</div>
+        <div class="cd-days" id="cdDays">89</div>
+        <div class="cd-sub">days until NDA Written · Sep 13, 2026</div>
+      </div>
+      <div class="cd-bar-wrap">
+        <div class="cd-bar-bg">
+          <div class="cd-bar-fill" id="cdBar" style="width:0%"></div>
+        </div>
+        <div class="cd-pct" id="cdPct">0% of prep time used</div>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="chart-container">
+      <div class="chart-title">SUBJECT MASTERY</div>
+      <div class="subject-progress-bars" id="masteryBars"></div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">WEEKLY ACTIVITY</div>
+      <canvas id="weekChart" height="120"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">STUDY HEATMAP (Last 12 weeks)</div>
+      <div style="margin-bottom:8px; font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:2px;">MON — SUN</div>
+      <div class="heatmap" id="heatmap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// DATA & STATE
+// ============================================================
+
+const PASSCODES = ['NDA2026', 'nda2026', 'NDA2025', 'nda2025', 'OPERATION2026'];
+// Hint: NDA + exam year (2026) — motivational: the year you join the academy
+
+const QUOTES = [
+  '"Excuses don\'t pass exams."',
+  '"Pain is temporary. NDA is forever."',
+  '"Every hour you waste, someone else is grinding."',
+  '"The parade ground won\'t care about your excuses."',
+  '"Officers don\'t quit. Neither do you."',
+  '"Kargil wasn\'t won by comfort seekers."',
+  '"89 days. That\'s all you need."',
+  '"Your uniform is waiting. Go earn it."',
+  '"Study now, salute later."',
+  '"The NDA gate opens for those who prepared."',
+];
+
+// NDA Syllabus — structured by subject and topic
+// startDate = June 17, 2026 (today = Day 0)
+const TODAY_STR = '2026-06-17';
+const EXAM_DATE = new Date('2026-09-13');
+
+function addDays(dateStr, n) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+// Full NDA syllabus as tasks — week by week
+const SYLLABUS = [
+  // WEEK 1 — MATHS FOUNDATIONS
+  { id:'m1', subject:'MATHS', topic:'Sets', desc:'Sets — Types, Venn Diagrams, Operations', date: addDays(TODAY_STR, 0), time:'45 min', pages:'Ch.1' },
+  { id:'m2', subject:'MATHS', topic:'Sets', desc:'Sets — DeMorgan\'s Laws, Cartesian Product', date: addDays(TODAY_STR, 0), time:'30 min', pages:'Ch.1' },
+  { id:'m3', subject:'MATHS', topic:'Relations & Functions', desc:'Relations — Types, Domain, Range', date: addDays(TODAY_STR, 1), time:'45 min', pages:'Ch.2' },
+  { id:'m4', subject:'MATHS', topic:'Trigonometry', desc:'Trig Ratios — Standard Values Table (must memorise)', date: addDays(TODAY_STR, 2), time:'45 min', pages:'Ch.3' },
+  { id:'m5', subject:'MATHS', topic:'Trigonometry', desc:'Identities — sin²+cos²=1, compound angles', date: addDays(TODAY_STR, 3), time:'45 min', pages:'Ch.3' },
+  { id:'m6', subject:'MATHS', topic:'Algebra', desc:'Quadratic Equations — roots, discriminant', date: addDays(TODAY_STR, 4), time:'45 min', pages:'Ch.5' },
+  { id:'m7', subject:'MATHS', topic:'Algebra', desc:'α+β, αβ formulas — PYQ drill (10 questions)', date: addDays(TODAY_STR, 5), time:'30 min', pages:'PYQ' },
+
+  // WEEK 1 — ENGLISH DAILY
+  { id:'e1', subject:'ENGLISH', topic:'Grammar', desc:'Subject-Verb Agreement — 10 rules with examples', date: addDays(TODAY_STR, 0), time:'30 min', pages:'Grammar' },
+  { id:'e2', subject:'ENGLISH', topic:'Vocabulary', desc:'Vocabulary — Latin/Greek roots: belli, mal, bene, port', date: addDays(TODAY_STR, 1), time:'20 min', pages:'Vocab' },
+  { id:'e3', subject:'ENGLISH', topic:'Grammar', desc:'Tenses — All 12 tenses, formation rules', date: addDays(TODAY_STR, 2), time:'25 min', pages:'Grammar' },
+  { id:'e4', subject:'ENGLISH', topic:'Vocabulary', desc:'Synonyms/Antonyms — Word list 1 (50 words)', date: addDays(TODAY_STR, 3), time:'20 min', pages:'Vocab' },
+  { id:'e5', subject:'ENGLISH', topic:'Comprehension', desc:'RC Practice — 1 passage with 5 questions', date: addDays(TODAY_STR, 4), time:'25 min', pages:'RC' },
+  { id:'e6', subject:'ENGLISH', topic:'Grammar', desc:'Articles and Prepositions — common NDA traps', date: addDays(TODAY_STR, 5), time:'20 min', pages:'Grammar' },
+
+  // WEEK 1 — GK DAILY (HISTORY)
+  { id:'h1', subject:'HISTORY', topic:'Ancient India', desc:'Indus Valley Civilisation — key facts', date: addDays(TODAY_STR, 0), time:'25 min', pages:'NCERT 6' },
+  { id:'h2', subject:'HISTORY', topic:'Ancient India', desc:'Vedic Age, Maurya Empire — Ashoka', date: addDays(TODAY_STR, 1), time:'25 min', pages:'NCERT 6' },
+  { id:'h3', subject:'HISTORY', topic:'Medieval India', desc:'Delhi Sultanate — key rulers, battles', date: addDays(TODAY_STR, 2), time:'25 min', pages:'NCERT 7' },
+  { id:'h4', subject:'HISTORY', topic:'Medieval India', desc:'Mughal Empire — Akbar to Aurangzeb', date: addDays(TODAY_STR, 3), time:'25 min', pages:'NCERT 7' },
+  { id:'h5', subject:'HISTORY', topic:'Modern India', desc:'British East India Company — 1600-1757', date: addDays(TODAY_STR, 4), time:'30 min', pages:'NCERT 8' },
+  { id:'h6', subject:'HISTORY', topic:'Modern India', desc:'Battle of Plassey, Buxar — causes & results', date: addDays(TODAY_STR, 5), time:'25 min', pages:'NCERT 8' },
+  { id:'h7', subject:'HISTORY', topic:'Modern India', desc:'1857 Revolt — causes, key leaders, outcomes', date: addDays(TODAY_STR, 6), time:'30 min', pages:'NCERT 8' },
+
+  // WEEK 2 — PHYSICS
+  { id:'p1', subject:'PHYSICS', topic:'Mechanics', desc:'Equations of Motion — v=u+at, s=ut+½at², v²=u²+2as', date: addDays(TODAY_STR, 7), time:'45 min', pages:'NCERT 11' },
+  { id:'p2', subject:'PHYSICS', topic:'Mechanics', desc:'Newton\'s Laws — 10 application problems', date: addDays(TODAY_STR, 8), time:'40 min', pages:'NCERT 11' },
+  { id:'p3', subject:'PHYSICS', topic:'Mechanics', desc:'Projectile Motion — range, max height, time', date: addDays(TODAY_STR, 9), time:'45 min', pages:'NCERT 11' },
+  { id:'p4', subject:'PHYSICS', topic:'Optics', desc:'Mirrors — concave, convex, plane — uses & differences', date: addDays(TODAY_STR, 10), time:'30 min', pages:'NCERT 10' },
+  { id:'p5', subject:'PHYSICS', topic:'Optics', desc:'Lenses — converging, diverging, lens formula', date: addDays(TODAY_STR, 11), time:'30 min', pages:'NCERT 10' },
+  { id:'p6', subject:'PHYSICS', topic:'Electricity', desc:'Ohm\'s Law, resistance, series & parallel circuits', date: addDays(TODAY_STR, 12), time:'40 min', pages:'NCERT 10' },
+  { id:'p7', subject:'PHYSICS', topic:'Waves & Sound', desc:'Sound — speed, frequency, pitch, echo', date: addDays(TODAY_STR, 13), time:'30 min', pages:'NCERT 9' },
+
+  // WEEK 2 — POLITY
+  { id:'po1', subject:'POLITY', topic:'Constitution', desc:'Preamble, Fundamental Rights — Art 12-35', date: addDays(TODAY_STR, 7), time:'35 min', pages:'NCERT 11' },
+  { id:'po2', subject:'POLITY', topic:'Constitution', desc:'DPSP, Fundamental Duties — Art 36-51A', date: addDays(TODAY_STR, 8), time:'30 min', pages:'NCERT 11' },
+  { id:'po3', subject:'POLITY', topic:'Parliament', desc:'Lok Sabha, Rajya Sabha — powers & composition', date: addDays(TODAY_STR, 9), time:'30 min', pages:'NCERT 11' },
+  { id:'po4', subject:'POLITY', topic:'Executive', desc:'President, PM, Cabinet — powers & election', date: addDays(TODAY_STR, 10), time:'30 min', pages:'NCERT 11' },
+  { id:'po5', subject:'POLITY', topic:'Judiciary', desc:'Supreme Court, High Courts — structure & powers', date: addDays(TODAY_STR, 11), time:'25 min', pages:'NCERT 11' },
+
+  // WEEK 2 — MATHS CONTINUED
+  { id:'m8', subject:'MATHS', topic:'Logarithms', desc:'Log laws — product, quotient, power rule with drills', date: addDays(TODAY_STR, 7), time:'40 min', pages:'Ch.4' },
+  { id:'m9', subject:'MATHS', topic:'Matrices', desc:'Matrix operations — addition, multiplication', date: addDays(TODAY_STR, 8), time:'45 min', pages:'Ch.6' },
+  { id:'m10', subject:'MATHS', topic:'Matrices', desc:'Determinants — 2×2, 3×3, |kA|=kⁿ|A| rule', date: addDays(TODAY_STR, 9), time:'45 min', pages:'Ch.6' },
+  { id:'m11', subject:'MATHS', topic:'Statistics', desc:'Mean, Median, Mode — combined problems', date: addDays(TODAY_STR, 10), time:'35 min', pages:'Ch.7' },
+  { id:'m12', subject:'MATHS', topic:'Probability', desc:'Basic probability, P(A∪B), P(A∩B)', date: addDays(TODAY_STR, 11), time:'40 min', pages:'Ch.8' },
+  { id:'m13', subject:'MATHS', topic:'Probability', desc:'Conditional probability, Bayes theorem intro', date: addDays(TODAY_STR, 12), time:'40 min', pages:'Ch.8' },
+
+  // WEEK 3 — GEOGRAPHY
+  { id:'g1', subject:'GEOGRAPHY', topic:'Physical', desc:'Rivers of India — Bay of Bengal vs Arabian Sea', date: addDays(TODAY_STR, 14), time:'30 min', pages:'NCERT 9' },
+  { id:'g2', subject:'GEOGRAPHY', topic:'Physical', desc:'Mountain ranges, Passes — Himalayas, Western Ghats', date: addDays(TODAY_STR, 15), time:'30 min', pages:'NCERT 9' },
+  { id:'g3', subject:'GEOGRAPHY', topic:'Climate', desc:'Monsoon system — origin, types, effects on India', date: addDays(TODAY_STR, 16), time:'30 min', pages:'NCERT 9' },
+  { id:'g4', subject:'GEOGRAPHY', topic:'World', desc:'Continents, Oceans, important straits & passages', date: addDays(TODAY_STR, 17), time:'30 min', pages:'NCERT 9' },
+  { id:'g5', subject:'GEOGRAPHY', topic:'World', desc:'Countries and capitals — 50 most important ones', date: addDays(TODAY_STR, 18), time:'25 min', pages:'Atlas' },
+
+  // WEEK 3 — DEFENCE GK
+  { id:'d1', subject:'DEFENCE GK', topic:'Indian Military', desc:'Indian Army, Navy, Airforce — structure, ranks', date: addDays(TODAY_STR, 14), time:'25 min', pages:'Notes' },
+  { id:'d2', subject:'DEFENCE GK', topic:'Weapons & Ships', desc:'INS Vikrant, INS Vikramaditya — key naval ships', date: addDays(TODAY_STR, 15), time:'20 min', pages:'Notes' },
+  { id:'d3', subject:'DEFENCE GK', topic:'Weapons & Ships', desc:'Agni, Prithvi, BrahMos — Indian missiles', date: addDays(TODAY_STR, 16), time:'20 min', pages:'Notes' },
+  { id:'d4', subject:'DEFENCE GK', topic:'Operations', desc:'Operation Vijay (Kargil), Operation Pawan — details', date: addDays(TODAY_STR, 17), time:'25 min', pages:'Notes' },
+  { id:'d5', subject:'DEFENCE GK', topic:'Awards', desc:'Param Vir Chakra — all recipients, battles', date: addDays(TODAY_STR, 18), time:'20 min', pages:'Notes' },
+
+  // WEEK 4+ — CHEMISTRY
+  { id:'c1', subject:'CHEMISTRY', topic:'Atomic Structure', desc:'Atomic number, mass number, isotopes — quick drill', date: addDays(TODAY_STR, 21), time:'30 min', pages:'NCERT 9' },
+  { id:'c2', subject:'CHEMISTRY', topic:'Periodic Table', desc:'Groups & periods — key elements to remember', date: addDays(TODAY_STR, 22), time:'35 min', pages:'NCERT 10' },
+  { id:'c3', subject:'CHEMISTRY', topic:'Chemical Reactions', desc:'Types of reactions — acid-base, redox, combination', date: addDays(TODAY_STR, 23), time:'35 min', pages:'NCERT 10' },
+  { id:'c4', subject:'CHEMISTRY', topic:'Everyday Chemistry', desc:'Common formulas — NaCl, H₂SO₄, HCl, NaOH, CO₂', date: addDays(TODAY_STR, 24), time:'25 min', pages:'Notes' },
+
+  // WEEK 4 — BIOLOGY
+  { id:'b1', subject:'BIOLOGY', topic:'Cell Biology', desc:'Cell organelles — functions of each (quick table)', date: addDays(TODAY_STR, 21), time:'30 min', pages:'NCERT 9' },
+  { id:'b2', subject:'BIOLOGY', topic:'Human Body', desc:'Digestive system — organs, enzymes, process', date: addDays(TODAY_STR, 22), time:'30 min', pages:'NCERT 10' },
+  { id:'b3', subject:'BIOLOGY', topic:'Human Body', desc:'Circulatory system — heart, blood groups, functions', date: addDays(TODAY_STR, 23), time:'30 min', pages:'NCERT 10' },
+  { id:'b4', subject:'BIOLOGY', topic:'Human Body', desc:'Nervous system & diseases — NDA frequently tested', date: addDays(TODAY_STR, 24), time:'25 min', pages:'NCERT 10' },
+];
+
+// State stored in localStorage
+let state = {
+  completedTasks: [],       // task IDs completed
+  passedTasks: {},          // taskId -> new date string
+  extraCompleted: [],       // upcoming tasks marked done early
+  dailyStudyLog: {},        // date -> minutes studied
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('nda_state');
+    if (s) state = JSON.parse(s);
+  } catch(e) {}
+}
+
+function saveState() {
+  localStorage.setItem('nda_state', JSON.stringify(state));
+}
+
+// ============================================================
+// GATE / PASSCODE
+// ============================================================
+let gateOpen = false;
+
+// Gate sound using Web Audio API
+function playShutterSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Multiple metallic clangs
+    const times = [0, 0.08, 0.18, 0.32, 0.5, 0.72, 1.0];
+    times.forEach((t, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      const freq = 180 - (i * 15);
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + t);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.3, ctx.currentTime + t + 0.3);
+      osc.type = 'sawtooth';
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + t);
+      gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.35);
+
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.4);
+    });
+
+    // Low rumble
+    const rumble = ctx.createOscillator();
+    const rGain = ctx.createGain();
+    rumble.connect(rGain);
+    rGain.connect(ctx.destination);
+    rumble.frequency.setValueAtTime(60, ctx.currentTime);
+    rumble.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 1.8);
+    rumble.type = 'sine';
+    rGain.gain.setValueAtTime(0.15, ctx.currentTime);
+    rGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+    rumble.start(ctx.currentTime);
+    rumble.stop(ctx.currentTime + 2.0);
+
+  } catch(e) {}
+}
+
+function playErrorSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(300, ctx.currentTime);
+    osc.frequency.setValueAtTime(200, ctx.currentTime + 0.15);
+    osc.type = 'square';
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.4);
+  } catch(e) {}
+}
+
+function tryUnlock() {
+  const input = document.getElementById('passcodeInput');
+  const errEl = document.getElementById('gateError');
+  const val = input.value.trim();
+
+  if (PASSCODES.map(p=>p.toUpperCase()).includes(val.toUpperCase())) {
+    // SUCCESS
+    errEl.textContent = '';
+    input.classList.remove('error');
+
+    // Flash green
+    input.style.borderColor = 'var(--green)';
+    input.style.color = 'var(--green)';
+    input.style.boxShadow = '0 0 20px rgba(0,255,136,0.4)';
+
+    // Play sound
+    playShutterSound();
+
+    // Show access granted
+    setTimeout(() => {
+      const ag = document.getElementById('access-granted');
+      ag.classList.add('show');
+    }, 100);
+
+    // Open shutters
+    setTimeout(() => {
+      document.getElementById('shutterTop').classList.add('open');
+      document.getElementById('shutterBottom').classList.add('open');
+    }, 300);
+
+    // Show app
+    setTimeout(() => {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      initApp();
+    }, 1900);
+
+  } else {
+    // FAIL
+    playErrorSound();
+    input.classList.add('error');
+    errEl.textContent = '⚠ ACCESS DENIED — INVALID CODE';
+    setTimeout(() => {
+      input.classList.remove('error');
+      input.value = '';
+      input.style.borderColor = '';
+      input.style.color = '';
+      input.style.boxShadow = '';
+    }, 800);
+  }
+}
+
+// ============================================================
+// APP INIT
+// ============================================================
+function initApp() {
+  loadState();
+  updateDateDisplay();
+  updateDaysLeft();
+  renderMission();
+  renderSubjects();
+  renderProgress();
+}
+
+function updateDateDisplay() {
+  const now = new Date();
+  const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('dateNum').innerHTML = now.getDate() + '<span id="dateMon">' + months[now.getMonth()] + '</span>';
+  document.getElementById('dateDayName').textContent = days[now.getDay()];
+  document.getElementById('dailyQuote').textContent = QUOTES[now.getDay() % QUOTES.length];
+}
+
+function updateDaysLeft() {
+  const now = new Date();
+  const diff = Math.ceil((EXAM_DATE - now) / (1000*60*60*24));
+  document.getElementById('daysLeft').textContent = diff;
+  document.getElementById('cdDays').textContent = diff;
+
+  // prep started June 17, 89 days total
+  const totalDays = 89;
+  const used = totalDays - diff;
+  const pct = Math.max(0, Math.min(100, Math.round((used/totalDays)*100)));
+  document.getElementById('cdBar').style.width = pct + '%';
+  document.getElementById('cdPct').textContent = pct + '% of prep time used';
+}
+
+// ============================================================
+// MISSION VIEW
+// ============================================================
+function getTodayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getTasksForDate(dateStr) {
+  return SYLLABUS.filter(t => {
+    const effectiveDate = state.passedTasks[t.id] || t.date;
+    return effectiveDate === dateStr;
+  });
+}
+
+function renderMission() {
+  const todayStr = getTodayStr();
+  const todayTasks = getTasksForDate(todayStr);
+
+  const total = todayTasks.length;
+  const done = todayTasks.filter(t => state.completedTasks.includes(t.id)).length;
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  document.getElementById('todayBar').style.width = pct + '%';
+  document.getElementById('todayPct').textContent = pct + '%';
+
+  // Group by subject
+  const blocks = {};
+  todayTasks.forEach(t => {
+    if (!blocks[t.subject]) blocks[t.subject] = [];
+    blocks[t.subject].push(t);
+  });
+
+  const container = document.getElementById('todayBlocks');
+  if (todayTasks.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="big">🎯</div>No tasks scheduled today. Check upcoming tasks in SUBJECTS view.</div>';
+    return;
+  }
+
+  let html = '<div class="section-eyebrow">TODAY\'S MISSION</div>';
+  let blockNum = 1;
+
+  Object.entries(blocks).forEach(([subject, tasks]) => {
+    const totalTime = tasks.reduce((a,t) => a + parseInt(t.time||'0'), 0);
+    html += `
+      <div class="block-card">
+        <div class="block-header">
+          <span class="block-num">BLOCK ${blockNum++}</span>
+          <span class="block-name">${subject}</span>
+          <span class="block-time">${totalTime} MIN</span>
+        </div>`;
+
+    tasks.forEach(t => {
+      const isDone = state.completedTasks.includes(t.id);
+      html += `
+        <div class="task-row ${isDone ? 'completed' : ''}" id="row-${t.id}">
+          <div class="task-check ${isDone ? 'done' : ''}" onclick="toggleTask('${t.id}')"></div>
+          <div class="task-info">
+            <div class="task-name">${t.desc}</div>
+            <div class="task-meta">${t.topic} · ${t.time} · ${t.pages}</div>
+          </div>
+          <div class="task-actions">
+            ${!isDone ? `<button class="task-btn btn-pass" onclick="passTask('${t.id}')">PASS →</button>` : ''}
+          </div>
+        </div>`;
+    });
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+  renderBacklogs();
+}
+
+function toggleTask(taskId) {
+  if (state.completedTasks.includes(taskId)) {
+    state.completedTasks = state.completedTasks.filter(id => id !== taskId);
+    showToast('Task unmarked');
+  } else {
+    state.completedTasks.push(taskId);
+    // log study time
+    const today = getTodayStr();
+    const task = SYLLABUS.find(t => t.id === taskId);
+    if (task) {
+      state.dailyStudyLog[today] = (state.dailyStudyLog[today] || 0) + parseInt(task.time || '30');
+    }
+    showToast('✓ TASK COMPLETE — SOLDIER!');
+  }
+  saveState();
+  renderMission();
+  updateProgress();
+}
+
+function passTask(taskId) {
+  const today = getTodayStr();
+  const nextDay = addDays(today, 1);
+  state.passedTasks[taskId] = nextDay;
+  saveState();
+  renderMission();
+  showToast('Task moved to tomorrow');
+}
+
+function renderBacklogs() {
+  const todayStr = getTodayStr();
+  const todayDate = new Date(todayStr);
+
+  // Find tasks that are overdue (date < today, not completed)
+  const overdue = SYLLABUS.filter(t => {
+    const effectiveDate = state.passedTasks[t.id] || t.date;
+    return effectiveDate < todayStr && !state.completedTasks.includes(t.id);
+  });
+
+  if (overdue.length === 0) {
+    document.getElementById('backlogSection').innerHTML = '';
+    return;
+  }
+
+  // Group by subject
+  const bySubject = {};
+  overdue.forEach(t => {
+    if (!bySubject[t.subject]) bySubject[t.subject] = [];
+    bySubject[t.subject].push(t);
+  });
+
+  let html = '<div class="section-eyebrow" style="margin-top:28px">SUBJECT BACKLOGS</div>';
+
+  Object.entries(bySubject).forEach(([subj, tasks]) => {
+    const delay = tasks.length;
+    html += `
+      <div class="backlog-section">
+        <div class="backlog-header">
+          <div class="backlog-title">${subj} BACKLOG</div>
+          <div class="delay-badge">${delay} TASK${delay>1?'S':''} OVERDUE</div>
+        </div>
+        <div class="backlog-cards">`;
+
+    // Show up to 3 cards
+    tasks.slice(0, 3).forEach(t => {
+      const effectiveDate = state.passedTasks[t.id] || t.date;
+      html += `
+        <div class="backlog-card">
+          <div class="backlog-card-date">${formatDate(effectiveDate)}</div>
+          <div class="backlog-task">
+            <span>${t.desc.substring(0, 40)}${t.desc.length>40?'...':''}</span>
+            <span class="pp">${t.pages}</span>
+          </div>
+        </div>`;
+    });
+
+    html += '</div></div>';
+  });
+
+  document.getElementById('backlogSection').innerHTML = html;
+}
+
+// ============================================================
+// SUBJECTS VIEW
+// ============================================================
+const SUBJECT_META = {
+  'MATHS':       { color: 'var(--accent)', class:'math', priority:'🔴 HIGH', priClass:'pri-red', marks:'300 marks' },
+  'ENGLISH':     { color: '#7c6fe0', class:'english', priority:'🔴 HIGH', priClass:'pri-red', marks:'200 marks' },
+  'PHYSICS':     { color: 'var(--accent2)', class:'physics', priority:'🔴 HIGH', priClass:'pri-red', marks:'~75 marks in GS' },
+  'HISTORY':     { color: 'var(--green)', class:'gk', priority:'🔴 HIGH', priClass:'pri-red', marks:'~50 marks in GS' },
+  'POLITY':      { color: '#4ade80', class:'gk', priority:'🔴 HIGH', priClass:'pri-red', marks:'~40 marks in GS' },
+  'GEOGRAPHY':   { color: '#22d3ee', class:'gk', priority:'🟡 MED', priClass:'pri-amber', marks:'~40 marks in GS' },
+  'CHEMISTRY':   { color: '#ff6eb4', class:'chemistry', priority:'🟢 OK', priClass:'pri-green', marks:'~50 marks in GS' },
+  'BIOLOGY':     { color: '#4ade80', class:'bio', priority:'🟢 OK', priClass:'pri-green', marks:'~40 marks in GS' },
+  'DEFENCE GK':  { color: '#f59e0b', class:'gk', priority:'🟡 MED', priClass:'pri-amber', marks:'~30 marks in GS' },
+};
+
+function renderSubjects() {
+  const allSubjects = [...new Set(SYLLABUS.map(t => t.subject))];
+
+  let gridHTML = '';
+  allSubjects.forEach(subj => {
+    const tasks = SYLLABUS.filter(t => t.subject === subj);
+    const done = tasks.filter(t => state.completedTasks.includes(t.id)).length;
+    const pct = Math.round((done / tasks.length) * 100);
+    const meta = SUBJECT_META[subj] || { color:'var(--accent)', class:'math', priority:'MED', priClass:'pri-amber', marks:'' };
+
+    gridHTML += `
+      <div class="subject-card ${meta.class}">
+        <div class="subj-card-top">
+          <div class="subj-card-name">${subj}</div>
+          <div class="subj-pct" style="color:${meta.color}">${pct}%</div>
+        </div>
+        <div class="subj-bar-bg">
+          <div class="subj-bar-fill" style="width:${pct}%;background:${meta.color}"></div>
+        </div>
+        <div class="subj-card-meta">${done}/${tasks.length} tasks · ${meta.marks}</div>
+        <span class="priority-tag ${meta.priClass}">${meta.priority} PRIORITY</span>
+      </div>`;
+  });
+
+  document.getElementById('subjectsGrid').innerHTML = gridHTML;
+
+  // Upcoming tasks (next 3 days)
+  const todayStr = getTodayStr();
+  const nextDays = [1,2,3].map(n => addDays(todayStr, n));
+
+  let upcomingHTML = '';
+  nextDays.forEach(d => {
+    const tasks = getTasksForDate(d);
+    if (tasks.length === 0) return;
+
+    const bySubj = {};
+    tasks.forEach(t => {
+      if (!bySubj[t.subject]) bySubj[t.subject] = [];
+      bySubj[t.subject].push(t);
+    });
+
+    upcomingHTML += `<div class="upcoming-card"><div class="upcoming-date">${formatDate(d)}</div>`;
+    Object.entries(bySubj).forEach(([subj, stasks]) => {
+      upcomingHTML += `<div class="upcoming-subj">${subj}</div>`;
+      stasks.forEach(t => {
+        const isDone = state.completedTasks.includes(t.id);
+        upcomingHTML += `
+          <div class="upcoming-task ${isDone?'completed':''}">
+            <span>${t.desc.substring(0,35)}${t.desc.length>35?'...':''}</span>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span class="pp-tag">${t.pages}</span>
+              ${!isDone ? `<button class="mark-done-btn" onclick="markUpcomingDone('${t.id}')">✓ DONE</button>` : ''}
             </div>
-        </header>
-        
-        <nav class="flex justify-center gap-10 max-w-5xl mx-auto border-b border-[#111] mb-6">
-            <button onclick="switchTab('math')" id="tab-math" class="text-[10px] uppercase p-5 text-white border-b-2 border-white">Mathematics</button>
-            <button onclick="switchTab('physics')" id="tab-physics" class="text-[10px] uppercase p-5 text-gray-600 hover:text-gray-300">Physics</button>
-            <button onclick="switchTab('chemistry')" id="tab-chemistry" class="text-[10px] uppercase p-5 text-gray-600 hover:text-gray-300">Chemistry</button>
-        </nav>
+          </div>`;
+      });
+    });
+    upcomingHTML += '</div>';
+  });
 
-        <div class="max-w-6xl mx-auto px-6 table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="w-12">#</th>
-                        <th class="topic-col">Topic Name</th>
-                        <th>ST</th><th>PB</th><th>PM</th><th>TS</th><th>R1</th><th>R2</th><th>FR</th>
-                    </tr>
-                </thead>
-                <tbody id="tracker-body"></tbody>
-            </table>
-        </div>
+  document.getElementById('upcomingGrid').innerHTML = upcomingHTML || '<div class="empty-state">No upcoming tasks in next 3 days.</div>';
+}
+
+function markUpcomingDone(taskId) {
+  if (!state.completedTasks.includes(taskId)) {
+    state.completedTasks.push(taskId);
+    const task = SYLLABUS.find(t => t.id === taskId);
+    if (task) {
+      const today = getTodayStr();
+      state.dailyStudyLog[today] = (state.dailyStudyLog[today] || 0) + parseInt(task.time || '30');
+    }
+    saveState();
+    renderSubjects();
+    renderMission();
+    updateProgress();
+    showToast('✓ AHEAD OF SCHEDULE — ALPHA SOLDIER!');
+  }
+}
+
+// ============================================================
+// PROGRESS VIEW
+// ============================================================
+let chartInstance = null;
+
+function renderProgress() {
+  updateProgress();
+  renderHeatmap();
+}
+
+function updateProgress() {
+  const total = SYLLABUS.length;
+  const done = state.completedTasks.length;
+  const pct = Math.round((done/total)*100);
+
+  const todayStr = getTodayStr();
+  const todayMin = state.dailyStudyLog[todayStr] || 0;
+
+  // Streak
+  let streak = 0;
+  let d = new Date(todayStr);
+  for (let i = 0; i < 30; i++) {
+    const ds = d.toISOString().split('T')[0];
+    if (state.dailyStudyLog[ds] && state.dailyStudyLog[ds] > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else if (i === 0) {
+      break;
+    } else {
+      break;
+    }
+  }
+
+  const maths = SYLLABUS.filter(t=>t.subject==='MATHS');
+  const mathDone = maths.filter(t=>state.completedTasks.includes(t.id)).length;
+  const mathPct = Math.round((mathDone/maths.length)*100);
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-big" style="color:var(--green)">${done}</div>
+      <div class="stat-lbl">Tasks Done</div>
     </div>
-
-    <div id="page-rankings" class="page-content hidden max-w-5xl mx-auto p-10">
-        <h1 class="text-[10px] tracking-[0.6em] text-gray-500 uppercase mb-16">LIVE ARENA</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
-            <div class="glass-card">
-                <p class="text-[9px] text-gray-600 uppercase tracking-widest mb-4">Focus Timer</p>
-                <h2 id="timer-display" class="text-5xl font-extralight mb-8 tracking-tighter">00:00:00</h2>
-                <div class="flex gap-4">
-                    <button onclick="toggleTimer()" id="timer-control" class="btn-pro">Start Session</button>
-                    <button onclick="endSession()" class="btn-pro">End & Record</button>
-                </div>
-            </div>
-            <div class="glass-card text-center flex flex-col justify-center">
-                <p class="text-[9px] text-gray-600 uppercase tracking-widest mb-4">Daily Study Total</p>
-                <h2 id="today-total" class="text-5xl font-extralight tracking-tighter">0h 0m</h2>
-                <div class="mt-6 flex justify-center gap-6">
-                    <div><p class="text-[8px] text-gray-500 uppercase">Rank</p><p class="text-sm">#--</p></div>
-                    <div><p class="text-[8px] text-gray-500 uppercase">Points</p><p id="focus-points" class="text-sm">0</p></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-card coming-soon-container h-64">
-            <div class="coming-soon-overlay">
-                <p class="cs-text">Global Leaderboard</p>
-                <p class="text-[7px] text-gray-600 uppercase mt-2">Connecting to Arena Servers...</p>
-            </div>
-            <h3 class="text-[10px] uppercase tracking-widest text-gray-800">Rankings</h3>
-        </div>
+    <div class="stat-card">
+      <div class="stat-big" style="color:var(--accent)">${pct}%</div>
+      <div class="stat-lbl">Overall</div>
     </div>
-
-    <div id="page-history" class="page-content hidden max-w-5xl mx-auto p-10">
-        <h1 class="text-[10px] tracking-[0.6em] text-gray-500 uppercase mb-10">MOCK ANALYTICS</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <input type="number" id="m-score" placeholder="MATH" class="bg-transparent border-b border-[#222] p-4 text-sm outline-none focus:border-white transition">
-            <input type="number" id="p-score" placeholder="PHYSICS" class="bg-transparent border-b border-[#222] p-4 text-sm outline-none focus:border-white transition">
-            <input type="number" id="c-score" placeholder="CHEMISTRY" class="bg-transparent border-b border-[#222] p-4 text-sm outline-none focus:border-white transition">
-            <button onclick="addMockResult()" class="btn-pro">Record Mock</button>
-        </div>
-
-        <div class="glass-card mb-12 h-64">
-            <canvas id="scoreChart"></canvas>
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead><tr><th>Mock</th><th>M</th><th>P</th><th>C</th><th>Total</th><th>Date</th><th>Action</th></tr></thead>
-                <tbody id="mock-history-body"></tbody>
-            </table>
-        </div>
+    <div class="stat-card">
+      <div class="stat-big" style="color:var(--accent2)">${streak}</div>
+      <div class="stat-lbl">Day Streak</div>
     </div>
-
-    <div id="page-feedback" class="page-content hidden max-w-xl mx-auto p-10 text-center">
-        <h1 class="text-[10px] tracking-[0.6em] text-gray-500 uppercase mb-16">COMMUNICATION</h1>
-        <p class="text-xs text-gray-500 mb-10 leading-loose">Found a bug or need a feature? Send it directly to the developer team.</p>
-        
-        <form action="https://formspree.io/f/xdawaekk" method="POST" class="text-left" id="feedback-form">
-            <input type="text" name="name" placeholder="Full Name" required class="w-full bg-transparent border-b border-[#111] py-5 mb-8 text-sm outline-none focus:border-white transition">
-            <input type="email" name="email" placeholder="Email Address" required class="w-full bg-transparent border-b border-[#111] py-5 mb-8 text-sm outline-none focus:border-white transition">
-            <textarea name="message" placeholder="Message or Feature Request..." required class="w-full bg-transparent border-b border-[#111] py-5 mb-16 text-sm outline-none focus:border-white transition h-32"></textarea>
-            <button type="submit" id="submit-btn" class="w-full btn-pro py-5">Push to Developer</button>
-            <p id="form-status" class="mt-6 text-[9px] uppercase tracking-widest text-green-500 hidden text-center">Transmission Successful</p>
-        </form>
+    <div class="stat-card">
+      <div class="stat-big" style="color:var(--amber)">${total - done}</div>
+      <div class="stat-lbl">Remaining</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-big" style="color:#7c6fe0">${Math.round(todayMin/60*10)/10}h</div>
+      <div class="stat-lbl">Today</div>
+    </div>
+  `;
 
-    <nav class="bottom-nav">
-        <div onclick="showPage('tracker')" class="nav-item active" id="btn-tracker">Tracker</div>
-        <div onclick="showPage('rankings')" class="nav-item" id="btn-rankings">Arena</div>
-        <div onclick="showPage('history')" class="nav-item" id="btn-history">Analysis</div>
-        <div onclick="showPage('feedback')" class="nav-item" id="btn-feedback">Support</div>
-    </nav>
+  // Subject mastery bars
+  const allSubjects = [...new Set(SYLLABUS.map(t=>t.subject))];
+  let barsHTML = '';
+  allSubjects.forEach(subj => {
+    const tasks = SYLLABUS.filter(t=>t.subject===subj);
+    const done2 = tasks.filter(t=>state.completedTasks.includes(t.id)).length;
+    const p = Math.round((done2/tasks.length)*100);
+    const meta = SUBJECT_META[subj] || { color:'var(--accent)' };
+    barsHTML += `
+      <div class="spb-row">
+        <div class="spb-name" style="color:${meta.color}">${subj}</div>
+        <div class="spb-bg">
+          <div class="spb-fill" style="width:${p}%;background:${meta.color}"></div>
+        </div>
+        <div class="spb-num" style="color:${meta.color}">${p}%</div>
+      </div>`;
+  });
+  document.getElementById('masteryBars').innerHTML = barsHTML;
 
-    <script>
-        // --- DATA ENGINE ---
-        const fullData = {
-            math: { "Category 1": ["Matrices And Determinants", "Sequence And Series", "Straight Line", "Probability", "Complex Numbers", "Functions", "Indefinite Integration", "Mathematical Reasoning", "Statistics"], "Category 2": ["Vector 3D", "Binomial Theorem", "Application Of Derivatives", "Circle", "Definite Integration", "Differential Equation", "Parabola", "Area Under Curves", "Quadratic Equations", "Vector", "Limits"], "Category 3": ["Continutity And Differentiability", "Hyperbola", "Trigonometrical Ratios", "Heights And Distances", "Trigonometrical Equations", "Set Theory And Relations"], "Category 4": ["Permutation And Combination", "Ellipse", "Differentiation", "Inverse Trigonometric Functions", "Solution Of Triangle"] },
-            physics: { "Category 1": ["Current Electricity", "Semiconductors", "Thermal Properties Of Matter", "Calorimetry", "Kinetic Theory Of Gases", "Properties Of Matter", "Fluid Mechanics", "Capacitance", "Gravitation", "Units And Dimensions", "Alternating Current", "Communication System"], "Category 2": ["Photoelectric Effect", "Electrostatics", "Rotational Motion", "Electromagnetic Waves", "Ray Optics", "Waves And Sound", "Oscillations", "Magnetic Effects Of Current", "Electromagnetic Induction", "Center Of Mass And Momentum"], "Category 3": ["Wave Optics", "Atomic Physics", "Work Power Energy", "Nuclear Physics", "Motion in Two Dimension", "Laws Of Motion"], "Category 4": ["Experimental Physics", "Motion In One Dimension", "Magnetism", "Heat Transfer", "Circular Motion", "Mathematics In Physics"] },
-            chemistry: { "Category 1": ["Biomolecules", "Polymers", "P Block Elements", "Environmental Chemistry", "S Block & Hydrogen", "Mole Concept", "Surface Chemistry", "Atomic Structure", "Electrochemistry", "Metallurgy", "Solutions"], "Category 2": ["Coordination Compounds", "Chemical Thermodynamics", "General Organic Chemistry", "Hydrocarbons", "Haloalkanes", "Aldehydes And Ketones", "Amines", "Chemical Kinetics", "Chemical Bonding", "d and f block elements", "Haloarenes And Phenols"], "Category 3": ["Periodicity", "Solid State", "Gaseous State", "Purification Of Organic Compounds", "Chemistry in Everyday Life", "Chemical Equilibrium"], "Category 4": ["Alcohols Phenols And Ethers", "Carboxylic Acid And Its Derivatives", "Ionic Equilibrium", "Aromatic Compounds", "Redox Reactions", "Qualitative Inorganic Chemistry"] }
-        };
+  renderWeekChart();
+}
 
-        const cols = ['st', 'pb', 'pm', 'ts', 'r1', 'r2', 'fr'];
-        let currentSub = 'math';
+function renderWeekChart() {
+  const canvas = document.getElementById('weekChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
-        // --- NAVIGATION ---
-        function showPage(pageId) {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-            document.getElementById('page-' + pageId).classList.remove('hidden');
-            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + pageId).classList.add('active');
-            if(pageId === 'history') renderHistory();
-            window.scrollTo(0,0);
-        }
+  // Last 7 days
+  const labels = [];
+  const data = [];
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
-        function switchTab(sub) {
-            currentSub = sub;
-            ['math', 'physics', 'chemistry'].forEach(s => {
-                const btn = document.getElementById('tab-' + s);
-                btn.className = (s === sub) ? 'text-[10px] uppercase p-5 text-white border-b-2 border-white' : 'text-[10px] uppercase p-5 text-gray-600 hover:text-gray-300';
-            });
-            renderTable();
-        }
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const ds = d.toISOString().split('T')[0];
+    labels.push(days[d.getDay()]);
+    data.push(Math.round((state.dailyStudyLog[ds] || 0) / 60 * 10) / 10);
+  }
 
-        // --- TRACKER ENGINE ---
-        function renderTable() {
-            const body = document.getElementById('tracker-body');
-            body.innerHTML = '';
-            let count = 1;
-            for (const [cat, topics] of Object.entries(fullData[currentSub])) {
-                body.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="9">${cat}</td></tr>`);
-                topics.forEach(topic => {
-                    const rowId = `${currentSub}-${count}`;
-                    let rowHtml = `<tr><td>${count}</td><td class="topic-col">${topic}</td>`;
-                    cols.forEach(col => {
-                        const checkId = `${rowId}-${col}`;
-                        rowHtml += `<td><input type="checkbox" ${localStorage.getItem(checkId) === 'true' ? 'checked' : ''} class="cb" onchange="save('${checkId}', this.checked)"></td>`;
-                    });
-                    body.insertAdjacentHTML('beforeend', rowHtml + `</tr>`);
-                    count++;
-                });
-            }
-            updateStats();
-        }
+  const W = canvas.offsetWidth || 700;
+  const H = 120;
+  canvas.width = W;
+  canvas.height = H;
 
-        function save(id, val) { localStorage.setItem(id, val); updateStats(); }
+  ctx.clearRect(0, 0, W, H);
 
-        function updateStats() {
-            ['math', 'physics', 'chemistry'].forEach(s => {
-                let done = 0, total = 0;
-                Object.values(fullData[s]).forEach(l => total += l.length * cols.length);
-                for (let i = 0; i < localStorage.length; i++) {
-                    const k = localStorage.key(i);
-                    if (k && k.startsWith(s + '-') && localStorage.getItem(k) === 'true') done++;
-                }
-                const p = Math.min(Math.round((done / total) * 100), 100) || 0;
-                document.getElementById(`${s}-perc`).innerText = p + '%';
-                const barId = s === 'chemistry' ? 'chem-bar' : s + '-bar';
-                if (document.getElementById(barId)) document.getElementById(barId).style.width = p + '%';
-            });
-        }
+  const maxVal = Math.max(...data, 3);
+  const barW = W / labels.length * 0.6;
+  const gap = W / labels.length;
+  const pad = 30;
 
-        // --- TIMER & ARENA ---
-        let timerSeconds = 0, timerInterval = null;
-        let todaySeconds = parseInt(localStorage.getItem('todayStudyTime') || '0');
+  // Grid lines
+  ctx.strokeStyle = 'rgba(0,212,255,0.08)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 3; i++) {
+    const y = pad + (H - pad*2) * (1 - i/3);
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
 
-        function toggleTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval); timerInterval = null;
-                document.getElementById('timer-control').innerText = 'Resume Session';
-            } else {
-                timerInterval = setInterval(() => { timerSeconds++; updateTimerDisplay(); }, 1000);
-                document.getElementById('timer-control').innerText = 'Pause';
-            }
-        }
+  labels.forEach((label, i) => {
+    const val = data[i];
+    const x = gap * i + gap/2;
+    const barH = val > 0 ? Math.max(4, (val/maxVal) * (H - pad*2)) : 0;
+    const y = H - pad - barH;
 
-        function endSession() {
-            if(timerSeconds < 5 && timerSeconds > 0) return alert("Session too short!");
-            clearInterval(timerInterval); timerInterval = null;
-            todaySeconds += timerSeconds;
-            localStorage.setItem('todayStudyTime', todaySeconds);
-            timerSeconds = 0;
-            updateTimerDisplay(); updateTotalDisplay();
-            document.getElementById('timer-control').innerText = 'Start Session';
-            alert("Session recorded in daily arena total.");
-        }
+    // Bar
+    const grad = ctx.createLinearGradient(0, y, 0, H - pad);
+    grad.addColorStop(0, 'rgba(0,212,255,0.8)');
+    grad.addColorStop(1, 'rgba(0,212,255,0.1)');
+    ctx.fillStyle = val > 0 ? grad : 'rgba(0,212,255,0.05)';
+    ctx.beginPath();
+    ctx.roundRect(x - barW/2, y, barW, barH, 3);
+    ctx.fill();
 
-        function updateTimerDisplay() {
-            const h = Math.floor(timerSeconds/3600), m = Math.floor((timerSeconds%3600)/60), s = timerSeconds%60;
-            document.getElementById('timer-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        }
+    // Label
+    ctx.fillStyle = 'rgba(122,155,181,0.8)';
+    ctx.font = '10px Share Tech Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, H - 8);
 
-        function updateTotalDisplay() {
-            const th = Math.floor(todaySeconds/3600), tm = Math.floor((todaySeconds%3600)/60);
-            document.getElementById('today-total').innerText = `${th}h ${tm}m`;
-            document.getElementById('focus-points').innerText = Math.floor(todaySeconds / 600);
-        }
+    if (val > 0) {
+      ctx.fillStyle = 'rgba(0,212,255,0.9)';
+      ctx.font = '9px Share Tech Mono, monospace';
+      ctx.fillText(val + 'h', x, y - 4);
+    }
+  });
+}
 
-        // --- AI ADVISOR (TRAINED LOGIC) ---
-        const advisorQuotes = {
-            "backlog": "Advisor: Priority 1 is your current class. Dedicate 2 hours daily to backlogs using the 'One Shot' method. Don't drown in the past.",
-            "test": "Advisor: A mock test is a mirror. If you don't analyze it for 3 hours, the 3 hours of testing was a waste of time.",
-            "physics": "Advisor: Concepts first, formulas later. If you can't derive it, you don't know it. Focus on HCV and PYQs.",
-            "math": "Advisor: Mathematics is a contact sport. You must solve. Reading math is like watching someone else go to the gym.",
-            "tired": "Advisor: Burnout is real. Take tonight off. Sleep 8 hours. Tomorrow, start with your favorite subject.",
-            "default": "Advisor: Stay disciplined. Excellence is not an act, but a habit. What's our focus for the next session?"
-        };
+function renderHeatmap() {
+  const container = document.getElementById('heatmap');
+  // 12 weeks = 84 days back
+  let html = '';
+  for (let i = 83; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const ds = d.toISOString().split('T')[0];
+    const mins = state.dailyStudyLog[ds] || 0;
+    let level = '';
+    if (mins > 0) level = 'l1';
+    if (mins > 60) level = 'l2';
+    if (mins > 120) level = 'l3';
+    if (mins > 180) level = 'l4';
+    html += `<div class="heat-day ${level}" title="${ds}: ${mins}min"></div>`;
+  }
+  container.innerHTML = html;
+}
 
-        function toggleAI() { const w = document.getElementById('ai-window'); w.style.display = (w.style.display === 'flex') ? 'none' : 'flex'; }
-        
-        function handleAdvisorChat(e) {
-            e.preventDefault();
-            const input = document.getElementById('ai-input');
-            const msg = input.value.trim();
-            if(!msg) return;
+// ============================================================
+// UTILS
+// ============================================================
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
 
-            const container = document.getElementById('ai-msg-container');
-            container.insertAdjacentHTML('beforeend', `<div class="user-msg">${msg}</div>`);
-            input.value = '';
+  document.getElementById('view-' + tab).classList.add('active');
+  event.target.classList.add('active');
 
-            setTimeout(() => {
-                let reply = advisorQuotes.default;
-                const lower = msg.toLowerCase();
-                for (let key in advisorQuotes) { if(lower.includes(key)) reply = advisorQuotes[key]; }
-                container.insertAdjacentHTML('beforeend', `<div class="bot-msg">${reply}</div>`);
-                container.scrollTop = container.scrollHeight;
-            }, 600);
-        }
+  if (tab === 'subjects') renderSubjects();
+  if (tab === 'progress') renderProgress();
+}
 
-        // --- MOCK ANALYTICS ---
-        let myChart;
-        function addMockResult() {
-            const m = parseInt(document.getElementById('m-score').value) || 0;
-            const p = parseInt(document.getElementById('p-score').value) || 0;
-            const c = parseInt(document.getElementById('c-score').value) || 0;
-            const results = JSON.parse(localStorage.getItem('mockHistory') || '[]');
-            results.push({ m, p, c, total: m+p+c, date: new Date().toLocaleDateString('en-GB') });
-            localStorage.setItem('mockHistory', JSON.stringify(results));
-            renderHistory();
-            document.getElementById('m-score').value = '';
-            document.getElementById('p-score').value = '';
-            document.getElementById('c-score').value = '';
-        }
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${days[d.getDay()]} · ${months[d.getMonth()]} ${d.getDate()}`;
+}
 
-        function deleteMock(idx) {
-            let res = JSON.parse(localStorage.getItem('mockHistory'));
-            res.splice(idx, 1);
-            localStorage.setItem('mockHistory', JSON.stringify(res));
-            renderHistory();
-        }
+let toastTimeout;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
+}
 
-        function renderHistory() {
-            const body = document.getElementById('mock-history-body');
-            body.innerHTML = '';
-            const labels = [], chartData = [];
-            const data = JSON.parse(localStorage.getItem('mockHistory') || '[]');
-            data.forEach((res, i) => {
-                body.insertAdjacentHTML('afterbegin', `<tr><td>${i+1}</td><td>${res.m}</td><td>${res.p}</td><td>${res.c}</td><td class="text-white">${res.total}</td><td class="text-[10px]">${res.date}</td><td><span class="text-red-900 cursor-pointer" onclick="deleteMock(${i})">DEL</span></td></tr>`);
-                labels.push(`#${i+1}`); chartData.push(res.total);
-            });
-            if (myChart) myChart.destroy();
-            const ctx = document.getElementById('scoreChart').getContext('2d');
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels, datasets: [{ data: chartData, borderColor: '#fff', tension: 0.3, pointBackgroundColor: '#fff', borderWidth: 1 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#0a0a0a' }, ticks: { color: '#444', font: { size: 9 } } } } }
-            });
-        }
+// Enter key on passcode
+document.getElementById('passcodeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryUnlock();
+});
 
-        // --- FEEDBACK ---
-        const form = document.getElementById('feedback-form');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submit-btn');
-            const status = document.getElementById('form-status');
-            btn.innerText = 'TRANSMITTING...';
-            fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
-            .then(() => {
-                btn.innerText = 'PUSH TO DEVELOPER'; status.classList.remove('hidden'); form.reset();
-                setTimeout(() => status.classList.add('hidden'), 4000);
-            });
-        });
-
-        // --- INITIALIZE ---
-        window.addEventListener('load', () => {
-            setTimeout(() => { 
-                document.getElementById('loader').style.opacity = '0'; 
-                setTimeout(() => document.getElementById('loader').style.display='none', 800); 
-            }, 1000);
-            renderTable();
-            updateTotalDisplay();
-        });
-    </script>
+// Focus passcode on load
+window.onload = () => {
+  document.getElementById('passcodeInput').focus();
+};
+</script>
 </body>
 </html>
