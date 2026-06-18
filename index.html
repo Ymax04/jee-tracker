@@ -1,1689 +1,874 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NDA MISSION — OPERATION KARGIL</title>
+<title>NDA MISSION CONTROL — OPERATION COMEBACK RETURNS</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap');
+:root{--bg:#030508;--bg2:#080d14;--bg3:#0c141d;--accent:#00ffcc;--accent-dim:rgba(0,255,204,0.2);--accent2:#ff3366;--green:#00ff88;--red:#ff2a2a;--amber:#ffb800;--text:#e8f4ff;--text2:#5b7f9e;--border:rgba(0,255,204,0.2);--border2:rgba(0,255,204,0.08);--glow:0 0 20px rgba(0,255,204,0.4)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
 
-  :root {
-    --bg: #070b0f;
-    --bg2: #0d1520;
-    --bg3: #111d2e;
-    --accent: #00d4ff;
-    --accent2: #ff6b00;
-    --green: #00ff88;
-    --red: #ff3b3b;
-    --amber: #ffb800;
-    --text: #e8f4ff;
-    --text2: #7a9bb5;
-    --border: rgba(0,212,255,0.15);
-    --border2: rgba(0,212,255,0.08);
-    --glow: 0 0 20px rgba(0,212,255,0.3);
-  }
+/* CRT SCANLINE OVERLAY */
+body::before{content:" ";display:block;position:fixed;top:0;left:0;bottom:0;right:0;background:linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,0.25) 50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06));z-index:2;background-size:100% 2px,3px 100%;pointer-events:none;opacity:0.3}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+/* GATE */
+#gate{position:fixed;inset:0;z-index:1000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.gate-bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(0,255,204,.03) 40px,rgba(0,255,204,.03) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(0,255,204,.03) 40px,rgba(0,255,204,.03) 41px)}
+.gate-shutter-top,.gate-shutter-bottom{position:absolute;left:0;right:0;height:50%;background:linear-gradient(180deg,#010304,#080d14);display:flex;align-items:flex-end;justify-content:center;transition:transform 1.5s cubic-bezier(.7,0,.3,1);z-index:3}
+.gate-shutter-bottom{bottom:0;background:linear-gradient(0deg,#010304,#080d14);align-items:flex-start}
+.gate-shutter-top.open{transform:translateY(-100%)}
+.gate-shutter-bottom.open{transform:translateY(100%)}
+.shutter-lines{width:100%;padding:10px 0;display:flex;flex-direction:column;gap:6px}
+.shutter-line{height:3px;margin:0 20px;background:linear-gradient(90deg,transparent,rgba(0,255,204,.4),transparent);border-radius:2px}
+.gate-content{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:24px;padding:40px}
+.gate-emblem{width:80px;height:80px;border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:var(--glow);animation:pulse-ring 2s infinite;position:relative}
+.gate-emblem::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(0,255,204,.2);animation:pulse-ring 2s infinite .5s}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(0,255,204,.4)}70%{box-shadow:0 0 0 15px rgba(0,255,204,0)}100%{box-shadow:0 0 0 0 rgba(0,255,204,0)}}
+.gate-title{font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;letter-spacing:6px;color:var(--accent);text-shadow:0 0 30px rgba(0,255,204,.5);text-align:center;text-transform:uppercase}
+.gate-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:3px;text-align:center;margin-top:4px}
+.passcode-label{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:4px;text-transform:uppercase;text-align:center}
+.passcode-input{background:rgba(0,255,204,.05);border:1px solid var(--border);border-radius:4px;color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:18px;letter-spacing:8px;text-align:center;padding:14px 24px;width:260px;outline:none;transition:all .3s;z-index:10;position:relative}
+.passcode-input:focus{border-color:var(--accent);box-shadow:var(--glow);background:rgba(0,255,204,.08)}
+.passcode-input.error{border-color:var(--red);animation:shake .4s ease;color:var(--red)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
+.gate-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;letter-spacing:4px;padding:12px 40px;cursor:pointer;transition:all .3s;text-transform:uppercase;border-radius:2px;z-index:10;position:relative}
+.gate-btn:hover{background:var(--accent-dim);box-shadow:var(--glow)}
+.gate-error{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--red);letter-spacing:2px;height:18px;text-align:center}
+.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.3;animation:scan 4s linear infinite;z-index:4}
+@keyframes scan{0%{top:-2px}100%{top:100%}}
+#access-granted{position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;pointer-events:none}
+#access-granted.show{display:flex;animation:fade-out .5s ease 2s forwards}
+.access-text{font-family:'Rajdhani',sans-serif;font-size:48px;font-weight:700;color:var(--green);letter-spacing:8px;text-shadow:0 0 40px var(--green)}
+@keyframes fade-out{to{opacity:0}}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* TOPBAR */
+#app{display:none;min-height:100vh;position:relative;z-index:5}
+#app.visible{display:block}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(3,5,8,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:58px;gap:20px;flex-wrap:wrap}
+.logo{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent);letter-spacing:3px;text-transform:uppercase;white-space:nowrap}
+.logo small{color:var(--text2);font-weight:400;font-size:11px;letter-spacing:1px}
+.nav-tabs{display:flex;gap:0;background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.nav-tab{padding:7px 14px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:none;text-transform:uppercase;white-space:nowrap}
+.nav-tab.active{background:var(--accent-dim);color:var(--accent)}
+.nav-tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.day-counter{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:1px;white-space:nowrap;text-align:right;}
 
-  /* ====== GATE / PASSCODE SCREEN ====== */
-  #gate {
-    position: fixed; inset: 0; z-index: 1000;
-    background: #000;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    overflow: hidden;
-  }
+/* RANK BADGE in topbar */
+.rank-badge{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:4px;padding:5px 12px;cursor:pointer}
+.rank-icon{font-size:16px}
+.rank-name{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--amber);text-transform:uppercase}
 
-  .gate-bg {
-    position: absolute; inset: 0;
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,212,255,0.03) 40px, rgba(0,212,255,0.03) 41px),
-      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,212,255,0.03) 40px, rgba(0,212,255,0.03) 41px);
-  }
+/* VIEWS */
+.view{display:none;padding:24px;max-width:1100px;margin:0 auto}
+.view.active{display:block}
 
-  .gate-shutter-top, .gate-shutter-bottom {
-    position: absolute; left: 0; right: 0; height: 50%;
-    background: linear-gradient(180deg, #050a0f 0%, #0a1520 100%);
-    display: flex; align-items: flex-end; justify-content: center;
-    transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-    z-index: 2;
-    border: 1px solid rgba(0,212,255,0.1);
-  }
-  .gate-shutter-top {
-    top: 0;
-    background: linear-gradient(180deg, #020507 0%, #0d1a28 100%);
-    align-items: flex-end;
-  }
-  .gate-shutter-bottom {
-    bottom: 0;
-    background: linear-gradient(0deg, #020507 0%, #0d1a28 100%);
-    align-items: flex-start;
-  }
-  .gate-shutter-top.open { transform: translateY(-100%); }
-  .gate-shutter-bottom.open { transform: translateY(100%); }
+/* MISSION DESK */
+.mission-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:flex-start}
+.mission-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px}
+.date-big{font-family:'Rajdhani',sans-serif;font-size:56px;font-weight:700;line-height:1;color:var(--text);letter-spacing:-2px;text-shadow:0 0 20px rgba(255,255,255,0.2)}
+.date-day{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:4px;margin-top:4px}
+.section-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--text2);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.section-eyebrow::after{content:'';flex:1;height:1px;background:var(--border)}
 
-  /* shutter lines */
-  .shutter-lines {
-    width: 100%; padding: 10px 0;
-    display: flex; flex-direction: column; gap: 6px;
-  }
-  .shutter-line {
-    height: 3px; margin: 0 20px;
-    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
-    border-radius: 2px;
-  }
+/* FORMS */
+.input-field, .select-field{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:10px;width:100%;outline:none;margin-bottom:12px;color-scheme: dark;}
+.input-field:focus, .select-field:focus{border-color:var(--accent);box-shadow:var(--glow)}
+.engine-btn{background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;padding:10px;width:100%;cursor:pointer;border-radius:4px;text-transform:uppercase;transition:all .2s}
+.engine-btn:hover{background:rgba(0,255,136,.1);box-shadow:0 0 15px rgba(0,255,136,.2)}
 
-  .gate-content {
-    position: relative; z-index: 5;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 28px;
-    padding: 40px;
-  }
+/* TASK ROWS */
+.task-row{display:flex;align-items:center;padding:11px 14px;gap:10px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;margin-bottom:6px;transition:background .2s}
+.task-row:hover{background:rgba(0,212,255,.03); border-color:var(--border)}
+.task-check{width:20px;height:20px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.task-check:hover{border-color:var(--accent);box-shadow:var(--glow)}
+.task-info{flex:1;min-width:0}
+.task-name{font-size:13px;color:var(--text);line-height:1.4}
+.task-meta{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text2);margin-top:2px;letter-spacing:1px}
+.task-actions{display:flex;gap:5px}
+.task-btn{padding:4px 8px;font-family:'Share Tech Mono',monospace;font-size:9px;border-radius:3px;cursor:pointer;border:1px solid;background:transparent;text-transform:uppercase;transition:all .2s}
+.btn-delete{border-color:rgba(255,42,42,.3);color:var(--red)}
+.btn-delete:hover{background:rgba(255,42,42,.1);border-color:var(--red)}
 
-  .gate-emblem {
-    width: 80px; height: 80px;
-    border: 2px solid var(--accent);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px;
-    box-shadow: var(--glow);
-    animation: pulse-ring 2s infinite;
-    position: relative;
-  }
-  .gate-emblem::before {
-    content: '';
-    position: absolute; inset: -8px;
-    border-radius: 50%;
-    border: 1px solid rgba(0,212,255,0.2);
-    animation: pulse-ring 2s infinite 0.5s;
-  }
+/* BACKLOG */
+.backlog-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:24px}
+.delay-badge{font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 10px;border-radius:99px;background:rgba(255,42,42,.15);color:var(--red);border:1px solid rgba(255,42,42,.3)}
+.backlog-cards{display:grid;grid-template-columns:1fr;gap:8px}
+.backlog-card{background:var(--bg3);border:1px solid var(--red);border-radius:6px;padding:12px;position:relative}
+.mark-done-btn{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:9px;padding:4px 10px;border-radius:3px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.mark-done-btn:hover{background:rgba(0,255,136,.2);box-shadow:0 0 10px rgba(0,255,136,.3)}
 
-  @keyframes pulse-ring {
-    0% { box-shadow: 0 0 0 0 rgba(0,212,255,0.4); }
-    70% { box-shadow: 0 0 0 15px rgba(0,212,255,0); }
-    100% { box-shadow: 0 0 0 0 rgba(0,212,255,0); }
-  }
+/* MOCKS */
+.mock-container{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
+.mock-table{width:100%;border-collapse:collapse}
+.mock-table th{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text2);text-align:left;padding:10px;border-bottom:1px solid var(--border)}
+.mock-table td{padding:10px;border-bottom:1px solid var(--border2);font-size:12px}
+.score-badge{font-family:'Share Tech Mono',monospace;font-weight:bold;padding:2px 8px;border-radius:4px}
+.score-pass{background:rgba(0,255,136,.12);color:var(--green);border:1px solid rgba(0,255,136,.25)}
+.score-fail{background:rgba(255,42,42,.12);color:var(--red);border:1px solid rgba(255,42,42,.25)}
+.mock-input{background:rgba(0,0,0,.4);border:1px solid var(--border2);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:4px 8px;width:70px;border-radius:3px;outline:none;text-align:center}
+.mock-input:focus{border-color:var(--accent)}
 
-  .gate-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 32px; font-weight: 700;
-    letter-spacing: 6px;
-    color: var(--accent);
-    text-shadow: 0 0 30px rgba(0,212,255,0.5);
-    text-align: center;
-    text-transform: uppercase;
-  }
-  .gate-sub {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; color: var(--text2);
-    letter-spacing: 3px;
-    text-align: center;
-  }
+/* SYLLABUS & ANALYTICS */
+.syllabus-content h4 { color: var(--accent); margin-top: 15px; margin-bottom: 5px; font-family: 'Rajdhani', sans-serif; font-size: 18px; letter-spacing: 1px; text-transform: uppercase; }
+.syllabus-content p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 15px; padding-left: 10px; border-left: 2px solid var(--border2); }
+.record-table { width: 100%; border-collapse: collapse; margin-top: 15px; background:var(--bg2); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+.record-table th { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text2); text-align: left; padding: 12px; border-bottom: 1px solid var(--border); background:rgba(0,0,0,0.4)}
+.record-table td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--border2); }
+.chart-container{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:18px;margin-top:20px}
+.spb-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.spb-name{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;min-width:120px;text-transform:uppercase;color:var(--text)}
+.spb-bg{flex:1;height:8px;background:rgba(0,0,0,.5);border-radius:99px;overflow:hidden;border:1px solid var(--border2)}
+.spb-fill{height:100%;border-radius:99px;transition:width 1.2s ease;background:var(--accent)}
+.spb-num{font-family:'Share Tech Mono',monospace;font-size:11px;min-width:40px;text-align:right;color:var(--accent)}
 
-  .passcode-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--text2);
-    letter-spacing: 4px; text-transform: uppercase;
-    text-align: center;
-  }
+/* RANKS */
+.rank-card-big{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:12px;padding:28px;text-align:center;margin-bottom:20px}
+.rank-big-icon{font-size:64px;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(255,184,0,.4))}
+.rank-big-name{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--amber);letter-spacing:4px;text-transform:uppercase}
+.rank-xp-bar-bg{height:12px;background:rgba(0,0,0,.8);border-radius:99px;overflow:hidden;border:1px solid var(--border2);margin:16px 0 8px}
+.rank-xp-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#ff8c00,var(--amber));transition:width 1s ease}
+.rank-rung{display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.rank-rung.current{border-color:rgba(255,184,0,.5);background:rgba(255,184,0,.06)}
+.rank-rung.achieved{opacity:0.5}
 
-  .passcode-dots {
-    display: flex; gap: 16px; align-items: center;
-    justify-content: center;
-  }
-  .dot {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    background: transparent;
-    transition: all 0.2s;
-  }
-  .dot.filled { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+/* MINIMALIST STOPWATCH (FULLSCREEN & MINI) */
+#timerOverlay{position:fixed;inset:0;background:rgba(3,5,8,0.98);z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;backdrop-filter:blur(10px);transition:all 0.4s ease}
+#timerOverlay.show{display:flex}
+#timerOverlay.minimized{inset:auto;bottom:20px;right:20px;width:250px;height:80px;border:1px solid var(--accent);border-radius:8px;background:rgba(0,0,0,0.9);box-shadow:0 0 20px rgba(0,255,204,0.2);flex-direction:row;justify-content:space-between;padding:0 15px;}
+.timer-massive{font-family:'Share Tech Mono',monospace;font-size:18vw;font-weight:700;color:var(--text);text-shadow:0 0 40px rgba(0,255,204,0.4);line-height:1;margin-bottom:20px;letter-spacing:-2px;transition:all 0.4s ease}
+#timerOverlay.minimized .timer-massive{font-size:24px;margin:0;text-shadow:none;color:var(--accent)}
+#timerOverlay.minimized .timer-sub{display:none}
+.btn-mini-toggle{position:absolute;top:20px;right:20px;background:transparent;border:1px solid var(--border);color:var(--text2);padding:8px 12px;font-family:'Share Tech Mono',monospace;cursor:pointer;border-radius:4px;transition:0.2s}
+.btn-mini-toggle:hover{color:var(--text);border-color:var(--text)}
+#timerOverlay.minimized .btn-mini-toggle{position:static;padding:4px 8px;font-size:10px}
+#timerOverlay.minimized .btn-stop-session{display:none}
+.btn-stop-session{background:rgba(255,42,42,0.1);border:1px solid var(--red);color:var(--red);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:bold;letter-spacing:2px;padding:15px 40px;cursor:pointer;border-radius:4px;transition:0.2s;text-transform:uppercase}
+.btn-stop-session:hover{background:rgba(255,42,42,0.2);box-shadow:0 0 15px rgba(255,42,42,0.4)}
 
-  .passcode-input {
-    background: rgba(0,212,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--accent);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 18px;
-    letter-spacing: 8px;
-    text-align: center;
-    padding: 14px 24px;
-    width: 260px;
-    outline: none;
-    transition: all 0.3s;
-  }
-  .passcode-input:focus {
-    border-color: var(--accent);
-    box-shadow: var(--glow);
-    background: rgba(0,212,255,0.08);
-  }
-  .passcode-input.error {
-    border-color: var(--red);
-    animation: shake 0.4s ease;
-    color: var(--red);
-  }
+/* MODALS & TOAST */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:3000;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center;width:400px;box-shadow:0 0 50px rgba(0,255,204,0.1)}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;margin-bottom:8px}
+#toast{position:fixed;bottom:28px;right:28px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 18px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green);transform:translateY(100px);opacity:0;transition:all .3s;z-index:4000}
+#toast.show{transform:translateY(0);opacity:1}
+.empty-state{text-align:center;padding:36px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text2);letter-spacing:2px;background:rgba(0,0,0,0.2);border:1px dashed var(--border2);border-radius:8px;}
 
-  @keyframes shake {
-    0%,100%{transform:translateX(0)}
-    20%{transform:translateX(-8px)}
-    40%{transform:translateX(8px)}
-    60%{transform:translateX(-8px)}
-    80%{transform:translateX(8px)}
-  }
-
-  .gate-btn {
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px; font-weight: 600;
-    letter-spacing: 4px;
-    padding: 12px 40px;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    border-radius: 2px;
-  }
-  .gate-btn:hover {
-    background: rgba(0,212,255,0.1);
-    box-shadow: var(--glow);
-  }
-
-  .gate-hint {
-    font-size: 11px; color: rgba(122,155,181,0.5);
-    font-family: 'Share Tech Mono', monospace;
-    text-align: center; max-width: 280px;
-    line-height: 1.6;
-  }
-
-  .gate-error {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; color: var(--red);
-    letter-spacing: 2px;
-    height: 18px;
-  }
-
-  /* scanning line animation */
-  .scan-line {
-    position: absolute; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0.3;
-    animation: scan 4s linear infinite;
-    z-index: 3;
-  }
-  @keyframes scan {
-    0% { top: -2px; }
-    100% { top: 100%; }
-  }
-
-  /* ACCESS GRANTED overlay */
-  #access-granted {
-    position: fixed; inset: 0; z-index: 999;
-    display: none; align-items: center; justify-content: center;
-    background: transparent;
-    pointer-events: none;
-  }
-  #access-granted.show {
-    display: flex;
-    animation: fade-out 0.5s ease 2s forwards;
-  }
-  .access-text {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 48px; font-weight: 700;
-    color: var(--green);
-    letter-spacing: 8px;
-    text-shadow: 0 0 40px var(--green);
-    animation: access-flash 0.3s ease;
-  }
-  @keyframes access-flash {
-    0%{opacity:0;transform:scale(0.8)}
-    50%{opacity:1;transform:scale(1.05)}
-    100%{opacity:1;transform:scale(1)}
-  }
-  @keyframes fade-out {
-    to{opacity:0}
-  }
-
-  /* ====== MAIN APP ====== */
-  #app { display: none; min-height: 100vh; }
-  #app.visible { display: block; }
-
-  /* top bar */
-  .topbar {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(7,11,15,0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 32px;
-    display: flex; align-items: center;
-    height: 60px; gap: 32px;
-  }
-
-  .logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 18px; font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .logo span { color: var(--text2); font-weight: 400; font-size: 12px; }
-
-  .nav-tabs {
-    display: flex; gap: 0;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .nav-tab {
-    padding: 8px 20px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; font-weight: 600;
-    letter-spacing: 2px;
-    color: var(--text2);
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none; background: none;
-    text-transform: uppercase;
-  }
-  .nav-tab.active {
-    background: rgba(0,212,255,0.12);
-    color: var(--accent);
-  }
-  .nav-tab:hover:not(.active) {
-    color: var(--text); background: rgba(255,255,255,0.04);
-  }
-
-  .topbar-right {
-    margin-left: auto;
-    display: flex; align-items: center; gap: 20px;
-  }
-  .day-counter {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; color: var(--text2);
-    letter-spacing: 1px;
-  }
-  .day-counter span { color: var(--accent2); font-size: 15px; font-weight: bold; }
-
-  /* ====== VIEWS ====== */
-  .view { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
-  .view.active { display: block; }
-
-  /* ====== MISSION (TODAY) VIEW ====== */
-  .mission-header {
-    display: flex; align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    gap: 20px;
-  }
-  .date-block {}
-  .date-big {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 64px; font-weight: 700;
-    line-height: 1; color: var(--text);
-    letter-spacing: -2px;
-  }
-  .date-big span { font-size: 28px; color: var(--text2); margin-left: 4px; }
-  .date-day {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; color: var(--accent);
-    letter-spacing: 4px; margin-top: 4px;
-  }
-  .mission-quote {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; color: var(--text2);
-    text-align: right; font-style: italic;
-    max-width: 260px;
-    opacity: 0.7;
-  }
-
-  .progress-strip {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 16px 20px;
-    margin-bottom: 28px;
-    display: flex; align-items: center; gap: 24px;
-  }
-  .strip-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--text2);
-    letter-spacing: 2px; white-space: nowrap;
-  }
-  .strip-bar-bg {
-    flex: 1; height: 6px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 99px; overflow: hidden;
-    border: 1px solid var(--border2);
-  }
-  .strip-bar-fill {
-    height: 100%; border-radius: 99px;
-    background: linear-gradient(90deg, var(--accent), var(--green));
-    transition: width 0.8s ease;
-    position: relative;
-  }
-  .strip-bar-fill::after {
-    content: '';
-    position: absolute; right: -1px; top: -2px;
-    width: 10px; height: 10px;
-    background: var(--green);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--green);
-  }
-  .strip-pct {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 13px; color: var(--green);
-    font-weight: bold; min-width: 40px;
-  }
-
-  .section-eyebrow {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; letter-spacing: 4px;
-    color: var(--text2); text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-eyebrow::after {
-    content: ''; flex: 1; height: 1px;
-    background: var(--border);
-  }
-
-  .block-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  .block-header {
-    display: flex; align-items: center;
-    padding: 12px 16px; gap: 10px;
-    border-bottom: 1px solid var(--border2);
-  }
-  .block-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; color: var(--text2);
-    letter-spacing: 1px;
-  }
-  .block-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; font-weight: 600;
-    letter-spacing: 3px; color: var(--accent);
-    text-transform: uppercase;
-  }
-  .block-time {
-    margin-left: auto;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--text2);
-  }
-
-  .task-row {
-    display: flex; align-items: center;
-    padding: 12px 16px; gap: 12px;
-    border-bottom: 1px solid var(--border2);
-    transition: background 0.2s;
-  }
-  .task-row:last-child { border-bottom: none; }
-  .task-row:hover { background: rgba(0,212,255,0.03); }
-
-  .task-check {
-    width: 20px; height: 20px;
-    border: 1.5px solid var(--border);
-    border-radius: 3px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s; flex-shrink: 0;
-    background: transparent;
-  }
-  .task-check:hover { border-color: var(--accent); background: rgba(0,212,255,0.05); }
-  .task-check.done {
-    background: rgba(0,255,136,0.15);
-    border-color: var(--green);
-  }
-  .task-check.done::after {
-    content: '✓'; color: var(--green); font-size: 12px; font-weight: bold;
-  }
-
-  .task-info { flex: 1; }
-  .task-name {
-    font-size: 14px; color: var(--text);
-    transition: all 0.2s; line-height: 1.4;
-  }
-  .task-row.completed .task-name {
-    text-decoration: line-through; color: var(--text2);
-  }
-  .task-meta {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; color: var(--text2);
-    margin-top: 2px;
-  }
-
-  .task-actions { display: flex; gap: 6px; }
-  .task-btn {
-    padding: 4px 10px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; letter-spacing: 1px;
-    border-radius: 3px; cursor: pointer;
-    border: 1px solid; transition: all 0.2s;
-    background: transparent;
-    text-transform: uppercase;
-  }
-  .btn-pass {
-    border-color: rgba(255,184,0,0.3);
-    color: var(--amber);
-  }
-  .btn-pass:hover {
-    background: rgba(255,184,0,0.1);
-    border-color: var(--amber);
-  }
-
-  /* backlogs */
-  .backlog-section { margin-top: 32px; }
-  .backlog-header {
-    display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 12px;
-  }
-  .backlog-title {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; letter-spacing: 3px;
-    color: var(--text2); text-transform: uppercase;
-  }
-  .delay-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; padding: 3px 10px;
-    border-radius: 99px;
-    background: rgba(255,59,59,0.15);
-    color: var(--red); border: 1px solid rgba(255,59,59,0.3);
-  }
-
-  .backlog-cards {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-  }
-  .backlog-card {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 6px; padding: 12px;
-    font-size: 13px;
-  }
-  .backlog-card-date {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; color: var(--text2);
-    margin-bottom: 8px;
-  }
-  .backlog-task {
-    color: var(--text2); font-size: 12px;
-    padding: 4px 0; border-bottom: 1px solid var(--border2);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .backlog-task:last-child { border-bottom: none; }
-  .backlog-task .pp {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; color: rgba(122,155,181,0.5);
-    margin-left: auto;
-  }
-
-  /* ====== SUBJECTS VIEW ====== */
-  .subjects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px; margin-top: 24px;
-  }
-  .subject-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px; padding: 20px;
-    cursor: pointer; transition: all 0.2s;
-    position: relative; overflow: hidden;
-  }
-  .subject-card:hover {
-    border-color: rgba(0,212,255,0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  }
-  .subject-card::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px;
-  }
-  .subject-card.math::before { background: var(--accent); }
-  .subject-card.english::before { background: #7c6fe0; }
-  .subject-card.physics::before { background: var(--accent2); }
-  .subject-card.gk::before { background: var(--green); }
-  .subject-card.chemistry::before { background: #ff6eb4; }
-  .subject-card.bio::before { background: #4ade80; }
-
-  .subj-card-top {
-    display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 14px;
-  }
-  .subj-card-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 15px; font-weight: 700;
-    letter-spacing: 3px; text-transform: uppercase;
-  }
-  .subj-pct {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 20px; font-weight: bold;
-  }
-  .subj-bar-bg {
-    height: 4px; background: rgba(255,255,255,0.08);
-    border-radius: 99px; overflow: hidden; margin-bottom: 10px;
-  }
-  .subj-bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease; }
-  .subj-card-meta {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; color: var(--text2);
-    letter-spacing: 1px;
-  }
-  .priority-tag {
-    font-size: 10px; padding: 2px 8px; border-radius: 99px;
-    font-family: 'Share Tech Mono', monospace; letter-spacing: 1px;
-    display: inline-block; margin-top: 8px;
-  }
-  .pri-red { background: rgba(255,59,59,0.15); color: var(--red); border: 1px solid rgba(255,59,59,0.3); }
-  .pri-amber { background: rgba(255,184,0,0.15); color: var(--amber); border: 1px solid rgba(255,184,0,0.3); }
-  .pri-green { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
-
-  .upcoming-section { margin-top: 32px; }
-  .upcoming-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 12px; margin-top: 12px;
-  }
-  .upcoming-card {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: 8px; padding: 14px;
-  }
-  .upcoming-date {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px; color: var(--accent);
-    letter-spacing: 2px; margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-  .upcoming-subj {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 2px; color: var(--text2);
-    text-transform: uppercase; margin: 8px 0 4px;
-  }
-  .upcoming-task {
-    font-size: 12px; color: var(--text);
-    padding: 4px 0;
-    border-bottom: 1px solid var(--border2);
-    display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer; transition: color 0.2s;
-  }
-  .upcoming-task:hover { color: var(--accent); }
-  .upcoming-task:last-child { border-bottom: none; }
-  .upcoming-task .pp-tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px; color: rgba(122,155,181,0.5);
-  }
-  .mark-done-btn {
-    font-size: 10px; padding: 2px 6px;
-    background: rgba(0,255,136,0.1);
-    border: 1px solid rgba(0,255,136,0.2);
-    color: var(--green); border-radius: 3px;
-    cursor: pointer; margin-left: 6px;
-    font-family: 'Share Tech Mono', monospace;
-    transition: all 0.2s; white-space: nowrap;
-  }
-  .mark-done-btn:hover {
-    background: rgba(0,255,136,0.2);
-  }
-
-  /* ====== PROGRESS VIEW ====== */
-  .progress-view {}
-  .stats-row {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 12px; margin-bottom: 28px;
-  }
-  .stat-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px; padding: 16px;
-    text-align: center;
-  }
-  .stat-big {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 36px; font-weight: 700;
-    line-height: 1;
-  }
-  .stat-lbl {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px; letter-spacing: 2px;
-    color: var(--text2); margin-top: 6px;
-    text-transform: uppercase;
-  }
-
-  .chart-container {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px; padding: 20px;
-    margin-bottom: 20px;
-  }
-  .chart-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 14px; font-weight: 600;
-    letter-spacing: 3px; color: var(--text2);
-    text-transform: uppercase; margin-bottom: 20px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .chart-title::after {
-    content:''; flex:1; height:1px; background: var(--border);
-  }
-
-  canvas { width: 100% !important; }
-
-  .subject-progress-bars { display: flex; flex-direction: column; gap: 14px; }
-  .spb-row { display: flex; align-items: center; gap: 14px; }
-  .spb-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; font-weight: 600;
-    letter-spacing: 2px; min-width: 110px;
-    text-transform: uppercase;
-  }
-  .spb-bg {
-    flex: 1; height: 10px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 99px; overflow: hidden;
-    border: 1px solid var(--border2);
-  }
-  .spb-fill {
-    height: 100%; border-radius: 99px;
-    transition: width 1.2s ease;
-  }
-  .spb-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; min-width: 40px; text-align: right;
-  }
-
-  /* exam countdown */
-  .countdown-box {
-    background: linear-gradient(135deg, var(--bg2), var(--bg3));
-    border: 1px solid rgba(255,107,0,0.3);
-    border-radius: 8px; padding: 20px 24px;
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 24px;
-  }
-  .cd-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--accent2);
-    letter-spacing: 3px; text-transform: uppercase;
-  }
-  .cd-days {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 52px; font-weight: 700;
-    color: var(--accent2); line-height: 1;
-    text-shadow: 0 0 30px rgba(255,107,0,0.4);
-  }
-  .cd-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
-  .cd-bar-wrap { flex: 1; }
-  .cd-bar-bg {
-    height: 8px; background: rgba(0,0,0,0.5);
-    border-radius: 99px; overflow: hidden;
-    border: 1px solid rgba(255,107,0,0.2);
-    margin-bottom: 6px;
-  }
-  .cd-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent2), var(--red));
-    border-radius: 99px; transition: width 1s ease;
-  }
-  .cd-pct {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--text2);
-  }
-
-  /* weekly heatmap */
-  .heatmap { display: flex; gap: 6px; flex-wrap: wrap; }
-  .heat-day {
-    width: 14px; height: 14px; border-radius: 2px;
-    background: rgba(0,212,255,0.05);
-    border: 1px solid var(--border2);
-    transition: all 0.3s;
-    cursor: default;
-    position: relative;
-  }
-  .heat-day.l1 { background: rgba(0,212,255,0.2); }
-  .heat-day.l2 { background: rgba(0,212,255,0.4); }
-  .heat-day.l3 { background: rgba(0,212,255,0.6); }
-  .heat-day.l4 { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-
-  /* toast */
-  #toast {
-    position: fixed; bottom: 32px; right: 32px;
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 6px; padding: 12px 20px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px; color: var(--green);
-    letter-spacing: 1px;
-    transform: translateY(100px); opacity: 0;
-    transition: all 0.3s;
-    z-index: 500;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-  }
-  #toast.show {
-    transform: translateY(0); opacity: 1;
-  }
-
-  /* corner decorations */
-  .corner-tl, .corner-tr, .corner-bl, .corner-br {
-    position: fixed; width: 20px; height: 20px;
-    z-index: 50; pointer-events: none;
-  }
-  .corner-tl { top: 8px; left: 8px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); }
-  .corner-tr { top: 8px; right: 8px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
-  .corner-bl { bottom: 8px; left: 8px; border-bottom: 1px solid var(--accent); border-left: 1px solid var(--accent); }
-  .corner-br { bottom: 8px; right: 8px; border-bottom: 1px solid var(--accent); border-right: 1px solid var(--accent); }
-
-  /* empty state */
-  .empty-state {
-    text-align: center; padding: 40px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 13px; color: var(--text2);
-    letter-spacing: 2px;
-  }
-  .empty-state .big { font-size: 32px; margin-bottom: 12px; }
-
-  @media (max-width: 768px) {
-    .topbar { padding: 0 16px; }
-    .view { padding: 16px; }
-    .backlog-cards { grid-template-columns: 1fr; }
-    .upcoming-grid { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(3, 1fr); }
-    .date-big { font-size: 44px; }
-    .subjects-grid { grid-template-columns: 1fr; }
-  }
+@media(max-width:768px){
+  .topbar{height:auto;padding:8px 12px;gap:8px}
+  .view{padding:14px}
+  .mission-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
-<!-- CORNER DECORATIONS -->
-<div class="corner-tl"></div>
-<div class="corner-tr"></div>
-<div class="corner-bl"></div>
-<div class="corner-br"></div>
-
-<!-- GATE SCREEN -->
 <div id="gate">
   <div class="gate-bg"></div>
   <div class="scan-line"></div>
-
-  <div class="gate-shutter-top" id="shutterTop">
-    <div class="shutter-lines">
-      <div class="shutter-line"></div>
-      <div class="shutter-line"></div>
-      <div class="shutter-line"></div>
-    </div>
-  </div>
-  <div class="gate-shutter-bottom" id="shutterBottom">
-    <div class="shutter-lines">
-      <div class="shutter-line"></div>
-      <div class="shutter-line"></div>
-      <div class="shutter-line"></div>
-    </div>
-  </div>
-
+  <div class="gate-shutter-top" id="shutterTop"><div class="shutter-lines"><div class="shutter-line"></div><div class="shutter-line"></div></div></div>
+  <div class="gate-shutter-bottom" id="shutterBottom"><div class="shutter-lines"><div class="shutter-line"></div><div class="shutter-line"></div></div></div>
+  
   <div class="gate-content">
     <div class="gate-emblem">🎯</div>
     <div>
-      <div class="gate-title">OPERATION NDA</div>
-      <div class="gate-sub" style="margin-top:6px">MISSION CONTROL — CLASSIFIED</div>
+      <div class="gate-title">OPERATION COMEBACK RETURNS</div>
+      <div class="gate-sub">MISSION CONTROL — CLASSIFIED</div>
     </div>
     <div>
-      <div class="passcode-label" style="margin-bottom:16px">ENTER ACCESS CODE</div>
-      <input
-        type="password"
-        id="passcodeInput"
-        class="passcode-input"
-        maxlength="20"
-        placeholder="············"
-        autocomplete="off"
-        onkeydown="if(event.key==='Enter')tryUnlock()"
-      />
-      <div class="gate-error" id="gateError" style="margin-top:10px; text-align:center"></div>
+      <div class="passcode-label" style="margin-bottom:14px">ENTER ACCESS CODE</div>
+      <input type="password" id="passcodeInput" class="passcode-input" maxlength="20" placeholder="············" autocomplete="off"/>
+      <div class="gate-error" id="gateError" style="margin-top:8px"></div>
     </div>
     <button class="gate-btn" onclick="tryUnlock()">AUTHENTICATE →</button>
-    <div class="gate-hint">Hint: The institution you're fighting to join + your year of exam<br>(e.g. NDA2025)</div>
+  </div>
+</div>
+<div id="access-granted"><div class="access-text">ACCESS GRANTED</div></div>
+
+<div id="timerOverlay">
+  <button class="btn-mini-toggle" onclick="toggleStopwatchSize()" id="btnMinMax">MINIMIZE ↙</button>
+  <div class="timer-massive" id="bigTimerDisplay">00:00:00</div>
+  <div class="timer-sub" style="font-family:'Share Tech Mono', monospace; color:var(--text2); margin-bottom:40px; letter-spacing:4px">STUDY SESSION ACTIVE</div>
+  <button class="btn-stop-session" onclick="stopTimer()">END SESSION & LOG TIME</button>
+</div>
+
+<div class="modal-overlay" id="promoModal">
+  <div class="modal-box" style="border-color:var(--green)">
+    <div class="modal-title" style="color:var(--green)">PROMOTED!</div>
+    <div id="promoRankName" style="font-family:'Rajdhani',sans-serif; font-size:24px; color:var(--text); letter-spacing:4px; margin-bottom:20px; text-transform:uppercase"></div>
+    <button class="gate-btn" style="border-color:var(--green); color:var(--green)" onclick="closePromo()">MARCH ON →</button>
+  </div>
+</div>
+<div class="modal-overlay" id="demoteModal">
+  <div class="modal-box" style="border-color:var(--red)">
+    <div class="modal-title" style="color:var(--red)">DEMOTION</div>
+    <div id="demoteRankName" style="font-family:'Rajdhani',sans-serif; font-size:24px; color:var(--text); letter-spacing:4px; margin-bottom:20px; text-transform:uppercase"></div>
+    <div style="font-family:'Share Tech Mono', monospace; font-size:11px; color:var(--text2); margin-bottom: 20px;">Failure to complete tasks reduced your overall count. Get back to work.</div>
+    <button class="gate-btn" style="border-color:var(--red); color:var(--red)" onclick="closeDemote()">I WILL RECOVER →</button>
   </div>
 </div>
 
-<!-- ACCESS GRANTED FLASH -->
-<div id="access-granted">
-  <div class="access-text">ACCESS GRANTED</div>
-</div>
-
-<!-- MAIN APP -->
 <div id="app">
   <div class="topbar">
-    <div class="logo">NDA <span>MISSION CONTROL</span></div>
+    <div class="logo">COMEBACK RETURNS <small>// COMBAT READY</small></div>
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchTab('mission')">📡 MISSION</button>
-      <button class="nav-tab" onclick="switchTab('subjects')">📚 SUBJECTS</button>
-      <button class="nav-tab" onclick="switchTab('progress')">📊 PROGRESS</button>
+      <button class="nav-tab active" onclick="switchTab('mission',this)">HQ DESK</button>
+      <button class="nav-tab" onclick="switchTab('syllabus',this)">SYLLABUS</button>
+      <button class="nav-tab" onclick="switchTab('analytics',this)">ANALYTICS & RECORDS</button>
+      <button class="nav-tab" onclick="switchTab('rank',this)">PROFILES</button>
     </div>
+    
     <div class="topbar-right">
-      <div class="day-counter">D-DAY IN <span id="daysLeft">89</span> DAYS</div>
+      <button class="gate-btn" style="padding: 6px 14px; font-size: 11px; letter-spacing: 2px; border-color: var(--green); color: var(--green);" onclick="startTimer()">⏱ START STUDY</button>
+      <div class="rank-badge" onclick="switchTab('rank',document.querySelector('.nav-tab:nth-child(4)'))">
+        <span class="rank-icon" id="topRankIcon">🪖</span>
+        <span class="rank-name" id="topRankName">SEPOY</span>
+      </div>
+      <div class="day-counter">TARGET: AUG 25 <br><span id="daysLeft" style="color:var(--accent)">0</span> DAYS LEFT</div>
     </div>
   </div>
 
-  <!-- MISSION VIEW -->
-  <div class="view active" id="view-mission">
+  <div id="view-mission" class="view active">
     <div class="mission-header">
-      <div class="date-block">
-        <div class="date-big" id="dateNum">17<span id="dateMon">JUN</span></div>
-        <div class="date-day" id="dateDayName">WEDNESDAY</div>
-      </div>
-      <div class="mission-quote" id="dailyQuote">"Excuses don't pass exams."</div>
-    </div>
-
-    <div class="progress-strip">
-      <div class="strip-label">TODAY'S MISSION</div>
-      <div class="strip-bar-bg">
-        <div class="strip-bar-fill" id="todayBar" style="width:0%"></div>
-      </div>
-      <div class="strip-pct" id="todayPct">0%</div>
-    </div>
-
-    <div id="todayBlocks"></div>
-    <div class="backlog-section" id="backlogSection"></div>
-  </div>
-
-  <!-- SUBJECTS VIEW -->
-  <div class="view" id="view-subjects">
-    <div class="section-eyebrow">CORE MASTERY</div>
-    <div class="subjects-grid" id="subjectsGrid"></div>
-    <div class="upcoming-section">
-      <div class="section-eyebrow" style="margin-top:28px">UPCOMING TASKS</div>
-      <div class="upcoming-grid" id="upcomingGrid"></div>
-    </div>
-  </div>
-
-  <!-- PROGRESS VIEW -->
-  <div class="view" id="view-progress">
-    <div class="countdown-box">
       <div>
-        <div class="cd-label">EXAM COUNTDOWN</div>
-        <div class="cd-days" id="cdDays">89</div>
-        <div class="cd-sub">days until NDA Written · Sep 13, 2026</div>
+        <div class="date-big" id="hqDate">DATE</div>
+        <div class="date-day">MISSION TIMELINE PHASE // ACTIVE</div>
       </div>
-      <div class="cd-bar-wrap">
-        <div class="cd-bar-bg">
-          <div class="cd-bar-fill" id="cdBar" style="width:0%"></div>
+    </div>
+
+    <div class="mission-grid">
+      <div>
+        <div class="section-eyebrow">TODAY'S DEPLOYED TARGETS</div>
+        <div id="activeBlocksContainer"></div>
+
+        <div class="section-eyebrow" style="margin-top:24px">UPCOMING / SCHEDULED TASKS</div>
+        <div id="upcomingBlocksContainer"></div>
+
+        <div class="backlog-section" id="backlogWrapper">
+          <div class="backlog-header">
+            <span class="backlog-title">STRATEGIC TASKS IN BACKLOG</span>
+            <span class="delay-badge" id="backlogCount">0 OVERDUE</span>
+          </div>
+          <div class="backlog-cards" id="backlogContainer"></div>
         </div>
-        <div class="cd-pct" id="cdPct">0% of prep time used</div>
+
+        <div class="section-eyebrow" style="margin-top:24px">STRATEGIC MOCK BATTLE RECORDS</div>
+        <div class="mock-container">
+          <table class="mock-table">
+            <thead>
+              <tr><th>Mock ID</th><th>Paper Category</th><th>Target Marks</th><th>Achieved Score</th><th>Status</th></tr>
+            </thead>
+            <tbody id="mockTableBody"></tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <div class="stats-row" id="statsRow"></div>
+      <div>
+        <div class="section-eyebrow">COMMAND TASK DEPLOYMENT</div>
+        <div style="background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px;">
+          <input type="text" id="taskInputName" class="input-field" placeholder="What are you studying?" autocomplete="off">
+          
+          <select id="taskInputSubj" class="select-field">
+            <option value="Mathematics">Mathematics</option>
+            <option value="English">English</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="General Science">General Science</option>
+            <option value="History">History</option>
+            <option value="Geography">Geography</option>
+            <option value="Current Affairs">Current Affairs</option>
+          </select>
+          
+          <div style="margin-bottom:12px;">
+            <label style="font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text2);">SCHEDULE DATE:</label>
+            <input type="date" id="taskInputDate" class="input-field" style="margin-bottom:0; margin-top:4px;">
+          </div>
 
-    <div class="chart-container">
-      <div class="chart-title">SUBJECT MASTERY</div>
-      <div class="subject-progress-bars" id="masteryBars"></div>
-    </div>
-
-    <div class="chart-container">
-      <div class="chart-title">WEEKLY ACTIVITY</div>
-      <canvas id="weekChart" height="120"></canvas>
-    </div>
-
-    <div class="chart-container">
-      <div class="chart-title">STUDY HEATMAP (Last 12 weeks)</div>
-      <div style="margin-bottom:8px; font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:2px;">MON — SUN</div>
-      <div class="heatmap" id="heatmap"></div>
+          <button class="engine-btn" onclick="deployManualTask()">ASSIGN TASK →</button>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div id="view-syllabus" class="view">
+    <div class="section-eyebrow">NDA SYLLABUS 2026 (OFFICIAL)</div>
+    <div class="block-card" style="padding: 24px; background:var(--bg2)">
+      <div class="syllabus-content">
+        <h3 style="color:var(--text); font-family:'Rajdhani', sans-serif; font-size: 24px; border-bottom:1px solid var(--border); padding-bottom:10px;">1. Mathematics (Paper I)</h3>
+        
+        <h4>Algebra</h4>
+        <p>Concept of set, operations on sets, Venn diagrams. De Morgan laws, Cartesian product, relation, equivalence relation. Representation of real numbers on a line. Complex numbers—basic properties, modulus, argument, cube roots of unity. Binary system of numbers. Conversion of a number in decimal system to binary system and vice-versa. Arithmetic, Geometric, and Harmonic progressions. Quadratic equations with real coefficients. Solution of linear inequations of two variables by graphs. Permutation and Combination. Binomial theorem and its applications. Logarithms and their applications.</p>
+        
+        <h4>Matrices and Determinants</h4>
+        <p>Types of matrices, operations on matrices. Determinant of a matrix, basic properties of determinants. Adjoint and inverse of a square matrix, Applications-Solution of a system of linear equations in two or three unknowns by Cramer’s rule and by Matrix Method.</p>
+        
+        <h4>Trigonometry</h4>
+        <p>Angles and their measures in degrees and radians. Trigonometrical ratios. Trigonometric identities Sum and difference formulae. Multiple and Sub-multiple angles. Inverse trigonometric functions. Applications-Height and distance, properties of triangles.</p>
+        
+        <h4>Analytical Geometry of Two and Three Dimension</h4>
+        <p>Rectangular Cartesian Coordinate system. Distance formula. Equation of a line in various forms. The angle between two lines. Distance of a point from a line. Equation of a circle in standard and general form. Standard forms of parabola, ellipse, and hyperbola. Eccentricity and axis of a conic. Point in a three-dimensional space, the distance between two points. Direction Cosines and direction ratios. Equation of a plane and a line in various forms. The angle between two lines and the angle between two planes. Equation of a sphere.</p>
+        
+        <h4>Differential Calculus</h4>
+        <p>Concept of a real-valued function–domain, range, and graph of a function. Composite functions, one-to-one, onto, and inverse functions. The notion of limit, Standard limits—examples. Continuity of functions—examples, algebraic operations on continuous functions. Derivative of function at a point, geometrical and physical interpretation of a derivative—applications. Derivatives of sum, product, and quotient of functions, derivative of a function concerning another function, derivative of a composite function. Second-order derivatives. Increasing and decreasing functions. Application of derivatives in problems of maxima and minima.</p>
+        
+        <h4>Integral Calculus and Differential Equations</h4>
+        <p>Integration as inverse of differentiation, integration by substitution and by parts, standard integrals involving algebraic expressions, trigonometric, exponential, and hyperbolic functions. Evaluation of definite integrals—determination of areas of plane regions bounded by curves—applications. Definition of order and degree of a differential equation, formation of a differential equation by examples. A general and particular solution of differential equations, solution of the first order, and first-degree differential equations of various types—examples. Application in problems of growth and decay.</p>
+        
+        <h4>Vector Algebra</h4>
+        <p>Vectors in two and three dimensions, magnitude, and direction of a vector. Unit and null vectors, addition of vectors, scalar multiplication of a vector, scalar product or dot product of two vectors. Vector product or cross product of two vectors. Application work done by a force and moment of a force and in geometrical problems.</p>
+        
+        <h4>Statistics and Probability</h4>
+        <p>Statistics Classification of data, Frequency distribution, cumulative frequency distribution—examples. Graphical representation—Histogram, Pie Chart, frequency polygon— examples. Measures of Central tendency—Mean, median, and mode. Variance and standard deviation—determination and comparison. Correlation and regression. Probability Random experiment, outcomes, associated sample space, mutually exclusive and exhaustive events, impossible and certain events. Union and Intersection of events. Complementary, elementary, and composite events. Definition of probability—classical and statistical—examples. Elementary theorems on probability—simple problems. Conditional probability, Bayes’ theorem—simple problems. Random variable as function on a sample space. Binomial distribution, examples of random experiments giving rise to Binominal distribution.</p>
+
+        <hr style="border:0; height:1px; background:var(--border); margin: 40px 0;">
+
+        <h3 style="color:var(--text); font-family:'Rajdhani', sans-serif; font-size: 24px; border-bottom:1px solid var(--border); padding-bottom:10px;">2. General Ability Test (Paper II)</h3>
+        
+        <h4>Part A: English (200 Marks)</h4>
+        <p>Spotting Errors, Comprehension, Selecting Words, Synonyms, Antonyms, Sentence Improvements, Ordering of Words in a Sentence.</p>
+        
+        <h4>Part B: Physics</h4>
+        <p>Physical Properties and States of Matter, Mass, Weight, Volume, Density, Specific Gravity, Archimedes, Pressure Barometer. Motion, Velocity, Acceleration, Newton’s Laws, Force, Momentum, Parallelogram of Forces, Stability, Gravitation, Work, Power, Energy. Effects of Heat, Temperature, change of State, Latent Heat. Sound waves. Light, Reflection, refraction, Mirrors, Lenses, Human Eye. Magnets, Earth as a Magnet. Static/Current Electricity, Ohm’s Law, Circuits, Heating/Magnetic effects, Power, Cells, X-Rays. Principles of: Pendulum, Pulleys, Siphon, Levers, Balloon, Pumps, Hydrometer, Pressure Cooker, Thermos, Gramophone, Telegraphs, Telephone, Periscope, Telescope, Microscope, Mariner’s Compass.</p>
+
+        <h4>Part B: Chemistry</h4>
+        <p>Physical/Chemical changes. Elements, Mixtures, Compounds, Symbols, Formulae, simple Equations, Law of Chemical Combination. Properties of Air and Water. Preparation/Properties of Hydrogen, Oxygen, Nitrogen, CO2, Oxidation/Reduction. Acids, bases, salts. Carbon forms. Fertilizers. Preparation of Soap, Glass, Ink, Paper, Cement, Paints, Matches, Gun-Powder. Structure of Atom, Atomic/Molecular Weights, Valency.</p>
+
+        <h4>Part B: General Science</h4>
+        <p>Living vs nonliving. Cells, Protoplasms, Tissues. Growth/Reproduction in Plants/Animals. Human Body and vital organs. Epidemics. Food, Energy, balanced Diet. Solar System, meteors, comets, Eclipses. Eminent Scientists.</p>
+
+        <h4>Part B: History, Freedom Movement</h4>
+        <p>Indian History, Culture, Civilisation. Freedom Movement. Indian Constitution and Administration. Five Year Plans. Panchayati Raj, Co-operatives, Bhoodan, Sarvodaya, Mahatma Gandhi. Forces shaping modern world; Renaissance, Exploration; War of American Independence. French, Industrial, Russian Revolutions. Impact of Science. UN, Panchsheel, Democracy, Socialism, Communism. Role of India.</p>
+
+        <h4>Part B: Geography</h4>
+        <p>Earth shape/size. Latitudes, Longitudes, Time, IDL. Earth movements. Origin of Earth. Rocks, Weathering, Earthquakes, Volcanoes. Ocean Currents, Tides. Atmosphere, Temperature, Pressure, Planetary Winds, Cyclones. Humidity, Condensation, Precipitation, Climate types. Regional Geography of India—Climate, vegetation, Minerals, Power, agriculture, Industry. Sea ports, land/air routes. Imports/Exports.</p>
+
+        <h4>Part B: Current Events</h4>
+        <p>Important events in India in recent years. Current important world events. Prominent personalities—Indian and International (cultural/sports).</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-analytics" class="view">
+    <div class="section-eyebrow">SUBJECT COMPLETION ANALYTICS</div>
+    <div class="chart-container" id="analyticsBars">
+      </div>
+
+    <div class="section-eyebrow" style="margin-top:30px;">STUDY TIME LOGIC RECORDS</div>
+    <table class="record-table">
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th>MINUTES STUDIED</th>
+          <th>HOURS CONVERTED</th>
+        </tr>
+      </thead>
+      <tbody id="studyRecordBody"></tbody>
+    </table>
+    
+    <div class="section-eyebrow" style="margin-top:30px;">COMPLETED TASKS HISTORY</div>
+    <table class="record-table">
+      <thead>
+        <tr>
+          <th>COMPLETION DATE</th>
+          <th>SUBJECT</th>
+          <th>TASK DESCRIPTION</th>
+        </tr>
+      </thead>
+      <tbody id="completedRecordBody"></tbody>
+    </table>
+  </div>
+
+  <div id="view-rank" class="view">
+    <div class="rank-card-big">
+      <div class="rank-big-icon" id="rankBigIcon">🪖</div>
+      <div class="rank-big-name" id="rankBigName">SEPOY</div>
+      <div style="font-family:'Share Tech Mono',monospace; color:var(--text2); margin-top:8px;">TOTAL TASKS SECURED: <span id="rankCurrentTasks" style="color:var(--text);font-weight:bold;font-size:16px;">0</span></div>
+      <div class="rank-xp-bar-bg"><div class="rank-xp-fill" id="rankXpFill" style="width:0%"></div></div>
+      <div class="rank-xp-text" id="rankXpText">0 / 10 TASKS REQUIRED FOR PROMOTION</div>
+    </div>
+    <div class="section-eyebrow">INDIAN ARMY ENLISTED TO OFFICER RANK LADDER</div>
+    <div class="ranks-ladder" id="ranksLadder"></div>
+  </div>
+
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ============================================================
-// DATA & STATE
-// ============================================================
-
-const PASSCODES = ['NDA2026', 'nda2026', 'NDA2025', 'nda2025', 'OPERATION2026'];
-// Hint: NDA + exam year (2026) — motivational: the year you join the academy
-
-const QUOTES = [
-  '"Excuses don\'t pass exams."',
-  '"Pain is temporary. NDA is forever."',
-  '"Every hour you waste, someone else is grinding."',
-  '"The parade ground won\'t care about your excuses."',
-  '"Officers don\'t quit. Neither do you."',
-  '"Kargil wasn\'t won by comfort seekers."',
-  '"89 days. That\'s all you need."',
-  '"Your uniform is waiting. Go earn it."',
-  '"Study now, salute later."',
-  '"The NDA gate opens for those who prepared."',
-];
-
-// NDA Syllabus — structured by subject and topic
-// startDate = June 17, 2026 (today = Day 0)
-const TODAY_STR = '2026-06-17';
-const EXAM_DATE = new Date('2026-09-13');
-
-function addDays(dateStr, n) {
-  const d = new Date(dateStr);
-  d.setDate(d.getDate() + n);
-  return d.toISOString().split('T')[0];
+// --- AUDIO SYSTEM ---
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    if(type === 'success') {
+        // High ascending blip (Lock open)
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start(audioCtx.currentTime); 
+        osc.stop(audioCtx.currentTime + 0.15);
+    } else {
+        // Low error buzz
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start(audioCtx.currentTime); 
+        osc.stop(audioCtx.currentTime + 0.3);
+    }
 }
 
-// Full NDA syllabus as tasks — week by week
-const SYLLABUS = [
-  // WEEK 1 — MATHS FOUNDATIONS
-  { id:'m1', subject:'MATHS', topic:'Sets', desc:'Sets — Types, Venn Diagrams, Operations', date: addDays(TODAY_STR, 0), time:'45 min', pages:'Ch.1' },
-  { id:'m2', subject:'MATHS', topic:'Sets', desc:'Sets — DeMorgan\'s Laws, Cartesian Product', date: addDays(TODAY_STR, 0), time:'30 min', pages:'Ch.1' },
-  { id:'m3', subject:'MATHS', topic:'Relations & Functions', desc:'Relations — Types, Domain, Range', date: addDays(TODAY_STR, 1), time:'45 min', pages:'Ch.2' },
-  { id:'m4', subject:'MATHS', topic:'Trigonometry', desc:'Trig Ratios — Standard Values Table (must memorise)', date: addDays(TODAY_STR, 2), time:'45 min', pages:'Ch.3' },
-  { id:'m5', subject:'MATHS', topic:'Trigonometry', desc:'Identities — sin²+cos²=1, compound angles', date: addDays(TODAY_STR, 3), time:'45 min', pages:'Ch.3' },
-  { id:'m6', subject:'MATHS', topic:'Algebra', desc:'Quadratic Equations — roots, discriminant', date: addDays(TODAY_STR, 4), time:'45 min', pages:'Ch.5' },
-  { id:'m7', subject:'MATHS', topic:'Algebra', desc:'α+β, αβ formulas — PYQ drill (10 questions)', date: addDays(TODAY_STR, 5), time:'30 min', pages:'PYQ' },
+// --- CONSTANTS ---
+const TARGET_DATE = new Date('2026-08-25');
+const PASSCODE = 'NDA2026';
 
-  // WEEK 1 — ENGLISH DAILY
-  { id:'e1', subject:'ENGLISH', topic:'Grammar', desc:'Subject-Verb Agreement — 10 rules with examples', date: addDays(TODAY_STR, 0), time:'30 min', pages:'Grammar' },
-  { id:'e2', subject:'ENGLISH', topic:'Vocabulary', desc:'Vocabulary — Latin/Greek roots: belli, mal, bene, port', date: addDays(TODAY_STR, 1), time:'20 min', pages:'Vocab' },
-  { id:'e3', subject:'ENGLISH', topic:'Grammar', desc:'Tenses — All 12 tenses, formation rules', date: addDays(TODAY_STR, 2), time:'25 min', pages:'Grammar' },
-  { id:'e4', subject:'ENGLISH', topic:'Vocabulary', desc:'Synonyms/Antonyms — Word list 1 (50 words)', date: addDays(TODAY_STR, 3), time:'20 min', pages:'Vocab' },
-  { id:'e5', subject:'ENGLISH', topic:'Comprehension', desc:'RC Practice — 1 passage with 5 questions', date: addDays(TODAY_STR, 4), time:'25 min', pages:'RC' },
-  { id:'e6', subject:'ENGLISH', topic:'Grammar', desc:'Articles and Prepositions — common NDA traps', date: addDays(TODAY_STR, 5), time:'20 min', pages:'Grammar' },
-
-  // WEEK 1 — GK DAILY (HISTORY)
-  { id:'h1', subject:'HISTORY', topic:'Ancient India', desc:'Indus Valley Civilisation — key facts', date: addDays(TODAY_STR, 0), time:'25 min', pages:'NCERT 6' },
-  { id:'h2', subject:'HISTORY', topic:'Ancient India', desc:'Vedic Age, Maurya Empire — Ashoka', date: addDays(TODAY_STR, 1), time:'25 min', pages:'NCERT 6' },
-  { id:'h3', subject:'HISTORY', topic:'Medieval India', desc:'Delhi Sultanate — key rulers, battles', date: addDays(TODAY_STR, 2), time:'25 min', pages:'NCERT 7' },
-  { id:'h4', subject:'HISTORY', topic:'Medieval India', desc:'Mughal Empire — Akbar to Aurangzeb', date: addDays(TODAY_STR, 3), time:'25 min', pages:'NCERT 7' },
-  { id:'h5', subject:'HISTORY', topic:'Modern India', desc:'British East India Company — 1600-1757', date: addDays(TODAY_STR, 4), time:'30 min', pages:'NCERT 8' },
-  { id:'h6', subject:'HISTORY', topic:'Modern India', desc:'Battle of Plassey, Buxar — causes & results', date: addDays(TODAY_STR, 5), time:'25 min', pages:'NCERT 8' },
-  { id:'h7', subject:'HISTORY', topic:'Modern India', desc:'1857 Revolt — causes, key leaders, outcomes', date: addDays(TODAY_STR, 6), time:'30 min', pages:'NCERT 8' },
-
-  // WEEK 2 — PHYSICS
-  { id:'p1', subject:'PHYSICS', topic:'Mechanics', desc:'Equations of Motion — v=u+at, s=ut+½at², v²=u²+2as', date: addDays(TODAY_STR, 7), time:'45 min', pages:'NCERT 11' },
-  { id:'p2', subject:'PHYSICS', topic:'Mechanics', desc:'Newton\'s Laws — 10 application problems', date: addDays(TODAY_STR, 8), time:'40 min', pages:'NCERT 11' },
-  { id:'p3', subject:'PHYSICS', topic:'Mechanics', desc:'Projectile Motion — range, max height, time', date: addDays(TODAY_STR, 9), time:'45 min', pages:'NCERT 11' },
-  { id:'p4', subject:'PHYSICS', topic:'Optics', desc:'Mirrors — concave, convex, plane — uses & differences', date: addDays(TODAY_STR, 10), time:'30 min', pages:'NCERT 10' },
-  { id:'p5', subject:'PHYSICS', topic:'Optics', desc:'Lenses — converging, diverging, lens formula', date: addDays(TODAY_STR, 11), time:'30 min', pages:'NCERT 10' },
-  { id:'p6', subject:'PHYSICS', topic:'Electricity', desc:'Ohm\'s Law, resistance, series & parallel circuits', date: addDays(TODAY_STR, 12), time:'40 min', pages:'NCERT 10' },
-  { id:'p7', subject:'PHYSICS', topic:'Waves & Sound', desc:'Sound — speed, frequency, pitch, echo', date: addDays(TODAY_STR, 13), time:'30 min', pages:'NCERT 9' },
-
-  // WEEK 2 — POLITY
-  { id:'po1', subject:'POLITY', topic:'Constitution', desc:'Preamble, Fundamental Rights — Art 12-35', date: addDays(TODAY_STR, 7), time:'35 min', pages:'NCERT 11' },
-  { id:'po2', subject:'POLITY', topic:'Constitution', desc:'DPSP, Fundamental Duties — Art 36-51A', date: addDays(TODAY_STR, 8), time:'30 min', pages:'NCERT 11' },
-  { id:'po3', subject:'POLITY', topic:'Parliament', desc:'Lok Sabha, Rajya Sabha — powers & composition', date: addDays(TODAY_STR, 9), time:'30 min', pages:'NCERT 11' },
-  { id:'po4', subject:'POLITY', topic:'Executive', desc:'President, PM, Cabinet — powers & election', date: addDays(TODAY_STR, 10), time:'30 min', pages:'NCERT 11' },
-  { id:'po5', subject:'POLITY', topic:'Judiciary', desc:'Supreme Court, High Courts — structure & powers', date: addDays(TODAY_STR, 11), time:'25 min', pages:'NCERT 11' },
-
-  // WEEK 2 — MATHS CONTINUED
-  { id:'m8', subject:'MATHS', topic:'Logarithms', desc:'Log laws — product, quotient, power rule with drills', date: addDays(TODAY_STR, 7), time:'40 min', pages:'Ch.4' },
-  { id:'m9', subject:'MATHS', topic:'Matrices', desc:'Matrix operations — addition, multiplication', date: addDays(TODAY_STR, 8), time:'45 min', pages:'Ch.6' },
-  { id:'m10', subject:'MATHS', topic:'Matrices', desc:'Determinants — 2×2, 3×3, |kA|=kⁿ|A| rule', date: addDays(TODAY_STR, 9), time:'45 min', pages:'Ch.6' },
-  { id:'m11', subject:'MATHS', topic:'Statistics', desc:'Mean, Median, Mode — combined problems', date: addDays(TODAY_STR, 10), time:'35 min', pages:'Ch.7' },
-  { id:'m12', subject:'MATHS', topic:'Probability', desc:'Basic probability, P(A∪B), P(A∩B)', date: addDays(TODAY_STR, 11), time:'40 min', pages:'Ch.8' },
-  { id:'m13', subject:'MATHS', topic:'Probability', desc:'Conditional probability, Bayes theorem intro', date: addDays(TODAY_STR, 12), time:'40 min', pages:'Ch.8' },
-
-  // WEEK 3 — GEOGRAPHY
-  { id:'g1', subject:'GEOGRAPHY', topic:'Physical', desc:'Rivers of India — Bay of Bengal vs Arabian Sea', date: addDays(TODAY_STR, 14), time:'30 min', pages:'NCERT 9' },
-  { id:'g2', subject:'GEOGRAPHY', topic:'Physical', desc:'Mountain ranges, Passes — Himalayas, Western Ghats', date: addDays(TODAY_STR, 15), time:'30 min', pages:'NCERT 9' },
-  { id:'g3', subject:'GEOGRAPHY', topic:'Climate', desc:'Monsoon system — origin, types, effects on India', date: addDays(TODAY_STR, 16), time:'30 min', pages:'NCERT 9' },
-  { id:'g4', subject:'GEOGRAPHY', topic:'World', desc:'Continents, Oceans, important straits & passages', date: addDays(TODAY_STR, 17), time:'30 min', pages:'NCERT 9' },
-  { id:'g5', subject:'GEOGRAPHY', topic:'World', desc:'Countries and capitals — 50 most important ones', date: addDays(TODAY_STR, 18), time:'25 min', pages:'Atlas' },
-
-  // WEEK 3 — DEFENCE GK
-  { id:'d1', subject:'DEFENCE GK', topic:'Indian Military', desc:'Indian Army, Navy, Airforce — structure, ranks', date: addDays(TODAY_STR, 14), time:'25 min', pages:'Notes' },
-  { id:'d2', subject:'DEFENCE GK', topic:'Weapons & Ships', desc:'INS Vikrant, INS Vikramaditya — key naval ships', date: addDays(TODAY_STR, 15), time:'20 min', pages:'Notes' },
-  { id:'d3', subject:'DEFENCE GK', topic:'Weapons & Ships', desc:'Agni, Prithvi, BrahMos — Indian missiles', date: addDays(TODAY_STR, 16), time:'20 min', pages:'Notes' },
-  { id:'d4', subject:'DEFENCE GK', topic:'Operations', desc:'Operation Vijay (Kargil), Operation Pawan — details', date: addDays(TODAY_STR, 17), time:'25 min', pages:'Notes' },
-  { id:'d5', subject:'DEFENCE GK', topic:'Awards', desc:'Param Vir Chakra — all recipients, battles', date: addDays(TODAY_STR, 18), time:'20 min', pages:'Notes' },
-
-  // WEEK 4+ — CHEMISTRY
-  { id:'c1', subject:'CHEMISTRY', topic:'Atomic Structure', desc:'Atomic number, mass number, isotopes — quick drill', date: addDays(TODAY_STR, 21), time:'30 min', pages:'NCERT 9' },
-  { id:'c2', subject:'CHEMISTRY', topic:'Periodic Table', desc:'Groups & periods — key elements to remember', date: addDays(TODAY_STR, 22), time:'35 min', pages:'NCERT 10' },
-  { id:'c3', subject:'CHEMISTRY', topic:'Chemical Reactions', desc:'Types of reactions — acid-base, redox, combination', date: addDays(TODAY_STR, 23), time:'35 min', pages:'NCERT 10' },
-  { id:'c4', subject:'CHEMISTRY', topic:'Everyday Chemistry', desc:'Common formulas — NaCl, H₂SO₄, HCl, NaOH, CO₂', date: addDays(TODAY_STR, 24), time:'25 min', pages:'Notes' },
-
-  // WEEK 4 — BIOLOGY
-  { id:'b1', subject:'BIOLOGY', topic:'Cell Biology', desc:'Cell organelles — functions of each (quick table)', date: addDays(TODAY_STR, 21), time:'30 min', pages:'NCERT 9' },
-  { id:'b2', subject:'BIOLOGY', topic:'Human Body', desc:'Digestive system — organs, enzymes, process', date: addDays(TODAY_STR, 22), time:'30 min', pages:'NCERT 10' },
-  { id:'b3', subject:'BIOLOGY', topic:'Human Body', desc:'Circulatory system — heart, blood groups, functions', date: addDays(TODAY_STR, 23), time:'30 min', pages:'NCERT 10' },
-  { id:'b4', subject:'BIOLOGY', topic:'Human Body', desc:'Nervous system & diseases — NDA frequently tested', date: addDays(TODAY_STR, 24), time:'25 min', pages:'NCERT 10' },
+// 17 Ranks + Custom Thresholds Array [10, 13, 12, 15...] mapping to absolute totals
+const reqs = [0, 10, 23, 35, 50, 70, 95, 125, 160, 200, 245, 295, 350, 410, 475, 550, 650];
+const rankStrata = [
+  {name:"Sepoy", req:reqs[0], icon:"🪖"},
+  {name:"Lance Naik", req:reqs[1], icon:"🎖️"},
+  {name:"Naik", req:reqs[2], icon:"🛡️"},
+  {name:"Havildar", req:reqs[3], icon:"⚔️"},
+  {name:"Naib Subedar", req:reqs[4], icon:"⭐"},
+  {name:"Subedar", req:reqs[5], icon:"⭐⭐"},
+  {name:"Subedar Major", req:reqs[6], icon:"⭐⭐⭐"},
+  {name:"Lieutenant", req:reqs[7], icon:"🌟"},
+  {name:"Captain", req:reqs[8], icon:"💫"},
+  {name:"Major", req:reqs[9], icon:"🦅"},
+  {name:"Lieutenant Colonel", req:reqs[10], icon:"🦇"},
+  {name:"Colonel", req:reqs[11], icon:"🦁"},
+  {name:"Brigadier", req:reqs[12], icon:"🔺"},
+  {name:"Major General", req:reqs[13], icon:"⚔️⭐"},
+  {name:"Lieutenant General", req:reqs[14], icon:"⚔️⭐⭐"},
+  {name:"General", req:reqs[15], icon:"⚔️⭐⭐⭐"},
+  {name:"Field Marshal", req:reqs[16], icon:"🔥"}
 ];
 
-// State stored in localStorage
+const initialMocks = [
+  {id:"MOCK-01",category:"Mathematics (Paper I)",target:120,score:0},
+  {id:"MOCK-02",category:"General Ability Test",target:250,score:0}
+];
+
+// --- STATE ---
 let state = {
-  completedTasks: [],       // task IDs completed
-  passedTasks: {},          // taskId -> new date string
-  extraCompleted: [],       // upcoming tasks marked done early
-  dailyStudyLog: {},        // date -> minutes studied
+  tasks: [],
+  mocks: [...initialMocks],
+  completedCount: 0, 
+  dailyStudyLog: {}, 
+  lastRankIndex: 0
 };
 
-function loadState() {
-  try {
-    const s = localStorage.getItem('nda_state');
-    if (s) state = JSON.parse(s);
-  } catch(e) {}
-}
+let studyTimer = null;
+let studySeconds = 0;
+let timerMinimized = false;
 
+// --- INIT ---
+window.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  document.getElementById('taskInputDate').value = getTodayStr(); // Default to today
+  updateHUD();
+  renderActiveDesk();
+  initMockTable();
+  
+  document.getElementById('passcodeInput').addEventListener('keydown', e => { 
+      if(e.key === 'Enter') tryUnlock(); 
+  });
+  document.getElementById('passcodeInput').focus();
+});
+
+function loadData() {
+  const local = localStorage.getItem('nda_comeback_state_v4');
+  if(local) state = JSON.parse(local);
+  // Backwards compatibility safety check
+  if(typeof state.completedCount === 'undefined') state.completedCount = state.tasks.filter(t=>t.done).length;
+}
 function saveState() {
-  localStorage.setItem('nda_state', JSON.stringify(state));
+  localStorage.setItem('nda_comeback_state_v4', JSON.stringify(state));
 }
-
-// ============================================================
-// GATE / PASSCODE
-// ============================================================
-let gateOpen = false;
-
-// Gate sound using Web Audio API
-function playShutterSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    // Multiple metallic clangs
-    const times = [0, 0.08, 0.18, 0.32, 0.5, 0.72, 1.0];
-    times.forEach((t, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      const freq = 180 - (i * 15);
-      osc.frequency.setValueAtTime(freq, ctx.currentTime + t);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.3, ctx.currentTime + t + 0.3);
-      osc.type = 'sawtooth';
-
-      gain.gain.setValueAtTime(0, ctx.currentTime + t);
-      gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.35);
-
-      osc.start(ctx.currentTime + t);
-      osc.stop(ctx.currentTime + t + 0.4);
-    });
-
-    // Low rumble
-    const rumble = ctx.createOscillator();
-    const rGain = ctx.createGain();
-    rumble.connect(rGain);
-    rGain.connect(ctx.destination);
-    rumble.frequency.setValueAtTime(60, ctx.currentTime);
-    rumble.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 1.8);
-    rumble.type = 'sine';
-    rGain.gain.setValueAtTime(0.15, ctx.currentTime);
-    rGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
-    rumble.start(ctx.currentTime);
-    rumble.stop(ctx.currentTime + 2.0);
-
-  } catch(e) {}
-}
-
-function playErrorSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(300, ctx.currentTime);
-    osc.frequency.setValueAtTime(200, ctx.currentTime + 0.15);
-    osc.type = 'square';
-    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.4);
-  } catch(e) {}
+function getTodayStr() {
+  // Returns YYYY-MM-DD in local timezone
+  const d = new Date();
+  const offset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - offset).toISOString().split('T')[0];
 }
 
 function tryUnlock() {
-  const input = document.getElementById('passcodeInput');
-  const errEl = document.getElementById('gateError');
-  const val = input.value.trim();
-
-  if (PASSCODES.map(p=>p.toUpperCase()).includes(val.toUpperCase())) {
-    // SUCCESS
-    errEl.textContent = '';
-    input.classList.remove('error');
-
-    // Flash green
-    input.style.borderColor = 'var(--green)';
-    input.style.color = 'var(--green)';
-    input.style.boxShadow = '0 0 20px rgba(0,255,136,0.4)';
-
-    // Play sound
-    playShutterSound();
-
-    // Show access granted
+  const pin = document.getElementById('passcodeInput').value.trim().toUpperCase();
+  const errorEl = document.getElementById('gateError');
+  if(pin === PASSCODE) {
+    playSound('success');
+    errorEl.textContent = "";
+    document.getElementById('passcodeInput').style.borderColor = 'var(--green)';
+    document.getElementById('passcodeInput').style.color = 'var(--green)';
+    document.getElementById('shutterTop').classList.add('open');
+    document.getElementById('shutterBottom').classList.add('open');
+    document.getElementById('access-granted').classList.add('show');
     setTimeout(() => {
-      const ag = document.getElementById('access-granted');
-      ag.classList.add('show');
-    }, 100);
-
-    // Open shutters
-    setTimeout(() => {
-      document.getElementById('shutterTop').classList.add('open');
-      document.getElementById('shutterBottom').classList.add('open');
-    }, 300);
-
-    // Show app
-    setTimeout(() => {
-      document.getElementById('gate').style.display = 'none';
+      document.getElementById('gate').style.display = "none";
       document.getElementById('app').classList.add('visible');
-      initApp();
-    }, 1900);
-
+    }, 1500);
   } else {
-    // FAIL
-    playErrorSound();
+    playSound('error');
+    const input = document.getElementById('passcodeInput');
     input.classList.add('error');
-    errEl.textContent = '⚠ ACCESS DENIED — INVALID CODE';
-    setTimeout(() => {
-      input.classList.remove('error');
-      input.value = '';
-      input.style.borderColor = '';
-      input.style.color = '';
-      input.style.boxShadow = '';
-    }, 800);
+    errorEl.textContent = "INCORRECT PASSCODE";
+    setTimeout(() => input.classList.remove('error'), 400);
   }
 }
 
-// ============================================================
-// APP INIT
-// ============================================================
-function initApp() {
-  loadState();
-  updateDateDisplay();
-  updateDaysLeft();
-  renderMission();
-  renderSubjects();
-  renderProgress();
-}
-
-function updateDateDisplay() {
-  const now = new Date();
-  const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  document.getElementById('dateNum').innerHTML = now.getDate() + '<span id="dateMon">' + months[now.getMonth()] + '</span>';
-  document.getElementById('dateDayName').textContent = days[now.getDay()];
-  document.getElementById('dailyQuote').textContent = QUOTES[now.getDay() % QUOTES.length];
-}
-
-function updateDaysLeft() {
-  const now = new Date();
-  const diff = Math.ceil((EXAM_DATE - now) / (1000*60*60*24));
-  document.getElementById('daysLeft').textContent = diff;
-  document.getElementById('cdDays').textContent = diff;
-
-  // prep started June 17, 89 days total
-  const totalDays = 89;
-  const used = totalDays - diff;
-  const pct = Math.max(0, Math.min(100, Math.round((used/totalDays)*100)));
-  document.getElementById('cdBar').style.width = pct + '%';
-  document.getElementById('cdPct').textContent = pct + '% of prep time used';
-}
-
-// ============================================================
-// MISSION VIEW
-// ============================================================
-function getTodayStr() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function getTasksForDate(dateStr) {
-  return SYLLABUS.filter(t => {
-    const effectiveDate = state.passedTasks[t.id] || t.date;
-    return effectiveDate === dateStr;
-  });
-}
-
-function renderMission() {
-  const todayStr = getTodayStr();
-  const todayTasks = getTasksForDate(todayStr);
-
-  const total = todayTasks.length;
-  const done = todayTasks.filter(t => state.completedTasks.includes(t.id)).length;
-  const pct = total > 0 ? Math.round((done/total)*100) : 0;
-
-  document.getElementById('todayBar').style.width = pct + '%';
-  document.getElementById('todayPct').textContent = pct + '%';
-
-  // Group by subject
-  const blocks = {};
-  todayTasks.forEach(t => {
-    if (!blocks[t.subject]) blocks[t.subject] = [];
-    blocks[t.subject].push(t);
-  });
-
-  const container = document.getElementById('todayBlocks');
-  if (todayTasks.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="big">🎯</div>No tasks scheduled today. Check upcoming tasks in SUBJECTS view.</div>';
-    return;
+// --- STOPWATCH LOGIC ---
+function startTimer() {
+  document.getElementById('timerOverlay').classList.add('show');
+  if(timerMinimized) toggleStopwatchSize(); // open full if started again
+  if(!studyTimer) {
+      studySeconds = 0;
+      studyTimer = setInterval(() => {
+        studySeconds++;
+        const h = Math.floor(studySeconds/3600);
+        const m = Math.floor((studySeconds%3600)/60);
+        const s = studySeconds%60;
+        document.getElementById('bigTimerDisplay').textContent = 
+          (h>0 ? h+":" : "") + String(m).padStart(2,'0') + ":" + String(s).padStart(2,'0');
+      }, 1000);
   }
-
-  let html = '<div class="section-eyebrow">TODAY\'S MISSION</div>';
-  let blockNum = 1;
-
-  Object.entries(blocks).forEach(([subject, tasks]) => {
-    const totalTime = tasks.reduce((a,t) => a + parseInt(t.time||'0'), 0);
-    html += `
-      <div class="block-card">
-        <div class="block-header">
-          <span class="block-num">BLOCK ${blockNum++}</span>
-          <span class="block-name">${subject}</span>
-          <span class="block-time">${totalTime} MIN</span>
-        </div>`;
-
-    tasks.forEach(t => {
-      const isDone = state.completedTasks.includes(t.id);
-      html += `
-        <div class="task-row ${isDone ? 'completed' : ''}" id="row-${t.id}">
-          <div class="task-check ${isDone ? 'done' : ''}" onclick="toggleTask('${t.id}')"></div>
-          <div class="task-info">
-            <div class="task-name">${t.desc}</div>
-            <div class="task-meta">${t.topic} · ${t.time} · ${t.pages}</div>
-          </div>
-          <div class="task-actions">
-            ${!isDone ? `<button class="task-btn btn-pass" onclick="passTask('${t.id}')">PASS →</button>` : ''}
-          </div>
-        </div>`;
-    });
-
-    html += '</div>';
-  });
-
-  container.innerHTML = html;
-  renderBacklogs();
 }
 
-function toggleTask(taskId) {
-  if (state.completedTasks.includes(taskId)) {
-    state.completedTasks = state.completedTasks.filter(id => id !== taskId);
-    showToast('Task unmarked');
-  } else {
-    state.completedTasks.push(taskId);
-    // log study time
+function stopTimer() {
+  clearInterval(studyTimer);
+  studyTimer = null;
+  document.getElementById('timerOverlay').classList.remove('show');
+  
+  const minutesStudied = Math.round(studySeconds / 60);
+  if(minutesStudied > 0) {
     const today = getTodayStr();
-    const task = SYLLABUS.find(t => t.id === taskId);
-    if (task) {
-      state.dailyStudyLog[today] = (state.dailyStudyLog[today] || 0) + parseInt(task.time || '30');
-    }
-    showToast('✓ TASK COMPLETE — SOLDIER!');
-  }
-  saveState();
-  renderMission();
-  updateProgress();
-}
-
-function passTask(taskId) {
-  const today = getTodayStr();
-  const nextDay = addDays(today, 1);
-  state.passedTasks[taskId] = nextDay;
-  saveState();
-  renderMission();
-  showToast('Task moved to tomorrow');
-}
-
-function renderBacklogs() {
-  const todayStr = getTodayStr();
-  const todayDate = new Date(todayStr);
-
-  // Find tasks that are overdue (date < today, not completed)
-  const overdue = SYLLABUS.filter(t => {
-    const effectiveDate = state.passedTasks[t.id] || t.date;
-    return effectiveDate < todayStr && !state.completedTasks.includes(t.id);
-  });
-
-  if (overdue.length === 0) {
-    document.getElementById('backlogSection').innerHTML = '';
-    return;
-  }
-
-  // Group by subject
-  const bySubject = {};
-  overdue.forEach(t => {
-    if (!bySubject[t.subject]) bySubject[t.subject] = [];
-    bySubject[t.subject].push(t);
-  });
-
-  let html = '<div class="section-eyebrow" style="margin-top:28px">SUBJECT BACKLOGS</div>';
-
-  Object.entries(bySubject).forEach(([subj, tasks]) => {
-    const delay = tasks.length;
-    html += `
-      <div class="backlog-section">
-        <div class="backlog-header">
-          <div class="backlog-title">${subj} BACKLOG</div>
-          <div class="delay-badge">${delay} TASK${delay>1?'S':''} OVERDUE</div>
-        </div>
-        <div class="backlog-cards">`;
-
-    // Show up to 3 cards
-    tasks.slice(0, 3).forEach(t => {
-      const effectiveDate = state.passedTasks[t.id] || t.date;
-      html += `
-        <div class="backlog-card">
-          <div class="backlog-card-date">${formatDate(effectiveDate)}</div>
-          <div class="backlog-task">
-            <span>${t.desc.substring(0, 40)}${t.desc.length>40?'...':''}</span>
-            <span class="pp">${t.pages}</span>
-          </div>
-        </div>`;
-    });
-
-    html += '</div></div>';
-  });
-
-  document.getElementById('backlogSection').innerHTML = html;
-}
-
-// ============================================================
-// SUBJECTS VIEW
-// ============================================================
-const SUBJECT_META = {
-  'MATHS':       { color: 'var(--accent)', class:'math', priority:'🔴 HIGH', priClass:'pri-red', marks:'300 marks' },
-  'ENGLISH':     { color: '#7c6fe0', class:'english', priority:'🔴 HIGH', priClass:'pri-red', marks:'200 marks' },
-  'PHYSICS':     { color: 'var(--accent2)', class:'physics', priority:'🔴 HIGH', priClass:'pri-red', marks:'~75 marks in GS' },
-  'HISTORY':     { color: 'var(--green)', class:'gk', priority:'🔴 HIGH', priClass:'pri-red', marks:'~50 marks in GS' },
-  'POLITY':      { color: '#4ade80', class:'gk', priority:'🔴 HIGH', priClass:'pri-red', marks:'~40 marks in GS' },
-  'GEOGRAPHY':   { color: '#22d3ee', class:'gk', priority:'🟡 MED', priClass:'pri-amber', marks:'~40 marks in GS' },
-  'CHEMISTRY':   { color: '#ff6eb4', class:'chemistry', priority:'🟢 OK', priClass:'pri-green', marks:'~50 marks in GS' },
-  'BIOLOGY':     { color: '#4ade80', class:'bio', priority:'🟢 OK', priClass:'pri-green', marks:'~40 marks in GS' },
-  'DEFENCE GK':  { color: '#f59e0b', class:'gk', priority:'🟡 MED', priClass:'pri-amber', marks:'~30 marks in GS' },
-};
-
-function renderSubjects() {
-  const allSubjects = [...new Set(SYLLABUS.map(t => t.subject))];
-
-  let gridHTML = '';
-  allSubjects.forEach(subj => {
-    const tasks = SYLLABUS.filter(t => t.subject === subj);
-    const done = tasks.filter(t => state.completedTasks.includes(t.id)).length;
-    const pct = Math.round((done / tasks.length) * 100);
-    const meta = SUBJECT_META[subj] || { color:'var(--accent)', class:'math', priority:'MED', priClass:'pri-amber', marks:'' };
-
-    gridHTML += `
-      <div class="subject-card ${meta.class}">
-        <div class="subj-card-top">
-          <div class="subj-card-name">${subj}</div>
-          <div class="subj-pct" style="color:${meta.color}">${pct}%</div>
-        </div>
-        <div class="subj-bar-bg">
-          <div class="subj-bar-fill" style="width:${pct}%;background:${meta.color}"></div>
-        </div>
-        <div class="subj-card-meta">${done}/${tasks.length} tasks · ${meta.marks}</div>
-        <span class="priority-tag ${meta.priClass}">${meta.priority} PRIORITY</span>
-      </div>`;
-  });
-
-  document.getElementById('subjectsGrid').innerHTML = gridHTML;
-
-  // Upcoming tasks (next 3 days)
-  const todayStr = getTodayStr();
-  const nextDays = [1,2,3].map(n => addDays(todayStr, n));
-
-  let upcomingHTML = '';
-  nextDays.forEach(d => {
-    const tasks = getTasksForDate(d);
-    if (tasks.length === 0) return;
-
-    const bySubj = {};
-    tasks.forEach(t => {
-      if (!bySubj[t.subject]) bySubj[t.subject] = [];
-      bySubj[t.subject].push(t);
-    });
-
-    upcomingHTML += `<div class="upcoming-card"><div class="upcoming-date">${formatDate(d)}</div>`;
-    Object.entries(bySubj).forEach(([subj, stasks]) => {
-      upcomingHTML += `<div class="upcoming-subj">${subj}</div>`;
-      stasks.forEach(t => {
-        const isDone = state.completedTasks.includes(t.id);
-        upcomingHTML += `
-          <div class="upcoming-task ${isDone?'completed':''}">
-            <span>${t.desc.substring(0,35)}${t.desc.length>35?'...':''}</span>
-            <div style="display:flex;align-items:center;gap:4px">
-              <span class="pp-tag">${t.pages}</span>
-              ${!isDone ? `<button class="mark-done-btn" onclick="markUpcomingDone('${t.id}')">✓ DONE</button>` : ''}
-            </div>
-          </div>`;
-      });
-    });
-    upcomingHTML += '</div>';
-  });
-
-  document.getElementById('upcomingGrid').innerHTML = upcomingHTML || '<div class="empty-state">No upcoming tasks in next 3 days.</div>';
-}
-
-function markUpcomingDone(taskId) {
-  if (!state.completedTasks.includes(taskId)) {
-    state.completedTasks.push(taskId);
-    const task = SYLLABUS.find(t => t.id === taskId);
-    if (task) {
-      const today = getTodayStr();
-      state.dailyStudyLog[today] = (state.dailyStudyLog[today] || 0) + parseInt(task.time || '30');
-    }
+    state.dailyStudyLog[today] = (state.dailyStudyLog[today] || 0) + minutesStudied;
     saveState();
-    renderSubjects();
-    renderMission();
-    updateProgress();
-    showToast('✓ AHEAD OF SCHEDULE — ALPHA SOLDIER!');
+    showToast(`✓ LOGGED ${minutesStudied} MINUTES TO RECORDS.`);
+    if(document.getElementById('view-analytics').classList.contains('active')) renderAnalytics();
   }
+  studySeconds = 0;
+  document.getElementById('bigTimerDisplay').textContent = "00:00:00";
 }
 
-// ============================================================
-// PROGRESS VIEW
-// ============================================================
-let chartInstance = null;
-
-function renderProgress() {
-  updateProgress();
-  renderHeatmap();
-}
-
-function updateProgress() {
-  const total = SYLLABUS.length;
-  const done = state.completedTasks.length;
-  const pct = Math.round((done/total)*100);
-
-  const todayStr = getTodayStr();
-  const todayMin = state.dailyStudyLog[todayStr] || 0;
-
-  // Streak
-  let streak = 0;
-  let d = new Date(todayStr);
-  for (let i = 0; i < 30; i++) {
-    const ds = d.toISOString().split('T')[0];
-    if (state.dailyStudyLog[ds] && state.dailyStudyLog[ds] > 0) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    } else if (i === 0) {
-      break;
+function toggleStopwatchSize() {
+    const overlay = document.getElementById('timerOverlay');
+    const btn = document.getElementById('btnMinMax');
+    if(timerMinimized) {
+        overlay.classList.remove('minimized');
+        btn.textContent = "MINIMIZE ↙";
+        timerMinimized = false;
     } else {
-      break;
+        overlay.classList.add('minimized');
+        btn.textContent = "MAXIMIZE ↗";
+        timerMinimized = true;
     }
-  }
+}
 
-  const maths = SYLLABUS.filter(t=>t.subject==='MATHS');
-  const mathDone = maths.filter(t=>state.completedTasks.includes(t.id)).length;
-  const mathPct = Math.round((mathDone/maths.length)*100);
+// --- TASK DEPLOYMENT & HQ DESK ---
+function deployManualTask() {
+  const nameInput = document.getElementById('taskInputName');
+  const subjInput = document.getElementById('taskInputSubj');
+  const dateInput = document.getElementById('taskInputDate');
+  
+  if(!nameInput.value.trim()) return;
 
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-big" style="color:var(--green)">${done}</div>
-      <div class="stat-lbl">Tasks Done</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-big" style="color:var(--accent)">${pct}%</div>
-      <div class="stat-lbl">Overall</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-big" style="color:var(--accent2)">${streak}</div>
-      <div class="stat-lbl">Day Streak</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-big" style="color:var(--amber)">${total - done}</div>
-      <div class="stat-lbl">Remaining</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-big" style="color:#7c6fe0">${Math.round(todayMin/60*10)/10}h</div>
-      <div class="stat-lbl">Today</div>
-    </div>
-  `;
+  const targetDate = dateInput.value || getTodayStr();
 
-  // Subject mastery bars
-  const allSubjects = [...new Set(SYLLABUS.map(t=>t.subject))];
-  let barsHTML = '';
-  allSubjects.forEach(subj => {
-    const tasks = SYLLABUS.filter(t=>t.subject===subj);
-    const done2 = tasks.filter(t=>state.completedTasks.includes(t.id)).length;
-    const p = Math.round((done2/tasks.length)*100);
-    const meta = SUBJECT_META[subj] || { color:'var(--accent)' };
-    barsHTML += `
-      <div class="spb-row">
-        <div class="spb-name" style="color:${meta.color}">${subj}</div>
-        <div class="spb-bg">
-          <div class="spb-fill" style="width:${p}%;background:${meta.color}"></div>
+  const freshObjective = {
+    id: Date.now(),
+    subject: subjInput.value,
+    task: nameInput.value.trim(),
+    done: false,
+    scheduledDate: targetDate,
+    completedDate: null
+  };
+
+  state.tasks.push(freshObjective);
+  saveState();
+  renderActiveDesk();
+  nameInput.value = "";
+  showToast(`📡 TASK ASSIGNED FOR ${targetDate}`);
+}
+
+function renderActiveDesk() {
+  document.getElementById('hqDate').textContent = getTodayStr();
+  const container = document.getElementById('activeBlocksContainer');
+  const upcomingContainer = document.getElementById('upcomingBlocksContainer');
+  const backlogContainer = document.getElementById('backlogContainer');
+  const backlogWrapper = document.getElementById('backlogWrapper');
+  
+  container.innerHTML = "";
+  upcomingContainer.innerHTML = "";
+  backlogContainer.innerHTML = "";
+  
+  const today = getTodayStr();
+  let todayCount = 0;
+  let upcomingCount = 0;
+  let backlogCount = 0;
+
+  state.tasks.forEach((task, index) => {
+    if(task.done) return;
+
+    if(task.scheduledDate < today) {
+      // BACKLOG
+      backlogCount++;
+      const card = document.createElement('div');
+      card.className = "backlog-card";
+      card.innerHTML = `
+        <div style="font-family:'Share Tech Mono',monospace; font-size:9px; color:var(--text2); margin-bottom:4px;">DUE: ${task.scheduledDate}</div>
+        <div style="font-weight:600; color:var(--text); margin-bottom:4px;">[${task.subject}]</div>
+        <div style="margin-bottom:8px; font-size:13px;">${task.task}</div>
+        <div style="display:flex; justify-content:space-between;">
+          <button class="mark-done-btn" onclick="completeTask(${index})">COMPLETE</button>
+          <button class="task-btn btn-delete" onclick="deleteTask(${index})">✖ DROP</button>
         </div>
-        <div class="spb-num" style="color:${meta.color}">${p}%</div>
-      </div>`;
-  });
-  document.getElementById('masteryBars').innerHTML = barsHTML;
-
-  renderWeekChart();
-}
-
-function renderWeekChart() {
-  const canvas = document.getElementById('weekChart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  // Last 7 days
-  const labels = [];
-  const data = [];
-  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const ds = d.toISOString().split('T')[0];
-    labels.push(days[d.getDay()]);
-    data.push(Math.round((state.dailyStudyLog[ds] || 0) / 60 * 10) / 10);
-  }
-
-  const W = canvas.offsetWidth || 700;
-  const H = 120;
-  canvas.width = W;
-  canvas.height = H;
-
-  ctx.clearRect(0, 0, W, H);
-
-  const maxVal = Math.max(...data, 3);
-  const barW = W / labels.length * 0.6;
-  const gap = W / labels.length;
-  const pad = 30;
-
-  // Grid lines
-  ctx.strokeStyle = 'rgba(0,212,255,0.08)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 3; i++) {
-    const y = pad + (H - pad*2) * (1 - i/3);
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-  }
-
-  labels.forEach((label, i) => {
-    const val = data[i];
-    const x = gap * i + gap/2;
-    const barH = val > 0 ? Math.max(4, (val/maxVal) * (H - pad*2)) : 0;
-    const y = H - pad - barH;
-
-    // Bar
-    const grad = ctx.createLinearGradient(0, y, 0, H - pad);
-    grad.addColorStop(0, 'rgba(0,212,255,0.8)');
-    grad.addColorStop(1, 'rgba(0,212,255,0.1)');
-    ctx.fillStyle = val > 0 ? grad : 'rgba(0,212,255,0.05)';
-    ctx.beginPath();
-    ctx.roundRect(x - barW/2, y, barW, barH, 3);
-    ctx.fill();
-
-    // Label
-    ctx.fillStyle = 'rgba(122,155,181,0.8)';
-    ctx.font = '10px Share Tech Mono, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, x, H - 8);
-
-    if (val > 0) {
-      ctx.fillStyle = 'rgba(0,212,255,0.9)';
-      ctx.font = '9px Share Tech Mono, monospace';
-      ctx.fillText(val + 'h', x, y - 4);
+      `;
+      backlogContainer.appendChild(card);
+    } else if (task.scheduledDate === today) {
+      // TODAY
+      todayCount++;
+      const row = document.createElement('div');
+      row.className = "task-row";
+      row.innerHTML = `
+        <div class="task-check" onclick="completeTask(${index})"></div>
+        <div class="task-info">
+          <div class="task-name">${task.task}</div>
+          <div class="task-meta">${task.subject}</div>
+        </div>
+        <div class="task-actions">
+          <button class="task-btn btn-delete" onclick="deleteTask(${index})">✖</button>
+        </div>
+      `;
+      container.appendChild(row);
+    } else {
+      // UPCOMING
+      upcomingCount++;
+      const row = document.createElement('div');
+      row.className = "task-row";
+      row.style.opacity = "0.7";
+      row.innerHTML = `
+        <div class="task-info">
+          <div class="task-name">${task.task}</div>
+          <div class="task-meta">${task.subject} // SCHEDULED: ${task.scheduledDate}</div>
+        </div>
+        <div class="task-actions">
+           <button class="task-btn" style="color:var(--text2); border-color:var(--border);" onclick="deleteTask(${index})">REMOVE</button>
+        </div>
+      `;
+      upcomingContainer.appendChild(row);
     }
   });
+
+  if(todayCount === 0) container.innerHTML = `<div class="empty-state">NO TASKS FOR TODAY.</div>`;
+  if(upcomingCount === 0) upcomingContainer.innerHTML = `<div class="empty-state">NO UPCOMING TASKS SCHEDULED.</div>`;
+  
+  if(backlogCount === 0) backlogWrapper.style.display = "none";
+  else backlogWrapper.style.display = "block";
+  document.getElementById('backlogCount').textContent = `${backlogCount} OVERDUE`;
 }
 
-function renderHeatmap() {
-  const container = document.getElementById('heatmap');
-  // 12 weeks = 84 days back
-  let html = '';
-  for (let i = 83; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const ds = d.toISOString().split('T')[0];
-    const mins = state.dailyStudyLog[ds] || 0;
-    let level = '';
-    if (mins > 0) level = 'l1';
-    if (mins > 60) level = 'l2';
-    if (mins > 120) level = 'l3';
-    if (mins > 180) level = 'l4';
-    html += `<div class="heat-day ${level}" title="${ds}: ${mins}min"></div>`;
+function completeTask(index) {
+  state.tasks[index].done = true;
+  state.tasks[index].completedDate = getTodayStr();
+  state.completedCount++;
+  showToast("✓ TASK COMPLETED. SECURED.");
+  checkRank(); // Save state inside checkRank
+  renderActiveDesk();
+}
+
+function deleteTask(index) {
+  // If we delete an already completed task (not possible from HQ desk, but logic-wise), we'd lose count.
+  // Here we only delete uncompleted tasks from active desk.
+  state.tasks.splice(index, 1);
+  // Penalty for dropping tasks
+  state.completedCount = Math.max(0, state.completedCount - 1); 
+  showToast(`⚠️ TASK DROPPED. PENALTY APPLIED.`);
+  checkRank();
+  renderActiveDesk();
+}
+
+// --- RANKS (Based on Tasks Completed) ---
+function checkRank() {
+  let currentIndex = 0;
+  for(let i=0; i<rankStrata.length; i++) {
+    if(state.completedCount >= rankStrata[i].req) currentIndex = i;
   }
-  container.innerHTML = html;
+  
+  if(currentIndex > state.lastRankIndex) {
+    document.getElementById('promoRankName').textContent = rankStrata[currentIndex].name;
+    document.getElementById('promoModal').classList.add('show');
+  } else if (currentIndex < state.lastRankIndex) {
+    document.getElementById('demoteRankName').textContent = rankStrata[currentIndex].name;
+    document.getElementById('demoteModal').classList.add('show');
+  }
+  
+  state.lastRankIndex = currentIndex;
+  saveState();
+  updateHUD();
+  if(document.getElementById('view-rank').classList.contains('active')) renderRankView();
 }
 
-// ============================================================
-// UTILS
-// ============================================================
-function switchTab(tab) {
+function closePromo(){document.getElementById('promoModal').classList.remove('show')}
+function closeDemote(){document.getElementById('demoteModal').classList.remove('show')}
+
+function updateHUD() {
+  const rank = rankStrata[state.lastRankIndex];
+  document.getElementById('topRankIcon').textContent = rank.icon;
+  document.getElementById('topRankName').textContent = rank.name;
+
+  const rem = Math.ceil((TARGET_DATE - new Date()) / (1000 * 60 * 60 * 24));
+  document.getElementById('daysLeft').textContent = Math.max(0, rem);
+}
+
+function renderRankView() {
+  const rank = rankStrata[state.lastRankIndex];
+  document.getElementById('rankBigIcon').textContent = rank.icon;
+  document.getElementById('rankBigName').textContent = rank.name;
+  document.getElementById('rankCurrentTasks').textContent = state.completedCount;
+  
+  let nextRank = rankStrata[rankStrata.length - 1];
+  if(state.lastRankIndex + 1 < rankStrata.length) nextRank = rankStrata[state.lastRankIndex + 1];
+
+  const baseXP = rank.req;
+  const needed = nextRank.req - baseXP;
+  const progress = state.completedCount - baseXP;
+  const pct = needed === 0 ? 100 : Math.min(100, Math.max(0, Math.round((progress/needed)*100)));
+
+  document.getElementById('rankXpFill').style.width = pct + "%";
+  document.getElementById('rankXpText').textContent = `${state.completedCount} / ${nextRank.req} TASKS REQUIRED FOR PROMOTION`;
+
+  const ladder = document.getElementById('ranksLadder');
+  ladder.innerHTML = "";
+  rankStrata.forEach((r, i) => {
+    const row = document.createElement('div');
+    let stateClass = "";
+    if(state.completedCount >= r.req) stateClass = "achieved";
+    if(i === state.lastRankIndex) stateClass = "current";
+    
+    row.className = `rank-rung ${stateClass}`;
+    row.innerHTML = `
+      <div style="font-size:24px; min-width:35px; text-align:center;">${r.icon}</div>
+      <div style="flex:1">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase">${r.name}</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text2)">REQ: ${r.req} TASKS</div>
+      </div>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:10px; padding:3px 8px; border-radius:3px; border:1px solid; color:${i === state.lastRankIndex ? 'var(--amber)' : (state.completedCount >= r.req ? 'var(--green)' : 'var(--text2)')}; border-color:${i === state.lastRankIndex ? 'var(--amber)' : (state.completedCount >= r.req ? 'var(--green)' : 'var(--border)')}">
+        ${i === state.lastRankIndex ? 'COMMANDING' : (state.completedCount >= r.req ? 'CLEARED' : 'LOCKED')}
+      </span>
+    `;
+    ladder.appendChild(row);
+  });
+}
+
+// --- ANALYTICS & RECORDS ---
+function renderAnalytics() {
+  // 1. Subject Completion Bars
+  const barsContainer = document.getElementById('analyticsBars');
+  barsContainer.innerHTML = "";
+  
+  const subjects = ["Mathematics", "English", "Physics", "Chemistry", "General Science", "History", "Geography", "Current Affairs"];
+  subjects.forEach(subj => {
+    const subjTasks = state.tasks.filter(t => t.subject === subj);
+    const total = subjTasks.length;
+    const comp = subjTasks.filter(t => t.done).length;
+    
+    // Only show subjects that have tasks assigned
+    if(total > 0) {
+      const p = Math.round((comp/total)*100);
+      barsContainer.innerHTML += `
+        <div class="spb-row">
+          <div class="spb-name">${subj}</div>
+          <div class="spb-bg"><div class="spb-fill" style="width:${p}%;"></div></div>
+          <div class="spb-num">${comp}/${total} (${p}%)</div>
+        </div>
+      `;
+    }
+  });
+  if(barsContainer.innerHTML === "") barsContainer.innerHTML = "<div class='empty-state'>Assign tasks to generate subject analytics.</div>";
+
+  // 2. Study Time Records
+  const sBody = document.getElementById('studyRecordBody');
+  sBody.innerHTML = "";
+  const entries = Object.entries(state.dailyStudyLog).sort((a,b) => b[0].localeCompare(a[0]));
+  if(entries.length === 0) {
+    sBody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:var(--text2)'>No study time logged yet.</td></tr>";
+  } else {
+    entries.forEach(([date, mins]) => {
+      const hrs = (mins / 60).toFixed(2);
+      sBody.innerHTML += `<tr><td>${date}</td><td style="color:var(--accent)">${mins} min</td><td>${hrs} hr</td></tr>`;
+    });
+  }
+
+  // 3. Completed Tasks Record
+  const cBody = document.getElementById('completedRecordBody');
+  cBody.innerHTML = "";
+  const completed = state.tasks.filter(t => t.done).sort((a,b) => (b.completedDate||"").localeCompare(a.completedDate||""));
+  if(completed.length === 0) {
+    cBody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:var(--text2)'>No tasks completed yet.</td></tr>";
+  } else {
+    completed.forEach(t => {
+      cBody.innerHTML += `<tr>
+        <td style="font-family:'Share Tech Mono',monospace; color:var(--green)">${t.completedDate}</td>
+        <td><span style="background:var(--border2); padding:3px 8px; border-radius:3px; font-size:10px; border:1px solid var(--border)">${t.subject.toUpperCase()}</span></td>
+        <td>${t.task}</td>
+      </tr>`;
+    });
+  }
+}
+
+// --- MOCKS ---
+function initMockTable() {
+  const tbody = document.getElementById('mockTableBody');
+  tbody.innerHTML = "";
+  state.mocks.forEach((mock, index) => {
+    const isPassed = mock.score >= mock.target;
+    const badgeClass = isPassed ? "score-pass" : "score-fail";
+    const statusText = isPassed ? "PASSED" : "FAILED";
+    tbody.innerHTML += `
+      <tr>
+        <td style="color:var(--accent); font-weight:bold;">${mock.id}</td>
+        <td>${mock.category}</td>
+        <td style="color:var(--text2);">${mock.target}</td>
+        <td><input type="number" class="mock-input" value="${mock.score}" onchange="updateMockScore(${index}, this.value)"></td>
+        <td><span class="score-badge ${badgeClass}">${statusText}</span></td>
+      </tr>
+    `;
+  });
+}
+function updateMockScore(index, value) {
+  state.mocks[index].score = parseInt(value) || 0;
+  saveState();
+  initMockTable();
+}
+
+// --- NAVIGATION ---
+function switchTab(tab, btn) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-
-  document.getElementById('view-' + tab).classList.add('active');
-  event.target.classList.add('active');
-
-  if (tab === 'subjects') renderSubjects();
-  if (tab === 'progress') renderProgress();
+  document.getElementById(`view-${tab}`).classList.add('active');
+  if(btn) btn.classList.add('active');
+  
+  if(tab === 'mission') renderActiveDesk();
+  if(tab === 'rank') renderRankView();
+  if(tab === 'analytics') renderAnalytics();
 }
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  return `${days[d.getDay()]} · ${months[d.getMonth()]} ${d.getDate()}`;
-}
-
-let toastTimeout;
 function showToast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
-
-// Enter key on passcode
-document.getElementById('passcodeInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') tryUnlock();
-});
-
-// Focus passcode on load
-window.onload = () => {
-  document.getElementById('passcodeInput').focus();
-};
 </script>
 </body>
 </html>
